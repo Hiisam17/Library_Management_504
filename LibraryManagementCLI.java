@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 
 /**
@@ -24,7 +25,12 @@ public class LibraryManagementCLI {
             System.out.println("3. Sửa tài liệu");
             System.out.println("4. Tìm kiếm tài liệu");
             System.out.println("5. Hiển thị tất cả tài liệu");
-            System.out.println("6. Thoát");
+            System.out.println("6. Thêm người dùng");
+            System.out.println("7. Xóa người dùng");
+            System.out.println("8. Cập nhật thông tin người dùng");
+            System.out.println("9. Mượn tài liệu");
+            System.out.println("10. Trả tài liệu");
+            System.out.println("11. Thoát");
             System.out.print("Chọn một tùy chọn: ");
 
             int choice = scanner.nextInt();  // Đọc tùy chọn từ người dùng
@@ -79,6 +85,42 @@ public class LibraryManagementCLI {
                     library.displayDocuments();
                     break;
                 case 6:
+                    System.out.print("Nhập ID người dùng: ");
+                    int userId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Nhập tên người dùng: ");
+                    String userName = scanner.nextLine();
+                    User user = new User(userId, userName);
+                    library.addUser(user);
+                    break;
+                case 7:
+                    System.out.print("Nhập ID người dùng để xóa: ");
+                    int removeUserId = scanner.nextInt();
+                    library.removeUser(removeUserId);
+                    break;
+                case 8:
+                    System.out.print("Nhập ID người dùng để cập nhật: ");
+                    int updateUserId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Nhập tên mới: ");
+                    String newUserName = scanner.nextLine();
+                    System.out.print("Người dùng có thể mượn tài liệu (true/false): ");
+                    boolean canBorrow = scanner.nextBoolean();
+                    library.updateUser(updateUserId, newUserName, canBorrow);
+                    break;
+                case 9:
+                    System.out.print("Nhập ID người dùng: ");
+                    int borrowUserId = scanner.nextInt();
+                    System.out.print("Nhập ID tài liệu: ");
+                    int borrowDocumentId = scanner.nextInt();
+                    library.borrowDocument(borrowUserId, borrowDocumentId);
+                    break;
+                case 10:
+                    System.out.print("Nhập ID tài liệu để trả: ");
+                    int returnDocumentId = scanner.nextInt();
+                    library.returnDocument(returnDocumentId);
+                    break;
+                case 11:
                     // Thoát khỏi chương trình
                     exit = true;
                     break;
