@@ -282,4 +282,20 @@ class Library {
         }
         System.out.println("Không tìm thấy tài liệu hoặc tài liệu đã được trả.");
     }
+
+    // Hiển thị thông tin người dùng
+    /**
+     * Hiển thị thông tin của một người dùng dựa trên ID người dùng.
+     *
+     * @param userId ID của người dùng cần hiển thị thông tin.
+     */
+    public void displayUserInfo(int userId) {
+        for (User user : users) {
+            if (user.getId() == userId) {
+                user.displayInfo();
+                return;
+            }
+        }
+        System.out.println("Không tìm thấy người dùng.");
+    }
 }

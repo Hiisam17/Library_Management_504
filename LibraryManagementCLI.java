@@ -30,7 +30,8 @@ public class LibraryManagementCLI {
             System.out.println("8. Cập nhật thông tin người dùng");
             System.out.println("9. Mượn tài liệu");
             System.out.println("10. Trả tài liệu");
-            System.out.println("11. Thoát");
+            System.out.println("11. Hiển thị thông tin người dùng");
+            System.out.println("12. Thoát");
             System.out.print("Chọn một tùy chọn: ");
 
             int choice = scanner.nextInt();  // Đọc tùy chọn từ người dùng
@@ -121,6 +122,11 @@ public class LibraryManagementCLI {
                     library.returnDocument(returnDocumentId);
                     break;
                 case 11:
+                    System.out.print("Nhập ID người dùng để hiển thị thông tin: ");
+                    int displayUserId = scanner.nextInt();
+                    library.displayUserInfo(displayUserId);
+                    break;
+                case 12:
                     // Thoát khỏi chương trình
                     exit = true;
                     break;
