@@ -86,12 +86,13 @@ class Library {
     public Document searchDocument(String title) {
         for (Document doc : documents) {
             if (doc.getTitle().equalsIgnoreCase(title)) {
-                return doc;
+                return doc;  // Trả về tài liệu đầu tiên tìm thấy với tên phù hợp
             }
         }
-        System.out.println("Không tìm thấy tài liệu.");
-        return null;
+        System.out.println("Tài liệu không tìm thấy.");  // Thông báo không tìm thấy tài liệu
+        return null;  // Trả về null nếu không tìm thấy
     }
+
 
     /**
      * Tìm kiếm một tài liệu dựa trên ID.
