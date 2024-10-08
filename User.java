@@ -39,12 +39,24 @@ class User {
     this.canBorrow = canBorrow;
   }
 
+  public void displayBorrowedDocuments() {
+    if (borrowedDocuments.isEmpty()) {
+      System.out.println("Không có tài liệu nào được mượn.");
+    } else {
+      System.out.println("Các tài liệu đã mượn:");
+      for (Document doc : borrowedDocuments) {
+        System.out.println(doc);
+      }
+    }
+  }
+
   public void displayInfo() {
     System.out.println("User ID: " + id);
     System.out.println("Name: " + name);
+    System.out.println("Can Borrow: " + canBorrow);
     System.out.println("Borrowed Documents:");
     for (Document doc : borrowedDocuments) {
-      System.out.println("- " + doc.getTitle());
+      System.out.println("- " + doc.getTitle() + " by " + doc.getAuthor() + " (" + doc.getYear() + ")");
     }
   }
 

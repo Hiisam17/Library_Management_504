@@ -1,4 +1,5 @@
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -61,24 +62,126 @@ public class LibraryManagementCLI {
                     break;
                 case 3:
                     // Sửa tài liệu
-                    System.out.print("Nhập ID tài liệu để sửa: ");
-                    int editId = scanner.nextInt();
+                    System.out.println("Chọn phương thức tìm kiếm để sửa tài liệu:");
+                    System.out.println("1. Tìm kiếm theo tên tài liệu");
+                    System.out.println("2. Tìm kiếm theo ID tài liệu");
+                    int searchChoiceToEdit = scanner.nextInt();
                     scanner.nextLine();  // Xóa bộ đệm
-                    System.out.print("Nhập tiêu đề mới: ");
-                    String newTitle = scanner.nextLine();
-                    System.out.print("Nhập tác giả mới: ");
-                    String newAuthor = scanner.nextLine();
-                    System.out.print("Nhập năm xuất bản mới: ");
-                    int newYear = scanner.nextInt();
-                    library.editDocument(editId, newTitle, newAuthor, newYear);  // Cập nhật tài liệu
+
+                    Document documentToEdit = null;
+
+                    switch (searchChoiceToEdit) {
+                        case 1:
+                            // Tìm kiếm theo tên tài liệu
+                            System.out.print("Nhập tên tài liệu: ");
+                            String searchTitle = scanner.nextLine();
+                            documentToEdit = library.searchDocument(searchTitle);
+                            break;
+                        case 2:
+                            // Tìm kiếm theo ID tài liệu
+                            System.out.print("Nhập ID tài liệu: ");
+                            int searchId = scanner.nextInt();
+                            scanner.nextLine();  // Xóa bộ đệm
+                            documentToEdit = library.searchDocument(searchId);
+                            break;
+                        default:
+                            System.out.println("Lựa chọn không hợp lệ.");
+                            break;
+                    }
+
+                    if (documentToEdit != null) {
+                        // Nếu tìm thấy tài liệu, yêu cầu người dùng nhập thông tin mới
+                        System.out.print("Nhập tiêu đề mới: ");
+                        String newTitle = scanner.nextLine();
+                        System.out.print("Nhập tác giả mới: ");
+                        String newAuthor = scanner.nextLine();
+                        System.out.print("Nhập năm xuất bản mới: ");
+                        int newYear = scanner.nextInt();
+
+                        // Cập nhật thông tin cho tài liệu
+                        documentToEdit.setTitle(newTitle);
+                        documentToEdit.setAuthor(newAuthor);
+                        documentToEdit.setYear(newYear);
+
+                        System.out.println("Tài liệu đã được cập nhật.");
+                    } else {
+                        System.out.println("Không tìm thấy tài liệu.");
+                    }
                     break;
+
                 case 4:
                     // Tìm kiếm tài liệu
-                    System.out.print("Nhập tiêu đề tài liệu để tìm kiếm: ");
-                    String searchTitle = scanner.nextLine();
-                    Document found = library.searchDocument(searchTitle);  // Tìm kiếm tài liệu
-                    if (found != null) {
-                        System.out.println("Tài liệu được tìm thấy: " + found);
+                    System.out.println("Chọn phương thức tìm kiếm:");
+                    System.out.println("1. Tìm kiếm theo tên tài liệu");
+                    System.out.println("2. Tìm kiếm theo ID tài liệu");
+                    System.out.println("3. Tìm kiếm theo tên tác giả");
+                    System.out.println("4. Tìm kiếm theo năm xuất bản");
+                    int searchChoice = scanner.nextInt();
+                    scanner.nextLine();  // Xóa bộ đệm
+                    Document found = null;  // Biến lưu kết quả tìm kiếm (nếu là một tài liệu)
+
+                    switch (searchChoice) {
+                        case 1:
+                            // Tìm kiếm theo tên tài liệu (trả về một tài liệu duy nhất)
+                            System.out.print("Nhập tên tài liệu: ");
+                            String searchTitle = scanner.nextLine();
+                            found = library.searchDocument(searchTitle);
+                            if (found != null) {
+                                System.out.println("Tài liệu tìm thấy: " + found);
+                            } else {
+                                System.out.println("Không tìm thấy tài liệu với tên: " + searchTitle);
+                            }
+                            break;
+                        case 2:
+                            // Tìm kiếm theo ID tài liệu (trả về một tài liệu duy nhất)
+                            System.out.print("Nhập ID tài liệu: ");
+                            int searchId = scanner.nextInt();
+                            scanner.nextLine();  // Xóa bộ đệm
+                            found = library.searchDocument(searchId);
+                            if (found != null) {
+                                System.out.println("Tài liệu tìm thấy: " + found);
+                            } else {
+                                System.out.println("Không tìm thấy tài liệu với ID: " + searchId);
+                            }
+                            break;
+                        case 3:
+                            // Tìm kiếm theo tên tác giả (trả về danh sách tài liệu)
+                            System.out.print("Nhập tên tác giả: ");
+                            String searchAuthor = scanner.nextLine();
+                            List<Document> authorDocs = library.getDocumentsByAuthor(searchAuthor);
+
+                            // Kiểm tra nếu có tài liệu nào được tìm thấy
+                            if (!authorDocs.isEmpty()) {
+                                System.out.println("Các tài liệu của tác giả " + searchAuthor + " là: ");
+                                for (Document doc1 : authorDocs) {
+                                    System.out.println(doc1);  // In ra thông tin của từng tài liệu
+                                }
+                            } else {
+                                System.out.println("Không tìm thấy tài liệu nào của tác giả: " + searchAuthor);
+                            }
+                            break;
+                        case 4:
+                            // Tìm kiếm theo năm xuất bản (trả về danh sách tài liệu)
+                            System.out.print("Nhập năm xuất bản: ");
+                            int searchYear = scanner.nextInt();
+                            scanner.nextLine();  // Xóa bộ đệm
+
+                            List<Document> yearDocs = library.getDocumentsByYear(searchYear);
+
+                            // Kiểm tra nếu có tài liệu nào được tìm thấy
+                            if (!yearDocs.isEmpty()) {
+                                System.out.println("Các tài liệu được xuất bản trong năm " + searchYear + " là:");
+                                for (Document doc2 : yearDocs) {
+                                    System.out.println(doc2);  // In ra thông tin của từng tài liệu
+                                }
+                            } else {
+                                System.out.println("Không tìm thấy tài liệu nào xuất bản trong năm: " + searchYear);
+                            }
+                            break;
+
+                        default:
+                            System.out.println("Lựa chọn không hợp lệ.");
+                            break;
                     }
                     break;
                 case 5:
