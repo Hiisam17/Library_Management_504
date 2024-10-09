@@ -186,10 +186,12 @@ public class LibraryManagementCLI {
                             break;
                     }
                     break;
+                    //no error
                 case 5:
                     // Hiển thị tất cả tài liệu
                     library.displayDocuments();
                     break;
+                //no error
                 case 6:
                     System.out.print("Nhập ID người dùng: ");
                     int userId = scanner.nextInt();
@@ -199,11 +201,13 @@ public class LibraryManagementCLI {
                     User user = new User(userId, userName);
                     library.addUser(user);
                     break;
+                //no error
                 case 7:
                     System.out.print("Nhập ID người dùng để xóa: ");
                     int removeUserId = scanner.nextInt();
                     library.removeUser(removeUserId);
                     break;
+                //no error
                 case 8:
                     System.out.print("Nhập ID người dùng để cập nhật: ");
                     int updateUserId = scanner.nextInt();
@@ -214,6 +218,7 @@ public class LibraryManagementCLI {
                     boolean canBorrow = scanner.nextBoolean();
                     library.updateUser(updateUserId, newUserName, canBorrow);
                     break;
+                //no error
                 case 9:
                     System.out.print("Nhập ID người dùng: ");
                     int borrowUserId = scanner.nextInt();
