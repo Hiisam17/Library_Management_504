@@ -294,6 +294,7 @@ class Library {
         for (User user : users) {
             if (user.getId() == userId) {
                 user.displayInfo();
+                user.displayBorrowedDocuments(); // Display borrowed documents
                 return;
             }
         }
