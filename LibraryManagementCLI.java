@@ -54,12 +54,14 @@ public class LibraryManagementCLI {
                     Document doc = new Document(id, title, author, year);  // Tạo tài liệu mới
                     library.addDocument(doc);  // Thêm tài liệu vào thư viện
                     break;
+                    // no error
                 case 2:
                     // Xóa tài liệu
                     System.out.print("Nhập ID tài liệu để xóa: ");
                     int removeId = scanner.nextInt();
                     library.removeDocument(removeId);  // Xóa tài liệu khỏi thư viện
                     break;
+                    // no error
                 case 3:
                     // Sửa tài liệu
                     System.out.println("Chọn phương thức tìm kiếm để sửa tài liệu:");
@@ -108,7 +110,7 @@ public class LibraryManagementCLI {
                         System.out.println("Không tìm thấy tài liệu.");
                     }
                     break;
-
+                    // no error    
                 case 4:
                     // Tìm kiếm tài liệu
                     System.out.println("Chọn phương thức tìm kiếm:");
