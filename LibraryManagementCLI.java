@@ -46,6 +46,7 @@ public class LibraryManagementCLI {
                     String isbnResult = APIIntegration.getBookInfoByISBN(isbn);
                     APIIntegration.parseBookInfo(isbnResult);
                     break;
+                    // no error
                 case 2:
                     // Xóa tài liệu
                     System.out.print("Nhập ID tài liệu để xóa: ");
