@@ -300,4 +300,10 @@ class Library {
         }
         System.out.println("Không tìm thấy người dùng.");
     }
+
+    public void addDocumentFromAPI(String title, String author, String publisher, String publishedDate) {
+        int newId = documents.size() + 1; // Simple ID generation
+        Document newDocument = new Document(newId, title, author, 2021, publisher, publishedDate);
+        documents.add(newDocument);
+    }
 }

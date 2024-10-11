@@ -21,7 +21,7 @@ public class LibraryManagementCLI {
         while (!exit) {
             // Hiển thị menu lựa chọn
             System.out.println("Hệ thống quản lý thư viện");
-            System.out.println("1. Thêm tài liệu");
+            System.out.println("1. Tìm kiếm tài liệu theo ISBN");
             System.out.println("2. Xóa tài liệu");
             System.out.println("3. Sửa tài liệu");
             System.out.println("4. Tìm kiếm tài liệu");
@@ -41,18 +41,10 @@ public class LibraryManagementCLI {
             // Xử lý tùy chọn của người dùng
             switch (choice) {
                 case 1:
-                    // Thêm tài liệu
-                    System.out.print("Nhập ID tài liệu: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();  // Xóa bộ đệm
-                    System.out.print("Nhập tiêu đề tài liệu: ");
-                    String title = scanner.nextLine();
-                    System.out.print("Nhập tác giả tài liệu: ");
-                    String author = scanner.nextLine();
-                    System.out.print("Nhập năm xuất bản tài liệu: ");
-                    int year = scanner.nextInt();
-                    Document doc = new Document(id, title, author, year);  // Tạo tài liệu mới
-                    library.addDocument(doc);  // Thêm tài liệu vào thư viện
+                    System.out.print("Nhập ISBN: ");
+                    String isbn = scanner.nextLine();
+                    String isbnResult = APIIntegration.getBookInfoByISBN(isbn);
+                    APIIntegration.parseBookInfo(isbnResult);
                     break;
                 case 2:
                     // Xóa tài liệu
@@ -60,6 +52,7 @@ public class LibraryManagementCLI {
                     int removeId = scanner.nextInt();
                     library.removeDocument(removeId);  // Xóa tài liệu khỏi thư viện
                     break;
+                    // no error
                 case 3:
                     // Sửa tài liệu
                     System.out.println("Chọn phương thức tìm kiếm để sửa tài liệu:");
@@ -108,7 +101,7 @@ public class LibraryManagementCLI {
                         System.out.println("Không tìm thấy tài liệu.");
                     }
                     break;
-
+                    // no error    
                 case 4:
                     // Tìm kiếm tài liệu
                     System.out.println("Chọn phương thức tìm kiếm:");
@@ -184,10 +177,12 @@ public class LibraryManagementCLI {
                             break;
                     }
                     break;
+                    //no error
                 case 5:
                     // Hiển thị tất cả tài liệu
                     library.displayDocuments();
                     break;
+                //no error
                 case 6:
                     System.out.print("Nhập ID người dùng: ");
                     int userId = scanner.nextInt();
@@ -197,11 +192,13 @@ public class LibraryManagementCLI {
                     User user = new User(userId, userName);
                     library.addUser(user);
                     break;
+                //no error
                 case 7:
                     System.out.print("Nhập ID người dùng để xóa: ");
                     int removeUserId = scanner.nextInt();
                     library.removeUser(removeUserId);
                     break;
+                //no error
                 case 8:
                     System.out.print("Nhập ID người dùng để cập nhật: ");
                     int updateUserId = scanner.nextInt();
@@ -212,6 +209,7 @@ public class LibraryManagementCLI {
                     boolean canBorrow = scanner.nextBoolean();
                     library.updateUser(updateUserId, newUserName, canBorrow);
                     break;
+                //no error
                 case 9:
                     System.out.print("Nhập ID người dùng: ");
                     int borrowUserId = scanner.nextInt();

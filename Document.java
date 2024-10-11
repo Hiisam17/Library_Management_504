@@ -7,6 +7,8 @@ class Document {
     private int id;               // ID của tài liệu
     private String title;         // Tiêu đề của tài liệu
     private String author;        // Tác giả của tài liệu
+    private String publisher;
+    private String publishedDate;
     private int year;             // Năm xuất bản của tài liệu
     private boolean isAvailable;   // Tình trạng khả dụng của tài liệu
 
@@ -18,11 +20,13 @@ class Document {
      * @param author Tác giả của tài liệu.
      * @param year   Năm xuất bản của tài liệu.
      */
-    public Document(int id, String title, String author, int year) {
+    public Document(int id, String title, String author, int year, String publisher, String publishedDate) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.year = year;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
         this.isAvailable = true;  // Mặc định tài liệu luôn khả dụng khi được tạo
     }
 
@@ -47,6 +51,13 @@ class Document {
         return isAvailable;
     }
 
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public String getPublishedDate() {
+        return publishedDate;
+    }
     /**
      * Đặt tình trạng khả dụng của tài liệu.
      *
@@ -69,6 +80,14 @@ class Document {
         this.year = year;
     }
 
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
     /**
      * Trả về thông tin của tài liệu dưới dạng chuỗi.
      *
@@ -76,6 +95,6 @@ class Document {
      */
     @Override
     public String toString() {
-        return "ID: " + id + ", Title: " + title + ", Author: " + author + ", Year: " + year + ", Available: " + isAvailable;
+        return "ID: " + id + ", Title: " + title + ", Author: " + author + ", Year: " + year + ", Available: " + isAvailable + ", Publisher: " + publisher + ", Published Date: " + publishedDate;
     }
 }
