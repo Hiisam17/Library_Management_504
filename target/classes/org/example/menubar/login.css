@@ -1,0 +1,24 @@
+.root {
+    -fx-background-color: #f0f0f0; /* Màu nền cho toàn bộ giao diện */
+}
+
+.text-field, .password-field {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.button {
+    -fx-background-color: #007bff; /* Màu nền nút đăng nhập */
+    -fx-text-fill: white;          /* Màu chữ của nút */
+    -fx-border-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #0056b3; /* Màu nền nút khi hover */
+}
+
+.label {
+    -fx-text-fill: #007bff; /* Màu của label */
+    -fx-font-size: 16px;
+}
