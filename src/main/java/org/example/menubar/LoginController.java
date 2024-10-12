@@ -4,6 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.util.Objects;
 
 public class LoginController {
 
@@ -13,7 +17,17 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
 
-    // Xử lý sự kiện nút Đăng nhập
+    @FXML
+    private ImageView logoImageView; // Thêm ImageView cho logo
+
+    // Phương thức khởi tạo
+    @FXML
+    public void initialize() {
+        // Tải hình ảnh vào ImageView
+        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png"))); // Đường dẫn đến hình ảnh
+        logoImageView.setImage(logo);
+    }
+
     @FXML
     private void handleLogin() {
         String username = usernameField.getText();
@@ -34,15 +48,14 @@ public class LoginController {
         }
     }
 
-    // Xử lý sự kiện nút Thoát
     @FXML
     private void handleExit() {
         System.exit(0);
     }
 
-    // Hàm kiểm tra thông tin đăng nhập
     private boolean validateLogin(String username, String password) {
         return username.equals("admin") && password.equals("1234");
     }
 }
+
 
