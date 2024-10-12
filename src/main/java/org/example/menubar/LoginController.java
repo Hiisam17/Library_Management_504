@@ -1,12 +1,17 @@
 package org.example.menubar;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class LoginController {
@@ -34,11 +39,15 @@ public class LoginController {
         String password = passwordField.getText();
 
         if (validateLogin(username, password)) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Đăng nhập thành công!");
-            alert.setContentText("Chào mừng, " + username + "!");
-            alert.showAndWait();
+            // Chuyển đến menu chính
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("menu-view.fxml"));
+                Parent mainMenuRoot = loader.load();
+                Stage stage = (Stage) usernameField.getScene().getWindow();
+                stage.setScene(new Scene(mainMenuRoot, 600, 400));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Lỗi");
