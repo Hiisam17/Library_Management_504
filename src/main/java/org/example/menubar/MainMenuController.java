@@ -2,6 +2,7 @@ package org.example.menubar;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
 
 public class MainMenuController {
 
@@ -29,7 +30,15 @@ public class MainMenuController {
         showAlert("Tìm Kiếm Tài Liệu", "Chức năng tìm kiếm tài liệu đang trong quá trình phát triển.");
     }
 
+    @FXML
+    private TextField searchField;
 
+    @FXML
+    private void handleSearch() {
+        String query = searchField.getText();
+        String jsonResponse = APIIntegration.getBookInfoByTitle(query);
+        APIIntegration.parseBookInfo(jsonResponse);
+    }
 
     // Hàm hiển thị thông báo
     private void showAlert(String title, String message) {
