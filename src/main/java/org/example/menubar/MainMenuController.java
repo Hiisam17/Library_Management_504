@@ -29,6 +29,8 @@ public class MainMenuController {
         showAlert("Tìm Kiếm Tài Liệu", "Chức năng tìm kiếm tài liệu đang trong quá trình phát triển.");
     }
 
+
+
     // Hàm hiển thị thông báo
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
