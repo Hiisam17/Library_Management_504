@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.MainMenuController" alignment="CENTER" spacing="10">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.MainMenuController" alignment="CENTER" spacing="10" stylesheets="@main_menu.css">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="Chào mừng đến với Quản lý Thư viện" styleClass="header-label"/>
@@ -15,3 +15,5 @@
     <Button text="Sửa Tài Liệu" onAction="#handleEditDocument" styleClass="menu-button"/>
     <Button text="Tìm Kiếm Tài Liệu" onAction="#handleSearchDocument" styleClass="menu-button"/>
 </VBox>
+
+
