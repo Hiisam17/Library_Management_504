@@ -1,0 +1,34 @@
+/* addDoc.css */
+
+.header-label {
+    font-size: 24px;
+    font-weight: bold;
+    text-fill: #333; /* Màu chữ */
+}
+
+.menu-button {
+    -fx-background-color: #4CAF50; /* Màu nền */
+    -fx-text-fill: white; /* Màu chữ */
+    -fx-padding: 10px 20px; /* Padding cho nút */
+    -fx-font-size: 14px; /* Kích thước chữ */
+    -fx-border-radius: 5px; /* Bo góc cho nút */
+}
+
+.menu-button:hover {
+    -fx-background-color: #45a049; /* Màu khi di chuột qua nút */
+}
+
+.text-field {
+    -fx-pref-width: 300px; /* Chiều rộng cố định cho TextField */
+    -fx-padding: 10px; /* Padding cho TextField */
+    -fx-border-radius: 5px; /* Bo góc cho TextField */
+}
+
+.vbox {
+    -fx-background-color: #f9f9f9; /* Màu nền cho VBox */
+    -fx-padding: 20; /* Padding cho VBox */
+    -fx-spacing: 15; /* Khoảng cách giữa các phần tử */
+    -fx-border-color: #ddd; /* Màu viền cho VBox */
+    -fx-border-width: 1; /* Độ dày viền */
+    -fx-background-insets: 5; /* Lề của màu nền */
+}

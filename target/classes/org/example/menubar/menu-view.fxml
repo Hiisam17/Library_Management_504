@@ -17,4 +17,5 @@
     <Button text="Tìm Kiếm Tài Liệu" onAction="#handleSearchDocument" styleClass="menu-button"/>
     <TextField fx:id="searchField" promptText="Nhập tiêu đề sách"/>
     <Button text="Tìm Kiếm" onAction="#handleSearch" styleClass="menu-button"/>
+
 </VBox>

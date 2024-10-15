@@ -5,7 +5,7 @@ package org.example.menubar;
  */
 class Document {
 
-    private int id;               // ID của tài liệu
+    private String id;               // ID của tài liệu
     private String title;         // Tiêu đề của tài liệu
     private String author;        // Tác giả của tài liệu
     private int year;             // Năm xuất bản của tài liệu
@@ -19,7 +19,7 @@ class Document {
      * @param author Tác giả của tài liệu.
      * @param year   Năm xuất bản của tài liệu.
      */
-    public Document(int id, String title, String author, int year) {
+    public Document(String id, String title, String author, int year) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -28,7 +28,7 @@ class Document {
     }
 
     // Phương thức truy cập (getter) cho các thuộc tính
-    public int getId() {
+    public String getId() {
         return id;
     }
 
