@@ -11,6 +11,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -62,8 +68,39 @@ public class LoginController {
         System.exit(0);
     }
 
+    //connect to SQL
+    public static Connection SQL_connect() {
+        Connection connection = null;
+        try {
+            String url = "jdbc:sqlite:data/liba.db";
+            connection = DriverManager.getConnection(url);
+            System.out.println("Kết nối thành công đến cơ sở dữ liệu!");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return connection;
+    }
+
+
     private boolean validateLogin(String username, String password) {
-        return username.equals("admin") && password.equals("1234");
+        String sql = "SELECT * FROM users WHERE user_name = ? AND password = ?";
+
+        try (Connection conn = SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            // Nếu có kết quả thì đăng nhập thành công
+            return rs.next();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
     }
 }
 

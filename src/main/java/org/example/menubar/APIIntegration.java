@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class APIIntegration {
 
-  private static final String API_KEY = "AIzaSyDEdCX7ld8DfmwmDHFhAo0hFHujtUqliYs"; // Thay YOUR_API_KEY bằng API key của bạn
+  private static final String API_KEY = "AIzaSyDEdCX7ld8DfmwmDHFhAo0hFHujtUqliYs";
 
   // Phương thức để tìm kiếm thông tin sách dựa trên ISBN
   public static String getBookInfoByISBN(String isbn) {
