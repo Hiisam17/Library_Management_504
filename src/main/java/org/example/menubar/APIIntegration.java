@@ -13,6 +13,17 @@ import org.json.JSONObject;
 public class APIIntegration {
 
   private static final String API_KEY = "AIzaSyDEdCX7ld8DfmwmDHFhAo0hFHujtUqliYs";
+  private static final ExecutorService executor = Executors.newFixedThreadPool(10);
+
+  // Phương thức để tìm kiếm thông tin sách dựa trên ISBN (không đồng bộ)
+  public static Future<String> getBookInfoByISBNAsync(String isbn) {
+    return executor.submit(() -> getBookInfoByISBN(isbn));
+  }
+
+  // Phương thức để tìm kiếm thông tin sách dựa trên tiêu đề (không đồng bộ)
+  public static Future<String> getBookInfoByTitleAsync(String title) {
+    return executor.submit(() -> getBookInfoByTitle(title));
+  }
 
   // Phương thức để tìm kiếm thông tin sách dựa trên ISBN
   public static String getBookInfoByISBN(String isbn) {
