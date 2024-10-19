@@ -3,6 +3,7 @@ module org.example.menubar {
     requires javafx.fxml;
     requires java.net.http;
     requires org.json;
+    requires java.desktop;
 
 
     opens org.example.menubar to javafx.fxml;
