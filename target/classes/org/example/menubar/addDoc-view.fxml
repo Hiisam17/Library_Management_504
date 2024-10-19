@@ -11,7 +11,6 @@
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="Thêm Tài Liệu Mới" styleClass="header-label"/>
-    <TextField fx:id="idField" promptText="ID" styleClass="text-field"/>
     <TextField fx:id="titleField" promptText="Tiêu đề" styleClass="text-field"/>
     <TextField fx:id="authorField" promptText="Tác giả" styleClass="text-field"/>
     <DatePicker fx:id="publishedDatePicker" promptText="Chọn ngày xuất bản"/>

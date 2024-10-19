@@ -19,8 +19,7 @@ class Document {
      * @param author Tác giả của tài liệu.
      * @param year   Năm xuất bản của tài liệu.
      */
-    public Document(String id, String title, String author, String publishedDate ) {
-        this.id = id;
+    public Document( String title, String author, String publishedDate ) {
         this.title = title;
         this.author = author;
         this.publishedDate = publishedDate;

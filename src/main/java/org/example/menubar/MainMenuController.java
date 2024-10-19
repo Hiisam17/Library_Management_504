@@ -62,7 +62,7 @@ public class MainMenuController {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin.");
         } else {
             // Thêm logic lưu tài liệu mới
-            Document newDocument = new Document(id, title, author, year);
+            Document newDocument = new Document( title, author, year);
             documents.add(newDocument); // library là danh sách các tài liệu
             showAlert("Thành công", "Đã thêm tài liệu mới!");
         }

@@ -2,18 +2,32 @@ package org.example.menubar;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.StringConverter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class AddDocumentController {
 
     // Khai báo danh sách tài liệu
-    private ObservableList<Document> documents = FXCollections.observableArrayList();
+    private ObservableList<Document> documents;
+
+    {
+        documents = FXCollections.observableArrayList();
+    }
 
     // Tham chiếu đến Stage
     private Stage stage;
+    // input and output for date
+    private final DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 
     @FXML
     private TextField idField;
@@ -22,27 +36,54 @@ public class AddDocumentController {
     @FXML
     private TextField authorField;
     @FXML
-    private TextField publishedDateField;
+    private DatePicker publishedDatePicker;
+    @FXML
+    public void initialize() {
+        //  hiển thị đúng định dạng dd/MM/yyyy
+        publishedDatePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? date.format(inputFormatter) : "";
+            }
 
+            @Override
+            public LocalDate fromString(String string) {
+                if (string == null || string.isEmpty()) {
+                    return null;
+                }
+                try {
+                    // Chuyển chuỗi thành LocalDate theo định dạng dd/MM/yyyy
+                    return LocalDate.parse(string, inputFormatter);
+                } catch (DateTimeParseException e) {
+                    showAlert("Lỗi", "Ngày nhập sai định dạng. Vui lòng nhập theo định dạng dd/MM/yyyy.");
+                    return null;
+                }
+            }
+        });
+    }
     // Xử lý sự kiện nút Lưu
     @FXML
     private void handleSaveDocument() {
         String title = titleField.getText();
         String author = authorField.getText();
-        String publishedDate = publishedDateField.getText();
-        String id = idField.getId();
+        LocalDate publishedDate = publishedDatePicker.getValue();
 
-        if (title.isEmpty() || author.isEmpty() || publishedDate.isEmpty()) {
+        // Chuyển đổi ngày thành định dạng yyyy-MM-dd
+        String formattedDate = publishedDate.format(outputFormatter);
+        if ( title.isEmpty() || author.isEmpty() || publishedDate == null) {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin.");
-        } else {
-            try {
-                Document newDocument = new Document(id, title, author, publishedDate);
-                documents.add(newDocument); // Thêm tài liệu vào danh sách
-                showAlert("Thành công", "Đã thêm tài liệu mới!");
-                clearFields(); // Xóa dữ liệu sau khi lưu
-            } catch (NumberFormatException e) {
-                showAlert("Lỗi", "Năm xuất bản phải là số.");
-            }
+            return;
+        }
+
+        try {
+            // Tạo đối tượng Document mới và thêm vào danh sách
+            Document newDocument = new Document( title, author, formattedDate);
+            documents.add(newDocument); // Thêm tài liệu vào danh sách
+            showAlert("Thành công", "Đã thêm tài liệu mới!");
+            clearFields(); // Xóa dữ liệu sau khi lưu
+        } catch (DateTimeParseException e) {
+            // Nếu sai định dạng, hiển thị Alert lỗi
+            showAlert("Lỗi", "Nhập sai định dạng ngày. Vui lòng nhập đúng định dạng dd/MM/yyyy.");
         }
     }
 
@@ -53,10 +94,9 @@ public class AddDocumentController {
 
     // Hàm xóa dữ liệu sau khi lưu
     private void clearFields() {
-        idField.clear();
         titleField.clear();
         authorField.clear();
-        publishedDateField.clear();
+        publishedDatePicker.setValue(null);
     }
 
     // Hàm hiển thị thông báo
