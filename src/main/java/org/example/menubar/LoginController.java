@@ -11,14 +11,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.io.IOException;
 import java.util.Objects;
+
+import static org.example.menubar.SQLlib.SQL_connect;
 
 public class LoginController {
 
@@ -69,17 +69,7 @@ public class LoginController {
     }
 
     //connect to SQL
-    public static Connection SQL_connect() {
-        Connection connection = null;
-        try {
-            String url = "jdbc:sqlite:data/liba.db";
-            connection = DriverManager.getConnection(url);
-            System.out.println("Kết nối thành công đến cơ sở dữ liệu!");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return connection;
-    }
+
 
 
     private boolean validateLogin(String username, String password) {

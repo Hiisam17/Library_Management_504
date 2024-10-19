@@ -8,8 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -64,7 +62,7 @@ public class MainMenuController {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin.");
         } else {
             // Thêm logic lưu tài liệu mới
-            Document newDocument = new Document(id, title, author, Integer.parseInt(year));
+            Document newDocument = new Document(id, title, author, year);
             documents.add(newDocument); // library là danh sách các tài liệu
             showAlert("Thành công", "Đã thêm tài liệu mới!");
         }

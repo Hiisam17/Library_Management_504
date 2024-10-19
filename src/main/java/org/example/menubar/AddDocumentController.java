@@ -22,22 +22,21 @@ public class AddDocumentController {
     @FXML
     private TextField authorField;
     @FXML
-    private TextField yearField;
+    private TextField publishedDateField;
 
     // Xử lý sự kiện nút Lưu
     @FXML
     private void handleSaveDocument() {
         String title = titleField.getText();
         String author = authorField.getText();
-        String year = yearField.getText();
+        String publishedDate = publishedDateField.getText();
         String id = idField.getId();
 
-        if (title.isEmpty() || author.isEmpty() || year.isEmpty()) {
+        if (title.isEmpty() || author.isEmpty() || publishedDate.isEmpty()) {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin.");
         } else {
             try {
-                int yearInt = Integer.parseInt(year);
-                Document newDocument = new Document(id, title, author, yearInt);
+                Document newDocument = new Document(id, title, author, publishedDate);
                 documents.add(newDocument); // Thêm tài liệu vào danh sách
                 showAlert("Thành công", "Đã thêm tài liệu mới!");
                 clearFields(); // Xóa dữ liệu sau khi lưu
@@ -57,7 +56,7 @@ public class AddDocumentController {
         idField.clear();
         titleField.clear();
         authorField.clear();
-        yearField.clear();
+        publishedDateField.clear();
     }
 
     // Hàm hiển thị thông báo

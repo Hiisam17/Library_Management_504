@@ -32,13 +32,13 @@ public class Library {
     }
 
     // Sửa thông tin tài liệu theo ID
-    public boolean editDocument(String id, String newTitle, String newAuthor, int newYear) {
+    public boolean editDocument(String id, String newTitle, String newAuthor, String newPublishedDate) {
         Optional<Document> documentOpt = findDocumentById(id);
         if (documentOpt.isPresent()) {
             Document document = documentOpt.get();
             document.setTitle(newTitle);
             document.setAuthor(newAuthor);
-            document.setYear(newYear);
+            document.setPublishedDate(newPublishedDate);
             return true;
         }
         return false;

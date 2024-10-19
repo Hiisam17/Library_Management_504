@@ -8,8 +8,8 @@ class Document {
     private String id;               // ID của tài liệu
     private String title;         // Tiêu đề của tài liệu
     private String author;        // Tác giả của tài liệu
-    private int year;             // Năm xuất bản của tài liệu
-    private boolean isAvailable;   // Tình trạng khả dụng của tài liệu
+    private String publishedDate;             // Năm xuất bản của tài liệu
+    private boolean isAvailable= true;   // Tình trạng khả dụng của tài liệu
 
     /**
      * Khởi tạo một tài liệu mới với thông tin cơ bản.
@@ -19,11 +19,11 @@ class Document {
      * @param author Tác giả của tài liệu.
      * @param year   Năm xuất bản của tài liệu.
      */
-    public Document(String id, String title, String author, int year) {
+    public Document(String id, String title, String author, String publishedDate ) {
         this.id = id;
         this.title = title;
         this.author = author;
-        this.year = year;
+        this.publishedDate = publishedDate;
         this.isAvailable = true;  // Mặc định tài liệu luôn khả dụng khi được tạo
     }
 
@@ -40,8 +40,8 @@ class Document {
         return author;
     }
 
-    public int getYear() {
-        return year;
+    public String    getPublishedDate() {
+        return publishedDate;
     }
 
     public boolean isAvailable() {
@@ -66,8 +66,8 @@ class Document {
         this.author = author;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
     }
 
     /**
@@ -77,6 +77,6 @@ class Document {
      */
     @Override
     public String toString() {
-        return "ID: " + id + ", Title: " + title + ", Author: " + author + ", Year: " + year + ", Available: " + isAvailable;
+        return "ID: " + id + ", Title: " + title + ", Author: " + author + ", PublishedDate: " + publishedDate + ", Available: " + isAvailable;
     }
 }
