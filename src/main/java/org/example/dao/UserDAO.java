@@ -1,22 +1,9 @@
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
+package org.example.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.io.IOException;
-import java.util.Objects;
 public class UserDAO {
     public boolean register(String username, String password) {
         String sql = "INSERT INTO users (user_name, password, is_admin) VALUES (?, ?, false)";
