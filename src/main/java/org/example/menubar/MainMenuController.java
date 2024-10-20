@@ -1,12 +1,11 @@
 package org.example.menubar;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,16 +14,16 @@ import java.io.IOException;
 
 public class MainMenuController {
 
-    private ObservableList<Document> documents = FXCollections.observableArrayList(); // Danh sách tài liệu
 
     @FXML
     private TextField titleField;
     @FXML
     private TextField authorField;
     @FXML
-    private TextField yearField;
+    private TextField publisherField;
     @FXML
-    private TextField idField;
+    private DatePicker publishedDatePicker;
+
 
     // Xử lý sự kiện nút Thêm Tài Liệu
     @FXML
@@ -51,7 +50,7 @@ public class MainMenuController {
         }
     }
 
-    @FXML
+    /*@FXML
     private void handleSaveDocument() {
         String title = titleField.getText();
         String author = authorField.getText();
@@ -62,11 +61,11 @@ public class MainMenuController {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin.");
         } else {
             // Thêm logic lưu tài liệu mới
-            Document newDocument = new Document( title, author, year);
+            Document newDocument = new Document( title, author, publisher,publisherDate);
             documents.add(newDocument); // library là danh sách các tài liệu
             showAlert("Thành công", "Đã thêm tài liệu mới!");
         }
-    }
+    }*/
 
     // Xử lý sự kiện nút Xóa Tài Liệu
     @FXML

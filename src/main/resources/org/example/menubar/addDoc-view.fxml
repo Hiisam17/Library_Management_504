@@ -13,6 +13,7 @@
     <Label text="Thêm Tài Liệu Mới" styleClass="header-label"/>
     <TextField fx:id="titleField" promptText="Tiêu đề" styleClass="text-field"/>
     <TextField fx:id="authorField" promptText="Tác giả" styleClass="text-field"/>
+    <TextField fx:id="publisherField" promptText="Nhà phát hành" styleClass="text-field"/>
     <DatePicker fx:id="publishedDatePicker" promptText="Chọn ngày xuất bản"/>
     <Button text="Lưu" onAction="#handleSaveDocument" styleClass="menu-button"/>
     <Button text="Quay lại" onAction="#handleBack" styleClass="menu-button"/>

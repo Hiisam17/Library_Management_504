@@ -8,6 +8,7 @@ class Document {
     private String id;               // ID của tài liệu
     private String title;         // Tiêu đề của tài liệu
     private String author;        // Tác giả của tài liệu
+    private String publisher;       // nhà xuất bản
     private String publishedDate;             // Năm xuất bản của tài liệu
     private boolean isAvailable= true;   // Tình trạng khả dụng của tài liệu
 
@@ -17,15 +18,17 @@ class Document {
      * @param id     ID của tài liệu.
      * @param title  Tiêu đề của tài liệu.
      * @param author Tác giả của tài liệu.
-     * @param year   Năm xuất bản của tài liệu.
+     * @param publishedDate   Năm xuất bản của tài liệu.
      */
-    public Document( String title, String author, String publishedDate ) {
+    public Document( String title, String author, String publisher,String publishedDate ) {
         this.title = title;
         this.author = author;
+        this.publisher = publisher;
         this.publishedDate = publishedDate;
         this.isAvailable = true;  // Mặc định tài liệu luôn khả dụng khi được tạo
     }
 
+    public Document(){};
     // Phương thức truy cập (getter) cho các thuộc tính
     public String getId() {
         return id;
@@ -39,7 +42,9 @@ class Document {
         return author;
     }
 
-    public String    getPublishedDate() {
+    public String getPublisher() { return publisher; }
+
+    public String getPublishedDate() {
         return publishedDate;
     }
 
@@ -65,9 +70,9 @@ class Document {
         this.author = author;
     }
 
-    public void setPublishedDate(String publishedDate) {
-        this.publishedDate = publishedDate;
-    }
+    public void setPublisher(String publisher) { this.publisher = this.publisher; }
+
+    public void setPublishedDate(String publishedDate) { this.publishedDate = publishedDate; }
 
     /**
      * Trả về thông tin của tài liệu dưới dạng chuỗi.

@@ -1,26 +1,24 @@
 package org.example.menubar;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.util.StringConverter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import static org.example.menubar.SQLlib.SQL_connect;
+
 public class AddDocumentController {
 
-    // Khai báo danh sách tài liệu
-    private ObservableList<Document> documents;
 
-    {
-        documents = FXCollections.observableArrayList();
-    }
 
     // Tham chiếu đến Stage
     private Stage stage;
@@ -30,11 +28,11 @@ public class AddDocumentController {
 
 
     @FXML
-    private TextField idField;
-    @FXML
     private TextField titleField;
     @FXML
     private TextField authorField;
+    @FXML
+    private TextField publisherField;
     @FXML
     private DatePicker publishedDatePicker;
     @FXML
@@ -64,27 +62,45 @@ public class AddDocumentController {
     // Xử lý sự kiện nút Lưu
     @FXML
     private void handleSaveDocument() {
-        String title = titleField.getText();
-        String author = authorField.getText();
-        LocalDate publishedDate = publishedDatePicker.getValue();
+        Document newDocument;
+        newDocument = new Document();
+        newDocument.setTitle(titleField.getText());
+        newDocument.setAuthor(authorField.getText());
+        newDocument.setPublisher(publisherField.getText());
 
         // Chuyển đổi ngày thành định dạng yyyy-MM-dd
+        LocalDate publishedDate = publishedDatePicker.getValue();
         String formattedDate = publishedDate.format(outputFormatter);
-        if ( title.isEmpty() || author.isEmpty() || publishedDate == null) {
+        newDocument.setPublishedDate(formattedDate);
+        String sql = "INSERT INTO document (title, author ,publisher, publishedDate) VALUES (?, ?, ?, ?)";
+
+
+        if (!newDocument.getTitle().isEmpty() && !newDocument.getAuthor().isEmpty() && !newDocument.getPublishedDate().isEmpty()) {
+            try (Connection conn = SQL_connect();
+                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, newDocument.getTitle());
+                pstmt.setString(2, newDocument.getAuthor());
+                pstmt.setString(3, newDocument.getPublisher());
+                pstmt.setString(4, newDocument.getPublishedDate());
+
+                // Thực thi câu lệnh
+                int rowsAffected = pstmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    showAlert("Thành công", "Đã thêm tài liệu mới!");
+                    clearFields(); // Xóa dữ liệu sau khi lưu
+                }
+            } catch (DateTimeParseException e) {
+                showAlert("Lỗi", "Nhập sai định dạng ngày. Vui lòng nhập đúng định dạng dd/MM/yyyy.");
+            } catch (SQLException e) {
+                showAlert("Lỗi", "Không thể thêm tài liệu vào cơ sở dữ liệu.");
+                e.printStackTrace();
+            }
+        } else {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin.");
             return;
         }
 
-        try {
-            // Tạo đối tượng Document mới và thêm vào danh sách
-            Document newDocument = new Document( title, author, formattedDate);
-            documents.add(newDocument); // Thêm tài liệu vào danh sách
-            showAlert("Thành công", "Đã thêm tài liệu mới!");
-            clearFields(); // Xóa dữ liệu sau khi lưu
-        } catch (DateTimeParseException e) {
-            // Nếu sai định dạng, hiển thị Alert lỗi
-            showAlert("Lỗi", "Nhập sai định dạng ngày. Vui lòng nhập đúng định dạng dd/MM/yyyy.");
-        }
     }
 
     // Hàm khởi tạo để nhận tham chiếu Stage
