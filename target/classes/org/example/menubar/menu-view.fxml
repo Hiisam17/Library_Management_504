@@ -24,7 +24,7 @@
 
     <!-- Bảng hiển thị danh sách tài liệu -->
     <Label text="Danh sách Tài liệu"/>
-    <TableView fx:id="documentTable" prefHeight="300" prefWidth="400">
+    <TableView fx:id="documentTableView" prefHeight="300" prefWidth="400">
         <columns>
             <TableColumn text="ID" fx:id="idColumn" prefWidth="100">
                 <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>

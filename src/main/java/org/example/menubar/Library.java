@@ -7,7 +7,7 @@ import java.util.Optional;
 public class Library {
 
     // Danh sách tài liệu
-    private static List<Document> documents;
+    static List<Document> documents;
 
     // Hàm khởi tạo
     public Library() {
