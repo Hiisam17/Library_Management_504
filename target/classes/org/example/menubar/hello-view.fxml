@@ -18,6 +18,7 @@
     <Label text="Mật khẩu:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
     <PasswordField fx:id="passwordField" promptText="Nhập mật khẩu" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
+    <Button text="Đăng ký" onAction="#handleRegister" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.columnSpan="1" styleClass="DAO-button"/>
     <Button text="Đăng nhập" onAction="#handleLogin" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
     <Button text="Thoát" onAction="#handleExit" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 </GridPane>

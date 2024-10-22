@@ -6,17 +6,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.example.menubar.Library.documents;
 
+
 public class MainMenuController {
 
+    @FXML
+    private TextField idField;
     @FXML
     private TextField titleField;
     @FXML
@@ -35,31 +41,59 @@ public class MainMenuController {
     @FXML
     private TableColumn<Document, String> authorColumn;
     @FXML
-    private TableColumn<Document, Integer> yearColumn;
+    private TableColumn<Document, String> publisherColumn;
+    @FXML
+    private TableColumn<Document, String> publishedDateColumn;
+
+    private ObservableList<Document> documentList = FXCollections.observableArrayList();
+    private final DocumentManager documentManager;
+
+    public MainMenuController() {
+        this.documentManager = new DocumentManager(new DatabaseManager());
+    }
+
 
     // Xử lý sự kiện nút Thêm Tài Liệu
     @FXML
     private void handleAddDocument() {
         try {
-            // Tải FXML
+            // Tải FXML cho cửa sổ thêm tài liệu
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddDoc-view.fxml"));
             Parent root = loader.load();
 
-            // Tạo và thiết lập Stage mới
             Stage stage = new Stage();
             stage.setTitle("Thêm Tài Liệu");
-            stage.initModality(Modality.APPLICATION_MODAL); // Đảm bảo cửa sổ mới là modal
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
 
-            // Thiết lập tham chiếu cho AddDocumentController
+            // Lấy controller của AddDocumentController và truyền các tham chiếu cần thiết
             AddDocumentController controller = loader.getController();
+            AddDocumentController.setMainMenuController(this); // "this" là MainMenuController
             controller.setStage(stage);
 
-            // Hiển thị cửa sổ
+            // Thiết lập callback để cập nhật TableView sau khi thêm tài liệu
+            // Gọi phương thức cập nhật TableView
+            controller.setOnDocumentAddedCallback(this::refreshTable);
+
             stage.showAndWait(); // Đợi cho đến khi cửa sổ được đóng
         } catch (IOException e) {
-            e.printStackTrace(); // Xử lý lỗi nếu cần
+            e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void initialize() {
+        // Khởi tạo các cột của TableView
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        publisherColumn.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        publishedDateColumn.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
+
+        // Gán ObservableList vào TableView
+        documentTableView.setItems(documentList);
+
+        refreshTable(); // Cập nhật TableView
     }
 
     // Xử lý sự kiện nút Xóa Tài Liệu
@@ -98,5 +132,24 @@ public class MainMenuController {
         alert.showAndWait();
     }
 
+    private void refreshTable() {
+        documentTableView.getItems().clear();
+
+        List<Document> documents = documentManager.getAllDocuments();
+
+        // In ra số lượng tài liệu để kiểm tra
+        System.out.println("Số lượng tài liệu: " + documents.size());
+
+        documentTableView.getItems().addAll(documents);
+    }
+
+    public ObservableList<Document> getDocumentList() {
+        return documentList;
+    }
+
+    public void setDocumentList(ObservableList<Document> documentList) {
+        this.documentList = documentList;
+    }
+    
 }
 

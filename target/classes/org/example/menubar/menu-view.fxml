@@ -35,8 +35,11 @@
             <TableColumn text="Tác giả" fx:id="authorColumn" prefWidth="150">
                 <cellValueFactory><PropertyValueFactory property="author"/></cellValueFactory>
             </TableColumn>
-            <TableColumn text="Năm" fx:id="yearColumn" prefWidth="100">
-                <cellValueFactory><PropertyValueFactory property="year"/></cellValueFactory>
+            <TableColumn text="Nhà xuất bản" fx:id="publisherColumn" prefWidth="100">
+                <cellValueFactory><PropertyValueFactory property="publisher"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Ngày xuất bản" fx:id="publishedDateColumn" prefWidth="100">
+                <cellValueFactory><PropertyValueFactory property="publishedDate"/></cellValueFactory>
             </TableColumn>
         </columns>
     </TableView>

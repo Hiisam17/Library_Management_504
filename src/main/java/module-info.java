@@ -5,7 +5,6 @@ module org.example.menubar {
     requires org.json;
     requires java.sql;
 
-
     opens org.example.menubar to javafx.fxml;
     exports org.example.menubar;
 }

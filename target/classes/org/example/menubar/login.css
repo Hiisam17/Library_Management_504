@@ -17,7 +17,18 @@
 .button:hover {
     -fx-background-color: #0056b3; /* Màu nền nút khi hover */
 }
+.DAO-button {
+    -fx-background-color: transparent; /* Giữ nền trong suốt */
+        -fx-border-color: transparent; /* Không viền */
+        -fx-text-fill: #000000; /* Màu chữ mặc định */
+        -fx-underline: true; /* Gạch chân chữ */
+}
 
+/* Hiệu ứng khi di chuột vào nút "Đăng ký" */
+.DAO-button:hover {
+    -fx-text-fill: #007bff;
+    -fx-background-color: transparent;
+}
 .label {
     -fx-text-fill: #007bff; /* Màu của label */
     -fx-font-size: 16px;
