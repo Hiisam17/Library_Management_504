@@ -102,7 +102,24 @@ public class MainMenuController {
     // Xử lý sự kiện nút Xóa Tài Liệu
     @FXML
     private void handleDeleteDocument() {
-        showAlert("Xóa Tài Liệu", "Chức năng xóa tài liệu đang trong quá trình phát triển.");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Delete_Doc.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Xóa Tài Liệu");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+
+            // Lấy controller của DeleteDocumentController và truyền các tham chiếu cần thiết
+            DeleteDocumentController controller = loader.getController();
+            controller.setMainMenuController(this); // truyền MainMenuController hiện tại
+            controller.setStage(stage);
+
+            stage.showAndWait(); // Đợi cho đến khi cửa sổ được đóng
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Xử lý sự kiện nút Sửa Tài Liệu
@@ -128,14 +145,14 @@ public class MainMenuController {
     }
 
     // Hàm hiển thị thông báo
-    private void showAlert(String title, String message) {
+    void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
 
-    private void refreshTable() {
+    void refreshTable() {
         documentTableView.getItems().clear();
 
         List<Document> documents = documentManager.getAllDocuments();
@@ -175,6 +192,11 @@ public class MainMenuController {
             return false;
         }
 
+    }
+
+    public void deleteDocumentById(String id) {
+        documentManager.deleteDocumentById(id); // Gọi phương thức trong DatabaseManager
+        refreshTable(); // Cập nhật lại TableView sau khi xóa
     }
 }
 

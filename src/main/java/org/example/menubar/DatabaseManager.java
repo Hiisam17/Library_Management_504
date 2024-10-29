@@ -1,9 +1,6 @@
 package org.example.menubar;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import static javafx.scene.input.DataFormat.URL;
 
@@ -65,5 +62,7 @@ public class DatabaseManager {
             System.out.println(e.getMessage());
         }
     } */
+
+
 }
 
