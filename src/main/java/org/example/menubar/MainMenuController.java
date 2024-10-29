@@ -154,27 +154,6 @@ public class MainMenuController {
         this.documentList = documentList;
     }
 
-    public static class UserDAO {
-        public boolean register(String username, String password) {
-            String sql = "INSERT INTO users (user_name, password, is_admin) VALUES (?, ?, false)";
 
-            try (Connection conn = SQL_connect();
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-                pstmt.setString(1, username);
-                pstmt.setString(2, password);
-
-                int rowsAffected = pstmt.executeUpdate();// true nếu đăng ký thành công
-
-                return rowsAffected > 0;
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-            return false;
-        }
-
-    }
 }
 

@@ -3,6 +3,7 @@ package org.example.menubar;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -10,6 +11,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -93,8 +95,33 @@ public class LoginController {
 
         return false;
     }
+    @FXML
+    private void handleRegister(ActionEvent actionEvent) {
+        try {
+            UserDAO DAO = new UserDAO();
+            // Tải giao diện FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UserDAO.fxml"));
+            Parent root = loader.load(); // Tải tệp FXML
 
-    public void handleRegister(ActionEvent actionEvent) {
+            // Tạo một Stage mới cho cửa sổ đăng ký
+            Stage stage = new Stage();
+            stage.setTitle("Đăng ký");
+            stage.initModality(Modality.APPLICATION_MODAL); // Cửa sổ này sẽ ở trên cửa sổ chính
+
+            // Tạo Scene với root từ tệp FXML
+            Scene scene = new Scene(root); // Tạo Scene mới với root đã tải
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("login.css")).toExternalForm()); // Thêm CSS
+
+            stage.setScene(scene); // Đặt Scene cho Stage
+
+            DAO.setStage(stage);
+            // Hiển thị cửa sổ mới
+            stage.show();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Có lỗi xảy ra khi tải giao diện: " + e.getMessage());
+            alert.showAndWait(); // Hiển thị thông báo lỗi nếu có
+        }
     }
 }
 
