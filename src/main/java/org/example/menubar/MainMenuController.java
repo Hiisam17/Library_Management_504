@@ -102,14 +102,55 @@ public class MainMenuController {
     // Xử lý sự kiện nút Xóa Tài Liệu
     @FXML
     private void handleDeleteDocument() {
-        showAlert("Xóa Tài Liệu", "Chức năng xóa tài liệu đang trong quá trình phát triển.");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Delete_Doc.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Xóa Tài Liệu");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+
+            // Lấy controller của DeleteDocumentController và truyền các tham chiếu cần thiết
+            DeleteDocumentController controller = loader.getController();
+            controller.setMainMenuController(this); // truyền MainMenuController hiện tại
+            controller.setStage(stage);
+
+            stage.showAndWait(); // Đợi cho đến khi cửa sổ được đóng
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    // Xử lý sự kiện nút Sửa Tài Liệu
     @FXML
     private void handleEditDocument() {
-        showAlert("Sửa Tài Liệu", "Chức năng sửa tài liệu đang trong quá trình phát triển.");
+        Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
+        if (selectedDocument == null) {
+            showAlert("Thông báo", "Vui lòng chọn tài liệu để sửa.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditDoc-view.fxml"));
+            Parent root = loader.load();
+
+            EditDocumentController controller = loader.getController();
+            controller.setStage(new Stage());
+            controller.setDocumentManager(documentManager);
+            controller.setDocument(selectedDocument);
+            controller.setOnDocumentEdited(this::refreshTable);
+
+            Stage stage = new Stage();
+            stage.setTitle("Sửa Tài Liệu");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     // Xử lý sự kiện nút Tìm Kiếm Tài Liệu
     @FXML
@@ -128,23 +169,38 @@ public class MainMenuController {
     }
 
     // Hàm hiển thị thông báo
-    private void showAlert(String title, String message) {
+    void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
 
-    private void refreshTable() {
+    void refreshTable() {
+        // Xóa sạch dữ liệu cũ trong bảng
         documentTableView.getItems().clear();
 
+        // Lấy danh sách tài liệu từ cơ sở dữ liệu thông qua documentManager
         List<Document> documents = documentManager.getAllDocuments();
+
+        // Kiểm tra nếu không có tài liệu nào hoặc lỗi kết nối cơ sở dữ liệu
+        if (documents == null) {
+            System.out.println("Lỗi: Không thể lấy dữ liệu tài liệu.");
+            showAlert("Lỗi kết nối", "Không thể kết nối tới cơ sở dữ liệu. Vui lòng kiểm tra lại kết nối.");
+            return;
+        }
 
         // In ra số lượng tài liệu để kiểm tra
         System.out.println("Số lượng tài liệu: " + documents.size());
 
+        if (documents.isEmpty()) {
+            System.out.println("Danh sách tài liệu hiện tại trống.");
+        }
+
+        // Thêm tất cả tài liệu vào TableView
         documentTableView.getItems().addAll(documents);
     }
+
 
     public ObservableList<Document> getDocumentList() {
         return documentList;
@@ -154,6 +210,31 @@ public class MainMenuController {
         this.documentList = documentList;
     }
 
+    public static class UserDAO {
+        public boolean register(String username, String password) {
+            String sql = "INSERT INTO users (user_name, password, is_admin) VALUES (?, ?, false)";
 
+            try (Connection conn = SQL_connect();
+                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+                pstmt.setString(1, username);
+                pstmt.setString(2, password);
+
+                int rowsAffected = pstmt.executeUpdate();// true nếu đăng ký thành công
+
+                return rowsAffected > 0;
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+            return false;
+        }
+
+    }
+
+    public void deleteDocumentById(String id) {
+        documentManager.deleteDocumentById(id); // Gọi phương thức trong DatabaseManager
+        refreshTable(); // Cập nhật lại TableView sau khi xóa
+    }
 }
-

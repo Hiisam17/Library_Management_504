@@ -1,54 +1,42 @@
 package org.example.menubar;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class DeleteDocumentController {
 
     @FXML
-    private TextField idField;
+    private TextField deleteIdField;
 
     private Stage stage;
+    private MainMenuController mainMenuController;
+
+    public void setMainMenuController(MainMenuController mainMenuController) {
+        this.mainMenuController = mainMenuController;
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    // Hàm xử lý khi nhấn nút "Xóa"
+    // Xử lý sự kiện khi người dùng nhấn "Xác nhận Xóa"
     @FXML
-    private void handleDeleteDocument() {
-        String id = idField.getText();
-        if (id == null || id.isEmpty()) {
-            showAlert("Lỗi", "Vui lòng nhập ID tài liệu");
-            return;
-        }
-
-        boolean isDeleted = Library.deleteDocumentById(id); // Giả sử bạn có hàm này trong lớp Library
-
-        if (isDeleted) {
-            showAlert("Thành công", "Tài liệu với ID " + id + " đã được xóa.");
-            idField.clear(); // Xóa nội dung ô nhập sau khi xóa thành công
+    private void handleConfirmDelete() {
+        String id = deleteIdField.getText();
+        if (id != null && !id.isEmpty()) {
+            mainMenuController.deleteDocumentById(id); // Gọi phương thức xóa từ MainMenuController
+            mainMenuController.refreshTable(); // Cập nhật lại danh sách
+            stage.close(); // Đóng cửa sổ sau khi xóa xong
         } else {
-            showAlert("Thất bại", "Không tìm thấy tài liệu với ID " + id);
+            mainMenuController.showAlert("Lỗi", "Vui lòng nhập ID của tài liệu cần xóa.");
         }
     }
 
-    // Hàm xử lý khi nhấn nút "Quay lại"
+    // Xử lý sự kiện khi người dùng nhấn "Hủy"
     @FXML
-    private void handleBack() {
-        if (stage != null) {
-            stage.close();
-        }
-    }
-
-    // Hàm hiển thị thông báo
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void handleCancel() {
+        stage.close();
     }
 }
 

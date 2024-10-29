@@ -1,9 +1,6 @@
 package org.example.menubar;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import static javafx.scene.input.DataFormat.URL;
 
@@ -14,7 +11,7 @@ public class DatabaseManager {
 
     public DatabaseManager(String url) {
         this.url = url;
-        dropTableIfExists(); // Xóa bảng nếu tồn tại
+        //dropTableIfExists(); // Xóa bảng nếu tồn tại
         createNewTable(); // Gọi phương thức tạo bảng
     }
 
@@ -53,7 +50,7 @@ public class DatabaseManager {
         }
     }
 
-    // Phương thức xóa bảng nếu tồn tại
+/*    // Phương thức xóa bảng nếu tồn tại
     public void dropTableIfExists() {
         String sql = "DROP TABLE IF EXISTS documents";
 
@@ -64,6 +61,8 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-    }
+    } */
+
+
 }
 

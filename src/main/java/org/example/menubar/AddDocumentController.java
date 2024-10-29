@@ -93,7 +93,7 @@ public class AddDocumentController {
             try {
                 // Use DocumentManager to insert the document
                 DocumentManager documentManager = new DocumentManager(new DatabaseManager());
-                documentManager.insertDocument(idField.getId(), titleField.getText(), authorField.getText(), publisherField.getText(), formattedDate);
+                documentManager.insertDocument(idField.getText(), titleField.getText(), authorField.getText(), publisherField.getText(), formattedDate);
 
                 showAlert("Success", "Document added successfully!");
 

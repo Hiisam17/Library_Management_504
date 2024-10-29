@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.DeleteDocumentController" alignment="CENTER" spacing="10">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-
-    <Label text="Xóa Tài Liệu"/>
-    <TextField fx:id="idField" promptText="ID Tài Liệu"/>
-    <Button text="Xóa" onAction="#handleDeleteDocument"/>
-    <Button text="Quay lại" onAction="#handleBack"/>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.DeleteDocumentController" spacing="10" alignment="CENTER">
+    <Label text="Nhập ID của tài liệu cần xóa:"/>
+    <TextField fx:id="deleteIdField" promptText="ID tài liệu"/>
+    <Button text="Xác nhận Xóa" onAction="#handleConfirmDelete"/>
+    <Button text="Hủy" onAction="#handleCancel"/>
 </VBox>
+

@@ -65,7 +65,7 @@ public class UserDAO {
             // Chèn tên người dùng vào cơ sở dữ liệu
             try (PreparedStatement insertStmt = conn.prepareStatement(insertUserSql)) {
                 insertStmt.setString(1, username);
-                insertStmt.setString(2, password); // Bạn nên mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+                insertStmt.setString(2, password);
 
                 int rowsAffected = insertStmt.executeUpdate();
                 return rowsAffected > 0; // true nếu đăng ký thành công
