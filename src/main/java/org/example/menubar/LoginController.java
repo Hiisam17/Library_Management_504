@@ -18,10 +18,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.example.menubar.DatabaseManager.SQL_connect;
 
 public class LoginController {
+    private Main mainApp;
+
+    public void setMainApp(Main mainApp) {
+        this.mainApp = mainApp;
+    }
 
     @FXML
     private TextField usernameField;
@@ -45,22 +51,29 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if (validateLogin(username, password)) {
-            // Chuyển đến menu chính
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("menu-view.fxml"));
-                Parent mainMenuRoot = loader.load();
-                Stage stage = (Stage) usernameField.getScene().getWindow();
-                stage.setScene(new Scene(mainMenuRoot, 600, 400));
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (mainApp != null) {
+            // Sử dụng phương thức validateLogin() để kiểm tra thông tin đăng nhập
+            Boolean isAdmin = validateLogin(username, password);
+            if (isAdmin != null) { // Đảm bảo rằng đăng nhập thành công
+                System.out.println("Login successful! Is Admin: " + isAdmin);
+                try {
+                    FXMLLoader loader;
+                    if (isAdmin) { // Nếu isAdmin là true, chuyển đến giao diện admin
+                        loader = new FXMLLoader(getClass().getResource("menu-view.fxml"));
+                    } else { // Nếu isAdmin là false, chuyển đến giao diện user
+                        loader = new FXMLLoader(getClass().getResource("user-view.fxml"));
+                    }
+                    Parent mainMenuRoot = loader.load();
+                    Stage stage = (Stage) usernameField.getScene().getWindow();
+                    stage.setScene(new Scene(mainMenuRoot, 600, 400));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                showAlert("Đăng nhập thất bại!", "Tên đăng nhập hoặc mật khẩu không đúng.");
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi");
-            alert.setHeaderText("Đăng nhập thất bại!");
-            alert.setContentText("Tên đăng nhập hoặc mật khẩu không đúng.");
-            alert.showAndWait();
+            showAlert("Lỗi hệ thống", "Ứng dụng chưa được khởi tạo đúng cách.");
         }
     }
 
@@ -73,8 +86,8 @@ public class LoginController {
 
 
 
-    private boolean validateLogin(String username, String password) {
-        String sql = "SELECT * FROM users WHERE user_name = ? AND password = ?";
+    private Boolean validateLogin(String username, String password) {
+        String sql = "SELECT is_admin FROM users WHERE user_name = ? AND password = ?";
 
         try (Connection conn = SQL_connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -84,17 +97,30 @@ public class LoginController {
 
             ResultSet rs = pstmt.executeQuery();
 
-            // Nếu có kết quả thì đăng nhập thành công
-            return rs.next();
+            // Nếu có kết quả, lấy giá trị của cột is_admin dưới dạng số nguyên
+            if (rs.next()) {
+                int isAdminInt = rs.getInt("is_admin"); // Lấy is_admin dưới dạng int
+                boolean isAdmin = isAdminInt == 1; // Kiểm tra nếu giá trị là 1 thì là admin
+                System.out.println("Debug - isAdmin (int): " + isAdminInt + ", isAdmin (boolean): " + isAdmin);
+                return isAdmin;
+            }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
-        return false;
+        return null; // Trả về null nếu thông tin đăng nhập không hợp lệ
     }
 
     public void handleRegister(ActionEvent actionEvent) {
+    }
+
+    private void showAlert(String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi");
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
 
