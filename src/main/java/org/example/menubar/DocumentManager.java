@@ -76,4 +76,29 @@ public class DocumentManager {
             System.out.println("Lỗi khi xóa tài liệu: " + e.getMessage());
         }
     }
+
+    public void updateDocument(Document document) {
+        String sql = "UPDATE documents SET title = ?, author = ?, publisher = ?, publishedDate = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseManager.SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, document.getTitle());
+            pstmt.setString(2, document.getAuthor());
+            pstmt.setString(3, document.getPublisher());
+            pstmt.setString(4, document.getPublishedDate());
+            pstmt.setString(5, document.getId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Cập nhật tài liệu thành công.");
+            } else {
+                System.out.println("Không tìm thấy tài liệu với ID: " + document.getId());
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi cập nhật tài liệu: " + e.getMessage());
+        }
+    }
+
 }

@@ -122,11 +122,35 @@ public class MainMenuController {
         }
     }
 
-    // Xử lý sự kiện nút Sửa Tài Liệu
     @FXML
     private void handleEditDocument() {
-        showAlert("Sửa Tài Liệu", "Chức năng sửa tài liệu đang trong quá trình phát triển.");
+        Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
+        if (selectedDocument == null) {
+            showAlert("Thông báo", "Vui lòng chọn tài liệu để sửa.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditDoc-view.fxml"));
+            Parent root = loader.load();
+
+            EditDocumentController controller = loader.getController();
+            controller.setStage(new Stage());
+            controller.setDocumentManager(documentManager);
+            controller.setDocument(selectedDocument);
+            controller.setOnDocumentEdited(this::refreshTable);
+
+            Stage stage = new Stage();
+            stage.setTitle("Sửa Tài Liệu");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     // Xử lý sự kiện nút Tìm Kiếm Tài Liệu
     @FXML
@@ -153,15 +177,30 @@ public class MainMenuController {
     }
 
     void refreshTable() {
+        // Xóa sạch dữ liệu cũ trong bảng
         documentTableView.getItems().clear();
 
+        // Lấy danh sách tài liệu từ cơ sở dữ liệu thông qua documentManager
         List<Document> documents = documentManager.getAllDocuments();
+
+        // Kiểm tra nếu không có tài liệu nào hoặc lỗi kết nối cơ sở dữ liệu
+        if (documents == null) {
+            System.out.println("Lỗi: Không thể lấy dữ liệu tài liệu.");
+            showAlert("Lỗi kết nối", "Không thể kết nối tới cơ sở dữ liệu. Vui lòng kiểm tra lại kết nối.");
+            return;
+        }
 
         // In ra số lượng tài liệu để kiểm tra
         System.out.println("Số lượng tài liệu: " + documents.size());
 
+        if (documents.isEmpty()) {
+            System.out.println("Danh sách tài liệu hiện tại trống.");
+        }
+
+        // Thêm tất cả tài liệu vào TableView
         documentTableView.getItems().addAll(documents);
     }
+
 
     public ObservableList<Document> getDocumentList() {
         return documentList;
