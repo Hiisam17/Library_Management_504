@@ -101,4 +101,32 @@ public class DocumentManager {
         }
     }
 
+    public List<Document> searchDocuments(String keyword) {
+        List<Document> results = new ArrayList<>();
+        String sql = "SELECT * FROM documents WHERE title LIKE ? OR author LIKE ?";
+
+        try (Connection conn = SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + keyword + "%");
+            pstmt.setString(2, "%" + keyword + "%");
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Document document = new Document(
+                        rs.getString("id"),
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getString("publisher"),
+                        rs.getString("publishedDate")
+                );
+                results.add(document);
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi tìm kiếm tài liệu: " + e.getMessage());
+        }
+        return results;
+    }
+
 }

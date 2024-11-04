@@ -155,7 +155,20 @@ public class MainMenuController {
     // Xử lý sự kiện nút Tìm Kiếm Tài Liệu
     @FXML
     private void handleSearchDocument() {
-        showAlert("Tìm Kiếm Tài Liệu", "Chức năng tìm kiếm tài liệu đang trong quá trình phát triển.");
+        String keyword = searchField.getText().trim();
+
+        // Kiểm tra từ khóa tìm kiếm không rỗng
+        if (keyword.isEmpty()) {
+            showAlert("Lỗi", "Vui lòng nhập từ khóa tìm kiếm.");
+            return;
+        }
+
+        // Lấy kết quả tìm kiếm từ DocumentManager
+        List<Document> searchResults = documentManager.searchDocuments(keyword);
+
+        // Xóa dữ liệu cũ và thêm dữ liệu mới vào TableView
+        documentTableView.getItems().clear();
+        documentTableView.getItems().addAll(searchResults);
     }
 
     @FXML
