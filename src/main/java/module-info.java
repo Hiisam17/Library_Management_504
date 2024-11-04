@@ -4,6 +4,7 @@ module org.example.menubar {
     requires java.net.http;
     requires org.json;
     requires java.sql;
+    requires java.desktop;
 
     opens org.example.menubar to javafx.fxml;
     exports org.example.menubar;
