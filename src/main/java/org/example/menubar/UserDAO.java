@@ -1,8 +1,7 @@
 package org.example.menubar;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -19,27 +18,41 @@ import java.util.Objects;
 import static org.example.menubar.DatabaseManager.SQL_connect;
 
 public class UserDAO {
-
     @FXML
     private TextField usernameField;
+
     @FXML
     private PasswordField passwordField;
-    @FXML
-    private ImageView logoImageView;
+
     @FXML
     private PasswordField confirmPasswordField;
+
+    @FXML
+    private ImageView logoImageView;
+
     private Stage stage;
+
     @FXML
     public void initialize() {
-        // Tải hình ảnh vào ImageView
-        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png"))); // Đường dẫn đến hình ảnh
-        logoImageView.setImage(logo);
+        try {
+            // Tải hình ảnh vào ImageView
+            Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png")));
+            logoImageView.setImage(logo);
+        } catch (NullPointerException e) {
+            System.err.println("Không tìm thấy hình ảnh: Image_login.png");
+        }
     }
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public boolean validateRegister(String username, String password, String confirmPassword) {
+    private boolean validateRegister(String username, String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            showAlert("Thông báo", "Mật khẩu không khớp!", Alert.AlertType.ERROR);
+            return false;
+        }
+
         String checkUserSql = "SELECT COUNT(*) FROM users WHERE user_name = ?";
         String insertUserSql = "INSERT INTO users (user_name, password) VALUES (?, ?)";
 
@@ -51,14 +64,7 @@ public class UserDAO {
             ResultSet rs = checkStmt.executeQuery();
 
             if (rs.next() && rs.getInt(1) > 0) {
-                // Tên người dùng đã tồn tại
                 showAlert("Thông báo", "Tên người dùng đã tồn tại!", Alert.AlertType.ERROR);
-                return false; // Hoặc có thể ném ra ngoại lệ
-            }
-
-            // Kiểm tra mật khẩu và mật khẩu xác nhận
-            if (!password.equals(confirmPassword)) {
-                showAlert("Thông báo", "Mật khẩu không khớp!", Alert.AlertType.ERROR);
                 return false;
             }
 
@@ -68,39 +74,49 @@ public class UserDAO {
                 insertStmt.setString(2, password);
 
                 int rowsAffected = insertStmt.executeUpdate();
-                return rowsAffected > 0; // true nếu đăng ký thành công
+                return rowsAffected > 0;
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Lỗi SQL: " + e.getMessage());
         }
 
         return false;
     }
+
     private void showAlert(String title, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setHeaderText(null); // Không hiển thị header
-        alert.setContentText(message); // Nội dung thông báo
-        alert.showAndWait(); // Hiển thị alert và chờ người dùng đóng
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
+
     @FXML
     private void DAOhandleRegister(ActionEvent actionEvent) {
         String username = usernameField.getText();
         String password = passwordField.getText();
-        String confirmPassword=confirmPasswordField.getText();
-        if(validateRegister(username, password,confirmPassword))
-        {
+        String confirmPassword = confirmPasswordField.getText();
+
+        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            showAlert("Lỗi", "Vui lòng điền tất cả các trường!", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (validateRegister(username, password, confirmPassword)) {
             showAlert("Thành công", "Đăng ký thành công!", Alert.AlertType.INFORMATION);
         }
     }
 
     @FXML
     private void DAOhandleExit(ActionEvent actionEvent) {
-           if(stage!=null) {
-               stage.close(); // Đóng cửa sổ hiện tại
-           }
+        if (stage != null) {
+            stage.close();
+        } else {
+            Stage currentStage = (Stage) usernameField.getScene().getWindow();
+            if (currentStage != null) {
+                currentStage.close();
+            }
+        }
     }
-
-
 }
