@@ -155,20 +155,20 @@ public class MainMenuController {
     // Xử lý sự kiện nút Tìm Kiếm Tài Liệu
     @FXML
     private void handleSearchDocument() {
-        String keyword = searchField.getText().trim();
+        try {
+            // Tải FXML của giao diện tìm kiếm
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/menubar/SearchDoc-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
 
-        // Kiểm tra từ khóa tìm kiếm không rỗng
-        if (keyword.isEmpty()) {
-            showAlert("Lỗi", "Vui lòng nhập từ khóa tìm kiếm.");
-            return;
+            // Tạo cửa sổ mới cho giao diện tìm kiếm
+            Stage searchStage = new Stage();
+            searchStage.setTitle("Tìm kiếm Tài liệu");
+            searchStage.setScene(scene);
+            searchStage.initModality(Modality.APPLICATION_MODAL); // Chặn cửa sổ khác cho đến khi đóng
+            searchStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        // Lấy kết quả tìm kiếm từ DocumentManager
-        List<Document> searchResults = documentManager.searchDocuments(keyword);
-
-        // Xóa dữ liệu cũ và thêm dữ liệu mới vào TableView
-        documentTableView.getItems().clear();
-        documentTableView.getItems().addAll(searchResults);
     }
 
     @FXML

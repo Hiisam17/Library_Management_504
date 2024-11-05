@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.SearchDocumentController" alignment="CENTER" spacing="10">
+    <TextField fx:id="searchField" promptText="Nhập từ khóa tìm kiếm"/>
+    <Button text="Tìm kiếm" onAction="#handleSearch"/>
+
+    <TableView fx:id="documentTableView" prefHeight="300" prefWidth="400">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn"/>
+            <TableColumn text="Tiêu đề" fx:id="titleColumn"/>
+            <TableColumn text="Tác giả" fx:id="authorColumn"/>
+            <TableColumn text="Nhà xuất bản" fx:id="publisherColumn"/>
+            <TableColumn text="Ngày xuất bản" fx:id="publishedDateColumn"/>
+        </columns>
+    </TableView>
+</VBox>
+
