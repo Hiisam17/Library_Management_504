@@ -5,23 +5,41 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<GridPane fx:controller="org.example.menubar.LoginController" xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="10" vgap="10">
-    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.LoginController" spacing="0" style="-fx-background-color: #D3D3D3;" stylesheets="@login.css">
 
-    <ImageView fx:id="logoImageView" fitWidth="400" fitHeight="200" GridPane.columnSpan="2" GridPane.rowIndex="0"/> <!-- Hình ảnh logo -->
-    <Label text="Tên đăng nhập:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <TextField fx:id="usernameField" promptText="Nhập tên đăng nhập" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <!-- Phần bên trái (Thông tin tiêu đề) -->
+    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #2E3B55; -fx-pref-width: 300;">
+        <Label text="Library" style="-fx-text-fill: #FFFFFF; -fx-font-size: 36px; -fx-font-weight: bold;"/>
+        <Label text="Books and Knowledge" style="-fx-text-fill: #FFFFFF; -fx-font-size: 18px;"/>
+        <Label text="© All Rights Reserved" style="-fx-text-fill: #FFFFFF; -fx-font-size: 10px; -fx-padding: 20 0 0 0;"/>
+    </VBox>
 
-    <Label text="Mật khẩu:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <PasswordField fx:id="passwordField" promptText="Nhập mật khẩu" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <!-- Phần bên phải (Khu vực đăng nhập) -->
+    <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #FFFFFF; -fx-padding: 30;" prefWidth="400">
+        <Label text="Secure Login" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-    <Button text="Đăng ký" onAction="#handleRegister" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.columnSpan="1" styleClass="DAO-button"/>
-    <Button text="Đăng nhập" onAction="#handleLogin" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-    <Button text="Thoát" onAction="#handleExit" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-</GridPane>
+        <VBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="Username" style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+            <TextField fx:id="usernameField" promptText="Username" style="-fx-font-size: 14px; -fx-prompt-text-fill: #C0C0C0;"/>
+
+            <Label text="Password" style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+            <PasswordField fx:id="passwordField" promptText="Password" style="-fx-font-size: 14px; -fx-prompt-text-fill: #C0C0C0;"/>
+        </VBox>
+
+        <VBox spacing="10">
+            <Button text="Login" onAction="#handleLogin" style="-fx-background-color: #2E3B55; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-pref-width: 150;"/>
+            <Button text="Cancel" onAction="#handleExit" style="-fx-background-color: #2E3B55; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-pref-width: 150;"/>
+            <Button text="Register" onAction="#handleRegister" style="-fx-background-color: #2E3B55; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-pref-width: 150;" />
+        </VBox>
+
+
+    </VBox>
+</HBox>
+
 
 
 

@@ -20,7 +20,7 @@
     <TextField fx:id="searchField" promptText="Nhập tiêu đề sách"/>
     <Button text="Tìm Kiếm" onAction="#handleSearch" styleClass="menu-button"/>
 
-    <!-- Bảng hiển thị danh sách tài liệu -->
+    <!-- Bảng hiển thị danh sách tài liệu giống với bảng của admin -->
     <Label text="Danh sách Tài liệu"/>
     <TableView fx:id="documentTableView" prefHeight="300" prefWidth="400">
         <columns>
@@ -42,3 +42,5 @@
         </columns>
     </TableView>
 </VBox>
+
+

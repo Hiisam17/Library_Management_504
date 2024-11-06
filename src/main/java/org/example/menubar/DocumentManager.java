@@ -101,6 +101,7 @@ public class DocumentManager {
         }
     }
 
+<<<<<<< HEAD
     public boolean borrowDocument(String id) {
         String checkAvailabilitySql = "SELECT isAvailable FROM document WHERE id = ?";
         String borrowSql = "UPDATE document SET isAvailable = false WHERE id = ?";
@@ -167,5 +168,38 @@ public class DocumentManager {
         }
 
         return documents;
+=======
+    public List<Document> searchDocuments(String keyword) {
+        List<Document> results = new ArrayList<>();
+        String sql = "SELECT * FROM documents WHERE title LIKE ? OR author LIKE ?";
+
+        try (Connection conn = SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + keyword + "%");
+            pstmt.setString(2, "%" + keyword + "%");
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Document document = new Document(
+                        rs.getString("id"),
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getString("publisher"),
+                        rs.getString("publishedDate")
+                );
+                results.add(document);
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi tìm kiếm tài liệu: " + e.getMessage());
+        }
+        return results;
+>>>>>>> 4ab05c11aa630c4026bc5910c7bbece502114dd6
     }
+
+    public boolean borrowDocument(String id) {
+        return false;
+    }
+
 }

@@ -15,12 +15,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.example.menubar.DatabaseManager.SQL_connect;
 
@@ -44,8 +44,8 @@ public class LoginController {
     @FXML
     public void initialize() {
         // Tải hình ảnh vào ImageView
-        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png"))); // Đường dẫn đến hình ảnh
-        logoImageView.setImage(logo);
+        //Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png"))); // Đường dẫn đến hình ảnh
+        //logoImageView.setImage(logo);
     }
 
     @FXML
@@ -116,29 +116,43 @@ public class LoginController {
     @FXML
     private void handleRegister(ActionEvent actionEvent) {
         try {
-            // Tải giao diện FXML
+            // Tải giao diện FXML cho cửa sổ đăng ký
             FXMLLoader loader = new FXMLLoader(getClass().getResource("UserDAO.fxml"));
             Parent root = loader.load(); // Tải tệp FXML
 
             // Tạo một Stage mới cho cửa sổ đăng ký
             Stage stage = new Stage();
             stage.setTitle("Đăng ký");
-            stage.initModality(Modality.APPLICATION_MODAL); // Cửa sổ này sẽ ở trên cửa sổ chính
+            stage.initModality(Modality.APPLICATION_MODAL); // Đặt cửa sổ này ở trên cửa sổ chính
+            stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow()); // Đặt chủ sở hữu của cửa sổ hiện tại
 
             // Tạo Scene với root từ tệp FXML
-            Scene scene = new Scene(root); // Tạo Scene mới với root đã tải
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("login.css")).toExternalForm()); // Thêm CSS
+            Scene scene = new Scene(root);
+
+            // Thêm CSS nếu tồn tại
+            URL cssURL = getClass().getResource("login.css");
+            if (cssURL != null) {
+                scene.getStylesheets().add(cssURL.toExternalForm());
+            } else {
+                System.out.println("Không tìm thấy tệp CSS, tiếp tục mà không có CSS.");
+            }
 
             stage.setScene(scene); // Đặt Scene cho Stage
 
             // Hiển thị cửa sổ mới
-            stage.show();
+            stage.showAndWait(); // Đợi cửa sổ đăng ký đóng
+
         } catch (IOException e) {
+            // Thông báo lỗi khi không tải được tệp FXML
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Có lỗi xảy ra khi tải giao diện: " + e.getMessage());
-            alert.showAndWait(); // Hiển thị thông báo lỗi nếu có
+           // alert.setTitle("Lỗi");
+          //  alert.setHeaderText("Không thể mở cửa sổ đăng ký");
+            alert.setContentText("Lỗi: " + e.getMessage());
+            alert.showAndWait(); // Hiển thị thông báo lỗi
+            e.printStackTrace();
         }
     }
+
 
     private void showAlert(String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
