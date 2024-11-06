@@ -1,10 +1,7 @@
 package org.example.usermenu;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
@@ -39,6 +36,9 @@ public class UserMenuController implements Initializable {
   @FXML
   private TableColumn<Document, String> publishedDateColumn;
 
+  @FXML
+  private TableColumn<Document, Boolean> isAvailableColumn;
+
 
   private DocumentManager documentManager;
 
@@ -53,6 +53,20 @@ public class UserMenuController implements Initializable {
     authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
     publisherColumn.setCellValueFactory(new PropertyValueFactory<>("publisher"));
     publishedDateColumn.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
+    isAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("isAvailable"));
+
+    // Sử dụng cellFactory tùy chỉnh để hiển thị 1 và 0 thay vì TRUE và FALSE
+    isAvailableColumn.setCellFactory(column -> new TableCell<Document, Boolean>() {
+      @Override
+      protected void updateItem(Boolean item, boolean empty) {
+        super.updateItem(item, empty);
+        if (empty || item == null) {
+          setText(null);
+        } else {
+          setText(item ? "1" : "0");
+        }
+      }
+    });
 
     // Tải dữ liệu từ SQL và hiển thị
     refreshTable();
@@ -69,7 +83,7 @@ public class UserMenuController implements Initializable {
     boolean success = documentManager.borrowDocument(selectedDocument.getId());
     if (success) {
       showAlert("Thành công", "Bạn đã mượn tài liệu thành công.");
-      refreshTable();
+      refreshTable(); // Tải lại dữ liệu sau khi mượn tài liệu
     } else {
       showAlert("Thất bại", "Không thể mượn tài liệu. Vui lòng thử lại.");
     }

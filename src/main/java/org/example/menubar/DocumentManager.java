@@ -179,11 +179,11 @@ public class DocumentManager {
 
     public List<Document> getAllDocument() {
         List<Document> documents = new ArrayList<>();
-        String sql = "SELECT id, title, author, publisher, publishedDate FROM document";
+        String sql = "SELECT id, title, author, publisher, publishedDate, isAvailable FROM document";
 
         try (Connection conn = SQL_connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 Document document = new Document();
@@ -192,13 +192,11 @@ public class DocumentManager {
                 document.setAuthor(rs.getString("author"));
                 document.setPublisher(rs.getString("publisher"));
                 document.setPublishedDate(rs.getString("publishedDate"));
+                document.setIsAvailable(rs.getInt("isAvailable") == 1); // Chuyển đổi giá trị từ số nguyên sang boolean
                 documents.add(document);
             }
-
-            System.out.println("Successfully retrieved " + documents.size() + " documents.");
-
         } catch (SQLException e) {
-            System.err.println("Error retrieving documents: " + e.getMessage());
+            System.out.println("Lỗi khi lấy dữ liệu tài liệu: " + e.getMessage());
         }
 
         return documents;
