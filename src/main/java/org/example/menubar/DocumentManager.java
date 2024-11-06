@@ -1,5 +1,7 @@
 package org.example.menubar;
 
+import javafx.scene.control.Alert;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,27 +16,59 @@ public class DocumentManager {
         this.dbManager = dbManager;
     }
 
-    public void insertDocument(String id, String title, String author, String publisher, String publishedDate) {
-        String sql = "INSERT INTO documents(id, title, author, publisher, publishedDate) VALUES(?,?,?,?,?)";
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public boolean insertDocument(String id, String title, String author, String publisher, String publishedDate) {
+        String checkIdSql = "SELECT COUNT(*) FROM documents WHERE id = ?";
+        String checkDuplicateSql = "SELECT COUNT(*) FROM documents WHERE title = ? AND author = ? AND publishedDate = ?";
+        String insertSql = "INSERT INTO documents (id, title, author, publisher, publishedDate) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = SQL_connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, id);
-            pstmt.setString(2, title);
-            pstmt.setString(3, author);
-            pstmt.setString(4, publisher);
-            pstmt.setString(5, publishedDate);
-            int rowsAffected = pstmt.executeUpdate();
+             PreparedStatement checkIdStmt = conn.prepareStatement(checkIdSql);
+             PreparedStatement checkDuplicateStmt = conn.prepareStatement(checkDuplicateSql)) {
 
-            if (rowsAffected > 0) {
-                System.out.println("Tài liệu đã được thêm thành công.");
-            } else {
-                System.out.println("Không thể thêm tài liệu.");
+            // Kiểm tra trùng ID
+            checkIdStmt.setString(1, id);
+            ResultSet rsId = checkIdStmt.executeQuery();
+            if (rsId.next() && rsId.getInt(1) > 0) {
+                showAlert("Error", "ID đã tồn tại!", Alert.AlertType.ERROR);
+                return false;
+            }
+
+            // Kiểm tra trùng title, author, publishedDate
+            checkDuplicateStmt.setString(1, title);
+            checkDuplicateStmt.setString(2, author);
+            checkDuplicateStmt.setString(3, publishedDate);
+            ResultSet rsDuplicate = checkDuplicateStmt.executeQuery();
+            if (rsDuplicate.next() && rsDuplicate.getInt(1) > 0) {
+                showAlert("Error", "Tài liệu đã tồn tại!", Alert.AlertType.ERROR);
+                return false;
+            }
+
+            // Nếu không có trùng lặp, thêm tài liệu mới
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                insertStmt.setString(1, id);
+                insertStmt.setString(2, title);
+                insertStmt.setString(3, author);
+                insertStmt.setString(4, publisher);
+                insertStmt.setString(5, publishedDate);
+                int rowsAffected = insertStmt.executeUpdate();
+
+                return rowsAffected > 0;
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return false;
         }
     }
+
+
 
     public List<Document> getAllDocuments() {
         List<Document> documents = new ArrayList<>();

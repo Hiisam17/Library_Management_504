@@ -78,39 +78,48 @@ public class AddDocumentController {
     }
     // Xử lý sự kiện nút Lưu
     @FXML
-    private void handleSaveDocument() {
-        Document newDocument = new Document(idField.getText(), titleField.getText(), authorField.getText(), publisherField.getText(), publishedDatePicker.getValue().format(outputFormatter));
-        newDocument.setId(idField.getText());
-        newDocument.setTitle(titleField.getText());
-        newDocument.setAuthor(authorField.getText());
-        newDocument.setPublisher(publisherField.getText());
+        private void handleSaveDocument() {
+            Document newDocument = new Document();
+            newDocument.setId(idField.getText());
+            newDocument.setTitle(titleField.getText());
+            newDocument.setAuthor(authorField.getText());
+            newDocument.setPublisher(publisherField.getText());
 
-        LocalDate publishedDate = publishedDatePicker.getValue();
-        String formattedDate = publishedDate.format(outputFormatter);
-        newDocument.setPublishedDate(formattedDate);
-
-        if ( !newDocument.getId().isEmpty() && !newDocument.getTitle().isEmpty() && !newDocument.getAuthor().isEmpty() && !newDocument.getPublishedDate().isEmpty()) {
-            try {
-                // Use DocumentManager to insert the document
-                DocumentManager documentManager = new DocumentManager(new DatabaseManager());
-                documentManager.insertDocument(idField.getText(), titleField.getText(), authorField.getText(), publisherField.getText(), formattedDate);
-
-                showAlert("Success", "Document added successfully!");
-
-                // Call the callback to refresh the TableView
-                if (onDocumentAddedCallback != null) {
-                    onDocumentAddedCallback.run();
-                }
-
-                clearFields(); // Clear fields after saving
-            } catch (Exception e) {
-                showAlert("Error", "Failed to add document to the database.");
-                e.printStackTrace();
-            }
-        } else {
-            showAlert("Error", "Please fill in all required fields.");
+            LocalDate publishedDate = publishedDatePicker.getValue();
+        if (publishedDate == null) {
+            showAlert("Error", "Please select a published date.");
+            return; // Dừng việc lưu tài liệu
         }
-    }
+            String formattedDate = publishedDate.format(outputFormatter);
+            newDocument.setPublishedDate(formattedDate);
+
+            if ( !newDocument.getId().isEmpty() && !newDocument.getTitle().isEmpty() && !newDocument.getAuthor().isEmpty() && !newDocument.getPublishedDate().isEmpty()) {
+                try {
+                    // Use DocumentManager to insert the document
+                    DocumentManager documentManager = new DocumentManager(new DatabaseManager());
+                    if(documentManager.insertDocument(idField.getText(),
+                            titleField.getText(),
+                            authorField.getText(),
+                            publisherField.getText(),
+                            formattedDate)) {
+                        showAlert("Success", "Document added successfully!");
+                    }
+
+                    // Call the callback to refresh the TableView
+                    if (onDocumentAddedCallback != null) {
+                        onDocumentAddedCallback.run();
+                    }
+
+                    clearFields(); // Clear fields after saving
+                } catch (Exception e) {
+                    showAlert("Error", "Failed to add document to the database.");
+                    e.printStackTrace();
+                }
+            } else {
+                showAlert("Error", "Please fill in all required fields.");
+            }
+        }
+
 
     // Hàm khởi tạo để nhận tham chiếu Stage
     public void setStage(Stage stage) {
