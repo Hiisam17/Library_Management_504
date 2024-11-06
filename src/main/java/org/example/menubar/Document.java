@@ -25,6 +25,7 @@ public class Document {
         this.author = author;
         this.publisher = publisher;
         this.publishedDate = publishedDate;
+
     }
 
     // Constructor không tham số (mặc định)
@@ -49,7 +50,7 @@ public class Document {
         return publishedDate;
     }
 
-    public boolean isAvailable() {
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 
@@ -58,7 +59,7 @@ public class Document {
      *
      * @param isAvailable Tình trạng mới của tài liệu (khả dụng hay không).
      */
-    public void setAvailable(boolean isAvailable) {
+    public void setIsAvailable(boolean isAvailable) {
         this.isAvailable = isAvailable;
     }
 

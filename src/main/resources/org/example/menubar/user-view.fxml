@@ -39,6 +39,9 @@
             <TableColumn text="Ngày xuất bản" fx:id="publishedDateColumn" prefWidth="100">
                 <cellValueFactory><PropertyValueFactory property="publishedDate"/></cellValueFactory>
             </TableColumn>
+            <TableColumn text="Trạng thái" fx:id="isAvailableColumn" prefWidth="100">
+                <cellValueFactory><PropertyValueFactory property="isAvailable"/></cellValueFactory>
+            </TableColumn>
         </columns>
     </TableView>
 </VBox>
