@@ -1,38 +1,3 @@
-//package org.example.usermenu;
-//
-//
-//import javafx.fxml.FXML;
-//import javafx.scene.control.TableView;
-//import javafx.scene.control.TextField;
-//import org.example.menubar.Document;
-//import org.example.menubar.DocumentManager;
-//import org.example.menubar.DatabaseManager;
-//
-//public class UserMenuController {
-//
-//  @FXML
-//  private TextField searchField;
-//
-//  @FXML
-//  private TableView<Document> documentTableView;
-//
-//  @FXML
-//  private void handleBorrowDocument() {
-//    // Logic for borrowing a document
-//  }
-//
-//  @FXML
-//  private void handleReturnDocument() {
-//    // Logic for returning a document
-//  }
-//
-//  @FXML
-//  private void handleSearch() {
-//    String searchText = searchField.getText();
-//    // Logic for searching documents based on searchText
-//  }
-//}
-
 package org.example.usermenu;
 
 import javafx.fxml.FXML;
@@ -74,18 +39,22 @@ public class UserMenuController implements Initializable {
   @FXML
   private TableColumn<Document, String> publishedDateColumn;
 
+
   private DocumentManager documentManager;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    // Khởi tạo DocumentManager (cần kết nối đến cơ sở dữ liệu qua DatabaseManager)
     documentManager = new DocumentManager(new DatabaseManager());
 
+    // Thiết lập các cột trong bảng TableView
     idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
     titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
     authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
     publisherColumn.setCellValueFactory(new PropertyValueFactory<>("publisher"));
     publishedDateColumn.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
 
+    // Tải dữ liệu từ SQL và hiển thị
     refreshTable();
   }
 
@@ -131,7 +100,8 @@ public class UserMenuController implements Initializable {
   }
 
   private void refreshTable() {
-    ObservableList<Document> documents = FXCollections.observableArrayList(documentManager.getAllDocuments());
+    // Lấy danh sách tài liệu từ cơ sở dữ liệu và cập nhật vào TableView
+    ObservableList<Document> documents = FXCollections.observableArrayList(documentManager.getAllDocument());
     documentTableView.setItems(documents);
   }
 

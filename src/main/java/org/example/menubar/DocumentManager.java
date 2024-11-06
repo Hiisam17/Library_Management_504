@@ -102,6 +102,70 @@ public class DocumentManager {
     }
 
     public boolean borrowDocument(String id) {
-      return false;
+        String checkAvailabilitySql = "SELECT isAvailable FROM document WHERE id = ?";
+        String borrowSql = "UPDATE document SET isAvailable = false WHERE id = ?";
+
+        try (Connection conn = SQL_connect();
+             PreparedStatement checkStmt = conn.prepareStatement(checkAvailabilitySql);
+             PreparedStatement borrowStmt = conn.prepareStatement(borrowSql)) {
+
+            // Kiểm tra xem tài liệu có sẵn để mượn hay không
+            checkStmt.setString(1, id);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next()) {
+                boolean isAvailable = rs.getBoolean("isAvailable");
+                if (!isAvailable) {
+                    System.out.println("Tài liệu đã được mượn.");
+                    return false;
+                }
+            } else {
+                System.out.println("Không tìm thấy tài liệu với ID: " + id);
+                return false;
+            }
+
+            // Cập nhật trạng thái của tài liệu để đánh dấu là đã mượn
+            borrowStmt.setString(1, id);
+            int rowsAffected = borrowStmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Mượn tài liệu thành công.");
+                return true;
+            } else {
+                System.out.println("Không thể mượn tài liệu.");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi mượn tài liệu: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+
+    public List<Document> getAllDocument() {
+        List<Document> documents = new ArrayList<>();
+        String sql = "SELECT id, title, author, publisher, publishedDate FROM document";
+
+        try (Connection conn = SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Document document = new Document();
+                document.setId(rs.getString("id"));
+                document.setTitle(rs.getString("title"));
+                document.setAuthor(rs.getString("author"));
+                document.setPublisher(rs.getString("publisher"));
+                document.setPublishedDate(rs.getString("publishedDate"));
+                documents.add(document);
+            }
+
+            System.out.println("Successfully retrieved " + documents.size() + " documents.");
+
+        } catch (SQLException e) {
+            System.err.println("Error retrieving documents: " + e.getMessage());
+        }
+
+        return documents;
     }
 }
