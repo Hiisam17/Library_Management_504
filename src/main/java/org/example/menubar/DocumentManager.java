@@ -129,4 +129,8 @@ public class DocumentManager {
         return results;
     }
 
+    public boolean borrowDocument(String id) {
+        return false;
+    }
+
 }
