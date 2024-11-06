@@ -7,21 +7,29 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane fx:controller="org.example.menubar.UserDAO" xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="10" vgap="10">
-    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+<GridPane fx:controller="org.example.menubar.UserDAO" xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="10" vgap="10" style="-fx-background-color: #FFFFFF; -fx-padding: 20;" stylesheets="@login.css">
 
-    <ImageView fx:id="logoImageView" fitWidth="400" fitHeight="200" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+    <!-- Tiêu đề -->
+    <Label text="Create Account" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2E3B55;" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
 
-    <Label text="Tên đăng nhập:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <TextField fx:id="usernameField" promptText="Nhập tên đăng nhập" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <!-- Tên đăng nhập -->
+    <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-size: 14px;"/>
+    <TextField fx:id="usernameField" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-font-size: 14px; -fx-prompt-text-fill: #C0C0C0;"/>
 
-    <Label text="Mật khẩu:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <PasswordField fx:id="passwordField" promptText="Nhập mật khẩu" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <!-- Mật khẩu -->
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-size: 14px;"/>
+    <PasswordField fx:id="passwordField" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="3" style="-fx-font-size: 14px; -fx-prompt-text-fill: #C0C0C0;"/>
 
-    <Label text="Nhập lại mật khẩu:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-    <PasswordField fx:id="confirmPasswordField" promptText="Nhập lại mật khẩu" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <!-- Nhập lại mật khẩu -->
+    <Label text="Confirm password:" GridPane.columnIndex="0" GridPane.rowIndex="4" style="-fx-font-size: 14px;"/>
+    <PasswordField fx:id="confirmPasswordField" promptText="Confirm password" GridPane.columnIndex="1" GridPane.rowIndex="4" style="-fx-font-size: 14px; -fx-prompt-text-fill: #C0C0C0;"/>
 
-    <Button text="Đăng ký" onAction="#DAOhandleRegister" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-    <Button text="Thoát" onAction="#DAOhandleExit" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+    <!-- Các nút hành động -->
+    <VBox spacing="10" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.halignment="CENTER">
+        <Button text="Confirm" onAction="#DAOhandleRegister" styleClass="button"/>
+        <Button text="Exit" onAction="#DAOhandleExit" styleClass="button"/>
+    </VBox>
 </GridPane>
+

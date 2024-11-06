@@ -44,8 +44,8 @@ public class LoginController {
     @FXML
     public void initialize() {
         // Tải hình ảnh vào ImageView
-        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png"))); // Đường dẫn đến hình ảnh
-        logoImageView.setImage(logo);
+        //Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png"))); // Đường dẫn đến hình ảnh
+        //logoImageView.setImage(logo);
     }
 
     @FXML
