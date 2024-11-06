@@ -1,15 +1,20 @@
 package org.example.usermenu;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.example.menubar.Document;
 import org.example.menubar.DocumentManager;
 import org.example.menubar.DatabaseManager;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -90,20 +95,34 @@ public class UserMenuController implements Initializable {
   }
 
   @FXML
+  private void handleShowBorrowedDocuments() {
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/menubar/borrowed-documents-view.fxml"));
+      Parent root = loader.load();
+      Stage stage = new Stage();
+      stage.setTitle("Danh Sách Tài Liệu Đã Mượn");
+      stage.setScene(new Scene(root));
+      stage.show();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @FXML
   private void handleReturnDocument() {
-//    Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
-//    if (selectedDocument == null) {
-//      showAlert("Thông báo", "Vui lòng chọn tài liệu để trả.");
-//      return;
-//    }
-//
-//    boolean success = documentManager.returnDocument(selectedDocument.getId());
-//    if (success) {
-//      showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
-//      refreshTable();
-//    } else {
-//      showAlert("Thất bại", "Không thể trả tài liệu. Vui lòng thử lại.");
-//    }
+    Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
+    if (selectedDocument == null) {
+      showAlert("Thông báo", "Vui lòng chọn tài liệu để trả.");
+      return;
+    }
+
+    boolean success = documentManager.returnDocument(selectedDocument.getId());
+    if (success) {
+      showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
+      refreshTable();
+    } else {
+      showAlert("Thất bại", "Không thể trả tài liệu. Vui lòng thử lại.");
+    }
   }
 
   @FXML

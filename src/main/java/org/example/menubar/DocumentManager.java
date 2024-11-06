@@ -201,6 +201,7 @@ public class DocumentManager {
 
         return documents;
     }
+
     public List<Document> searchDocuments(String keyword) {
         List<Document> results = new ArrayList<>();
         String sql = "SELECT * FROM documents WHERE title LIKE ? OR author LIKE ?";
@@ -227,6 +228,47 @@ public class DocumentManager {
             System.out.println("Lỗi tìm kiếm tài liệu: " + e.getMessage());
         }
         return results;
+    }
+
+    public List<Document> getBorrowedDocuments() {
+        List<Document> documents = new ArrayList<>();
+        String sql = "SELECT id, title, author, publisher, publishedDate, isAvailable FROM document WHERE isAvailable = 0";
+
+        try (Connection conn = dbManager.SQL_connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Document document = new Document();
+                document.setId(rs.getString("id"));
+                document.setTitle(rs.getString("title"));
+                document.setAuthor(rs.getString("author"));
+                document.setPublisher(rs.getString("publisher"));
+                document.setPublishedDate(rs.getString("publishedDate"));
+                document.setIsAvailable(rs.getInt("isAvailable") == 0); // Chuyển đổi giá trị từ số nguyên sang boolean
+                documents.add(document);
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi lấy dữ liệu tài liệu đã mượn: " + e.getMessage());
+        }
+
+        return documents;
+    }
+
+    public boolean returnDocument(String id) {
+        String returnSql = "UPDATE document SET isAvailable = 1 WHERE id = ?";
+
+        try (Connection conn = dbManager.SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(returnSql)) {
+
+            pstmt.setString(1, id);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi trả tài liệu: " + e.getMessage());
+            return false;
+        }
     }
 
 }
