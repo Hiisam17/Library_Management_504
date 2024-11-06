@@ -101,10 +101,9 @@ public class DocumentManager {
         }
     }
 
-<<<<<<< HEAD
     public boolean borrowDocument(String id) {
         String checkAvailabilitySql = "SELECT isAvailable FROM document WHERE id = ?";
-        String borrowSql = "UPDATE document SET isAvailable = false WHERE id = ?";
+        String borrowSql = "UPDATE document SET isAvailable = 0 WHERE id = ?"; // Đặt là 0 để đánh dấu là đã mượn
 
         try (Connection conn = SQL_connect();
              PreparedStatement checkStmt = conn.prepareStatement(checkAvailabilitySql);
@@ -114,8 +113,10 @@ public class DocumentManager {
             checkStmt.setString(1, id);
             ResultSet rs = checkStmt.executeQuery();
             if (rs.next()) {
-                boolean isAvailable = rs.getBoolean("isAvailable");
-                if (!isAvailable) {
+                int isAvailable = rs.getInt("isAvailable"); // Lấy giá trị dưới dạng số nguyên
+                System.out.println("isAvailable value from DB: " + isAvailable); // In giá trị để kiểm tra
+
+                if (isAvailable != 1) { // Kiểm tra nếu không phải là 1 thì tài liệu không sẵn sàng để mượn
                     System.out.println("Tài liệu đã được mượn.");
                     return false;
                 }
@@ -140,7 +141,6 @@ public class DocumentManager {
             return false;
         }
     }
-
 
 
     public List<Document> getAllDocument() {
@@ -168,7 +168,7 @@ public class DocumentManager {
         }
 
         return documents;
-=======
+    }
     public List<Document> searchDocuments(String keyword) {
         List<Document> results = new ArrayList<>();
         String sql = "SELECT * FROM documents WHERE title LIKE ? OR author LIKE ?";
@@ -195,11 +195,6 @@ public class DocumentManager {
             System.out.println("Lỗi tìm kiếm tài liệu: " + e.getMessage());
         }
         return results;
->>>>>>> 4ab05c11aa630c4026bc5910c7bbece502114dd6
-    }
-
-    public boolean borrowDocument(String id) {
-        return false;
     }
 
 }
