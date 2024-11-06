@@ -7,8 +7,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.usermenu.UserMenuController" alignment="CENTER" spacing="10" stylesheets="@user.css">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
@@ -20,7 +20,7 @@
     <TextField fx:id="searchField" promptText="Nhập tiêu đề sách"/>
     <Button text="Tìm Kiếm" onAction="#handleSearch" styleClass="menu-button"/>
 
-    <!-- Bảng hiển thị danh sách tài liệu giống với bảng của admin -->
+    <!-- Bảng hiển thị danh sách tài liệu -->
     <Label text="Danh sách Tài liệu"/>
     <TableView fx:id="documentTableView" prefHeight="300" prefWidth="400">
         <columns>
