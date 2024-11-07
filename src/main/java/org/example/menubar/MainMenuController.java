@@ -153,7 +153,7 @@ public class MainMenuController {
 
 
     // Xử lý sự kiện nút Tìm Kiếm Tài Liệu
-    @FXML
+    /*@FXML
     private void handleSearchDocument() {
         try {
             // Tải FXML của giao diện tìm kiếm
@@ -169,6 +169,21 @@ public class MainMenuController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }*/
+
+    @FXML
+    private void handleSearchDocument() {
+        // Lấy từ khóa từ thanh tìm kiếm
+        String keyword = searchField.getText().trim().toLowerCase();
+        
+        if (keyword.isEmpty()) {
+            showAlert("Lỗi", "Vui lòng nhập từ khóa tìm kiếm.");
+            return;
+        }
+
+        // Lấy kết quả tìm kiếm từ DocumentManager
+        ObservableList<Document> searchResults = FXCollections.observableArrayList(documentManager.searchDocuments(keyword));
+        documentTableView.setItems(searchResults);
     }
 
     @FXML

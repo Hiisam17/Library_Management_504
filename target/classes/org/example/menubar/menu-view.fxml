@@ -23,7 +23,7 @@
 <AnchorPane prefHeight="576.0" prefWidth="1050.0" style="-fx-background-color: #E0E0E0;" stylesheets="@main_menu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.menubar.MainMenuController">
     <children>
         <!-- Sidebar bên trái -->
-        <VBox alignment="TOP_CENTER" prefWidth="256.0" style="-fx-background-color: ##E0E0E0;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="TOP_CENTER" prefWidth="256.0" style="-fx-background-color: #E0E0E0;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <ImageView fitHeight="73.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
                     <image>
@@ -40,8 +40,24 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="btnDeleteDocument" graphicTextGap="22.0" onAction="#handleDeleteDocument" prefHeight="42.0" prefWidth="259.0" text="Xóa Tài Liệu" textFill="#e7e5e5" />
-                <Button fx:id="btnEditDocument" graphicTextGap="22.0" onAction="#handleEditDocument" prefHeight="42.0" prefWidth="259.0" text="Sửa Tài Liệu" textFill="#e7e5e5" />
+                <Button fx:id="btnDeleteDocument" graphicTextGap="22.0" onAction="#handleDeleteDocument" prefHeight="42.0" prefWidth="259.0" text="Xóa Tài Liệu" textFill="#e7e5e5" >
+                    <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@delete.jpg" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnEditDocument" graphicTextGap="22.0" onAction="#handleEditDocument" prefHeight="42.0" prefWidth="259.0" text="Sửa Tài Liệu" textFill="#e7e5e5" >
+                    <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@edit.jpg" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Button fx:id="btnSearchDocument" graphicTextGap="22.0" onAction="#handleSearchDocument" prefHeight="42.0" prefWidth="259.0" text="Tìm Kiếm Tài Liệu" textFill="#e7e5e5" />
             </children>
         </VBox>
