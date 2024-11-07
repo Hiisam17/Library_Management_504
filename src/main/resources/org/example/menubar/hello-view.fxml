@@ -33,7 +33,16 @@
         <VBox spacing="10">
             <Button text="Login" onAction="#handleLogin" style="-fx-background-color: #2E3B55; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-pref-width: 150;"/>
             <Button text="Cancel" onAction="#handleExit" style="-fx-background-color: #2E3B55; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-pref-width: 150;"/>
-            <Button text="Register" onAction="#handleRegister" style="-fx-background-color: #2E3B55; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-pref-width: 150;" />
+            <Button text="Register?" onAction="#handleRegister"
+                    style="-fx-background-color: #FFD700;
+               -fx-text-fill: #2E3B55;
+               -fx-font-size: 14px;
+               -fx-font-weight: bold;
+               -fx-pref-width: 150;
+               -fx-border-color: #FFA500;
+               -fx-border-width: 2;
+               -fx-border-radius: 5;
+               -fx-background-radius: 5;" />
         </VBox>
 
 

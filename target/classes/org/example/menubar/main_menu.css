@@ -1,34 +1,45 @@
-/* main-menu.css */
-
-/* Đặt kiểu cho VBox chính */
-.vbox {
-    -fx-background-color: #f0f0f0; /* Màu nền tổng thể */
-    -fx-padding: 20px;
-    -fx-alignment: center;
+.button
+{
+-fx-background-color : #05071F;
+-fx-text-fill : #e7e5e5;
+}
+.button:hover{
+-fx-background-color : #10165F;
+}
+.button:pressed
+{
+-fx-background-color : #1620A1;
 }
 
-/* Kiểu cho Label tiêu đề */
-.header-label {
-    -fx-font-size: 24px;
-    -fx-text-fill: #2c3e50; /* Màu chữ tiêu đề */
-    -fx-font-weight: bold;
+.scroll-pane {
+    -fx-background-color: #02030A;
 }
 
-/* Kiểu cho các nút menu */
-.menu-button {
-    -fx-background-color: #3498db; /* Màu nền nút */
-    -fx-text-fill: white; /* Màu chữ trên nút */
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-padding: 10px 20px;
-    -fx-background-radius: 10px; /* Bo tròn các góc nút */
-    -fx-border-radius: 10px;
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
 }
 
-.menu-button:hover {
-    -fx-background-color: #2980b9; /* Màu nền khi di chuột qua nút */
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
 
-.menu-button:pressed {
-    -fx-background-color: #1abc9c; /* Màu nền khi nút được nhấn */
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
 }
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #10165F;
+    -fx-background-radius: 5em;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: black;
+}
+
+
+
