@@ -23,15 +23,26 @@ public class DocumentManager {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
+    private boolean isDocumentDuplicate(String title, String author, String publishedDate) {
+        String checkDuplicateSql = "SELECT COUNT(*) FROM documents WHERE title = ? AND author = ? AND publishedDate = ?";
+        try (Connection conn = SQL_connect();
+             PreparedStatement stmt = conn.prepareStatement(checkDuplicateSql)) {
+            stmt.setString(1, title);
+            stmt.setString(2, author);
+            stmt.setString(3, publishedDate);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Nếu có lỗi, coi như có tài liệu trùng lặp
+        }
+    }
     public boolean insertDocument(String id, String title, String author, String publisher, String publishedDate) {
         String checkIdSql = "SELECT COUNT(*) FROM documents WHERE id = ?";
-        String checkDuplicateSql = "SELECT COUNT(*) FROM documents WHERE title = ? AND author = ? AND publishedDate = ?";
         String insertSql = "INSERT INTO documents (id, title, author, publisher, publishedDate) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = SQL_connect();
-             PreparedStatement checkIdStmt = conn.prepareStatement(checkIdSql);
-             PreparedStatement checkDuplicateStmt = conn.prepareStatement(checkDuplicateSql)) {
+             PreparedStatement checkIdStmt = conn.prepareStatement(checkIdSql)) {
 
             // Kiểm tra trùng ID
             checkIdStmt.setString(1, id);
@@ -41,12 +52,8 @@ public class DocumentManager {
                 return false;
             }
 
-            // Kiểm tra trùng title, author, publishedDate
-            checkDuplicateStmt.setString(1, title);
-            checkDuplicateStmt.setString(2, author);
-            checkDuplicateStmt.setString(3, publishedDate);
-            ResultSet rsDuplicate = checkDuplicateStmt.executeQuery();
-            if (rsDuplicate.next() && rsDuplicate.getInt(1) > 0) {
+            // Kiểm tra trùng title, author, publishedDate bằng phương thức isDocumentDuplicate
+            if (isDocumentDuplicate(title, author, publishedDate)) {
                 showAlert("Error", "Tài liệu đã tồn tại!", Alert.AlertType.ERROR);
                 return false;
             }
@@ -112,6 +119,12 @@ public class DocumentManager {
     }
 
     public void updateDocument(Document document) {
+        // Kiểm tra xem tài liệu có trùng lặp hay không trước khi cập nhật
+        if (isDocumentDuplicate(document.getTitle(), document.getAuthor(), document.getPublishedDate())) {
+            showAlert("Error", "Tài liệu đã tồn tại, không thể cập nhật.", Alert.AlertType.ERROR);
+            return; // Dừng lại nếu tài liệu trùng lặp
+        }
+
         String sql = "UPDATE documents SET title = ?, author = ?, publisher = ?, publishedDate = ? WHERE id = ?";
 
         try (Connection conn = DatabaseManager.SQL_connect();
@@ -125,13 +138,13 @@ public class DocumentManager {
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Cập nhật tài liệu thành công.");
+                showAlert("Success", "Cập nhật tài liệu thành công.", Alert.AlertType.INFORMATION);
             } else {
-                System.out.println("Không tìm thấy tài liệu với ID: " + document.getId());
+                showAlert("Error", "Không tìm thấy tài liệu với ID: " + document.getId(), Alert.AlertType.ERROR);
             }
 
         } catch (SQLException e) {
-            System.out.println("Lỗi khi cập nhật tài liệu: " + e.getMessage());
+            showAlert("Error", "Lỗi khi cập nhật tài liệu: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 

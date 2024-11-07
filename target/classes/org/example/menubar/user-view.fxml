@@ -13,7 +13,6 @@
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="Chào mừng đến với Quản lý Thư viện - Người Dùng" styleClass="header-label"/>
-
     <!-- Các nút chức năng -->
     <Button text="Mượn Tài Liệu" onAction="#handleBorrowDocument" styleClass="menu-button"/>
     <Button text="Trả Tài Liệu" onAction="#handleReturnDocument" styleClass="menu-button"/>

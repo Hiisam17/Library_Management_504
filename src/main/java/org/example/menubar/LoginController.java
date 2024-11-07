@@ -54,18 +54,27 @@ public class LoginController {
         String password = passwordField.getText();
 
         if (mainApp != null) {
-            // Sử dụng phương thức validateLogin() để kiểm tra thông tin đăng nhập
             Boolean isAdmin = validateLogin(username, password);
-            if (isAdmin != null) { // Đảm bảo rằng đăng nhập thành công
+            if (isAdmin != null) {
                 System.out.println("Login successful! Is Admin: " + isAdmin);
                 try {
                     FXMLLoader loader;
-                    if (isAdmin) { // Nếu isAdmin là true, chuyển đến giao diện admin
+                    if (isAdmin) {
                         loader = new FXMLLoader(getClass().getResource("menu-view.fxml"));
-                    } else { // Nếu isAdmin là false, chuyển đến giao diện user
+                    } else {
                         loader = new FXMLLoader(getClass().getResource("user-view.fxml"));
                     }
                     Parent mainMenuRoot = loader.load();
+
+                    // Lấy controller và thiết lập Stage
+                    if (isAdmin) {
+                        MainMenuController controller = loader.getController();
+                        controller.setStage((Stage) usernameField.getScene().getWindow());
+                    } //else {
+                       // UserMenuController controller = loader.getController();
+                      //  controller.setStage((Stage) usernameField.getScene().getWindow());
+                   // }
+
                     Stage stage = (Stage) usernameField.getScene().getWindow();
                     stage.setScene(new Scene(mainMenuRoot, 600, 400));
                 } catch (IOException e) {
@@ -78,6 +87,8 @@ public class LoginController {
             showAlert("Lỗi hệ thống", "Ứng dụng chưa được khởi tạo đúng cách.");
         }
     }
+
+
 
     @FXML
     private void handleExit() {

@@ -11,7 +11,7 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.MainMenuController" alignment="CENTER" spacing="10" stylesheets="@login.css">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-
+    <Button text="Đăng Xuất" onAction="#handleLogout" styleClass="menu-button"/>
     <Label text="Chào mừng đến với Quản lý Thư viện" styleClass="header-label"/>
 
     <!-- Các nút chức năng -->
