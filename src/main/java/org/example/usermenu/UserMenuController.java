@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class UserMenuController implements Initializable {
+  private static UserMenuController instance;
+
 
   @FXML
   private TextField searchField;
@@ -133,7 +135,7 @@ public class UserMenuController implements Initializable {
 //    documentTableView.setItems(searchResults);
   }
 
-  private void refreshTable() {
+  public void refreshTable() {
     // Lấy danh sách tài liệu từ cơ sở dữ liệu và cập nhật vào TableView
     ObservableList<Document> documents = FXCollections.observableArrayList(documentManager.getAllDocument());
     documentTableView.setItems(documents);
@@ -144,6 +146,14 @@ public class UserMenuController implements Initializable {
     alert.setTitle(title);
     alert.setContentText(message);
     alert.showAndWait();
+  }
+
+  public UserMenuController() {
+    instance = this;
+  }
+
+  public static UserMenuController getInstance() {
+    return instance;
   }
 
 }

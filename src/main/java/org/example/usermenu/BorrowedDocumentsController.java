@@ -61,7 +61,8 @@ public class BorrowedDocumentsController implements Initializable {
         boolean success = documentManager.returnDocument(selectedDocument.getId());
         if (success) {
             showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
-            refreshTable();
+            refreshTable(); // Tải lại danh sách tài liệu đã mượn sau khi trả tài liệu
+            UserMenuController.getInstance().refreshTable(); // Cập nhật lại bảng trong giao diện người dùng
         } else {
             showAlert("Thất bại", "Không thể trả tài liệu. Vui lòng thử lại.");
         }
