@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.SearchDocumentController" alignment="CENTER" spacing="10">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.SearchDocController" alignment="CENTER" spacing="10">
     <TextField fx:id="searchField" promptText="Nhập từ khóa tìm kiếm"/>
     <Button text="Tìm kiếm" onAction="#handleSearch"/>
 

@@ -10,10 +10,12 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.menubar.Document;
 import org.example.menubar.DocumentManager;
 import org.example.menubar.DatabaseManager;
+import org.example.menubar.SearchDocController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,9 +24,6 @@ import java.util.ResourceBundle;
 public class UserMenuController implements Initializable {
   private static UserMenuController instance;
 
-
-  @FXML
-  private TextField searchField;
 
   @FXML
   private TableView<Document> documentTableView;
@@ -130,9 +129,20 @@ public class UserMenuController implements Initializable {
 
   @FXML
   private void handleSearch() {
-//    String searchText = searchField.getText();
-//    ObservableList<Document> searchResults = FXCollections.observableArrayList(documentManager.searchDocuments(searchText));
-//    documentTableView.setItems(searchResults);
+    try {
+      // Tải FXML của giao diện tìm kiếm
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/menubar/SearchDoc-view.fxml"));
+      Scene scene = new Scene(fxmlLoader.load());
+
+      // Tạo cửa sổ mới cho giao diện tìm kiếm
+      Stage searchStage = new Stage();
+      searchStage.setTitle("Tìm kiếm Tài liệu");
+      searchStage.setScene(scene);
+      searchStage.initModality(Modality.APPLICATION_MODAL); // Chặn cửa sổ khác cho đến khi đóng
+      searchStage.show();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void refreshTable() {
