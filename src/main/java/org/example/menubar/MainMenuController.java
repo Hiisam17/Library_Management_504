@@ -2,6 +2,7 @@ package org.example.menubar;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,11 +19,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.example.menubar.DatabaseManager.SQL_connect;
 
 
 public class MainMenuController {
+    private Stage stage;
 
     @FXML
     private TextField idField;
@@ -53,6 +56,43 @@ public class MainMenuController {
 
     public MainMenuController() {
         this.documentManager = new DocumentManager(new DatabaseManager());
+    }
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        stage.setTitle("Library Manager");
+    }
+    // Phương thức getter để lấy stage
+    public Stage getStage() {
+        return this.stage;
+    }
+    @FXML
+    public void handleLogout(ActionEvent actionEvent) {
+        // Tạo một Alert xác nhận
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Xác nhận Đăng xuất");
+        alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+        alert.setContentText("Chọn OK để đăng xuất hoặc Hủy để quay lại.");
+
+        // Hiển thị Alert và chờ người dùng phản hồi
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (stage != null) {
+                stage.close(); // Đóng cửa sổ chính
+                stage=null;
+            }
+            try {
+                restartApp();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        // Nếu người dùng chọn "Hủy" hoặc đóng Alert, sẽ không làm gì cả
+    }
+    private void restartApp() throws IOException {
+        // Tạo lại đối tượng Main và gọi phương thức restart
+        Main mainApp = new Main();
+        mainApp.getInstance().restartApp();
     }
 
 
@@ -237,30 +277,8 @@ public class MainMenuController {
     public void setDocumentList(ObservableList<Document> documentList) {
         this.documentList = documentList;
     }
-
-    public static class UserDAO {
-        public boolean register(String username, String password) {
-            String sql = "INSERT INTO users (user_name, password, is_admin) VALUES (?, ?, false)";
-
-            try (Connection conn = SQL_connect();
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-                pstmt.setString(1, username);
-                pstmt.setString(2, password);
-
-                int rowsAffected = pstmt.executeUpdate();// true nếu đăng ký thành công
-
-                return rowsAffected > 0;
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-            return false;
-        }
-
-    }
-
+    
+    
     public void deleteDocumentById(String id) {
         documentManager.deleteDocumentById(id); // Gọi phương thức trong DatabaseManager
         refreshTable(); // Cập nhật lại TableView sau khi xóa
