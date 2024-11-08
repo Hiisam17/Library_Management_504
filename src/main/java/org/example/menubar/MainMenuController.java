@@ -81,7 +81,12 @@ public class MainMenuController {
                 stage=null;
             }
             try {
-                restartApp();
+                Main mainInstance = Main.getInstance();
+                if (mainInstance != null) {
+                    mainInstance.restartApp();
+                } else {
+                    System.err.println("Lỗi: Main chưa được khởi tạo.");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -92,7 +97,7 @@ public class MainMenuController {
     private void restartApp() throws IOException {
         // Tạo lại đối tượng Main và gọi phương thức restart
         Main mainApp = new Main();
-        mainApp.getInstance().restartApp();
+        Main.getInstance().restartApp();
     }
 
 

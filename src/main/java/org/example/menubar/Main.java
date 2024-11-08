@@ -14,13 +14,16 @@ public class Main extends Application {
     private Stage primaryStage;
     private UserService userService;
     private static Main instance;
-
+    public Main() {
+        // Constructor trống
+    }
     @Override
     public void start(Stage primaryStage) throws IOException {
+
         if (this.primaryStage == null) {
             this.primaryStage = primaryStage;
             userService = new UserService();
-
+            instance = this;
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("hello-view.fxml")));
             Parent root = loader.load();
 
@@ -38,11 +41,13 @@ public class Main extends Application {
             primaryStage.show();
         }
     }
-    public void restartApp() {
+    public void restartApp() throws IOException {
+
         if (primaryStage != null) {
             // Đóng cửa sổ hiện tại và làm mới
             primaryStage.close();
             try {
+                instance = this;
                 // Tạo lại cửa sổ đăng nhập
                 FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("hello-view.fxml")));
                 Parent root = loader.load();
@@ -70,10 +75,11 @@ public class Main extends Application {
     }
     public static Main getInstance() {
         if (instance == null) {
-            instance = new Main();
+            throw new IllegalStateException("Main chưa được khởi tạo.");
         }
         return instance;
     }
+
     public UserService getUserService() {
         return userService;
     }
