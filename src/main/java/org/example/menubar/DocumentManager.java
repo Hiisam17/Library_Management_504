@@ -173,7 +173,7 @@ public class DocumentManager {
                 document.setAuthor(rs.getString("author"));
                 document.setPublisher(rs.getString("publisher"));
                 document.setPublishedDate(rs.getString("publishedDate"));
-                document.setIsAvailable(rs.getInt("isAvailable") == 1); // Chuyển đổi giá trị từ số nguyên sang boolean
+                document.setIsAvailable(rs.getBoolean("isAvailable")); // Chuyển đổi giá trị từ số nguyên sang boolean
                 documents.add(document);
             }
         } catch (SQLException e) {
@@ -185,7 +185,7 @@ public class DocumentManager {
 
     public List<Document> searchDocuments(String keyword) {
         List<Document> results = new ArrayList<>();
-        String sql = "SELECT * FROM documents WHERE title LIKE ? OR author LIKE ?";
+        String sql = "SELECT * FROM document WHERE title LIKE ? OR author LIKE ?";
 
         try (Connection conn = SQL_connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -201,7 +201,8 @@ public class DocumentManager {
                         rs.getString("title"),
                         rs.getString("author"),
                         rs.getString("publisher"),
-                        rs.getString("publishedDate")
+                        rs.getString("publishedDate"),
+                        rs.getBoolean("isAvailable")
                 );
                 results.add(document);
             }
@@ -270,7 +271,8 @@ public class DocumentManager {
                         rs.getString("title"),
                         rs.getString("author"),
                         rs.getString("publisher"),
-                        rs.getString("publishedDate")
+                        rs.getString("publishedDate"),
+                        rs.getBoolean("isAvailable")
                 );
                 results.add(document);
             }
