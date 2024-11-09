@@ -4,16 +4,19 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Button?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.menubar.EditDocumentController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.menubar.EditDocumentController" stylesheets="@editDoc.css" styleClass="anchor-pane">
     <children>
-        <Label text="Sửa Tài Liệu" layoutX="20" layoutY="10" />
-        <TextField fx:id="idField" promptText="ID" layoutX="20" layoutY="40" editable="false" style="-fx-background-color: #f0f0f0;" />
+        <Label text="Sửa Tài Liệu" layoutX="20" layoutY="10" styleClass="label" />
 
-        <TextField fx:id="titleField" promptText="Tiêu đề" layoutX="20" layoutY="80" />
-        <TextField fx:id="authorField" promptText="Tác giả" layoutX="20" layoutY="120" />
-        <TextField fx:id="publisherField" promptText="Nhà xuất bản" layoutX="20" layoutY="160" />
-        <DatePicker fx:id="publishedDatePicker" layoutX="20" layoutY="200" />
-        <Button text="Lưu Thay Đổi" onAction="#handleSaveChanges" layoutX="20" layoutY="240" />
+        <TextField fx:id="idField" promptText="ID" layoutX="20" layoutY="50" editable="false" styleClass="text-field" />
+
+        <TextField fx:id="titleField" promptText="Tiêu đề" layoutX="20" layoutY="90" styleClass="text-field" />
+        <TextField fx:id="authorField" promptText="Tác giả" layoutX="20" layoutY="130" styleClass="text-field" />
+        <TextField fx:id="publisherField" promptText="Nhà xuất bản" layoutX="20" layoutY="170" styleClass="text-field" />
+
+        <DatePicker fx:id="publishedDatePicker" layoutX="20" layoutY="210" styleClass="date-picker" />
+
+        <Button text="Lưu Thay Đổi" onAction="#handleSaveChanges" layoutX="20" layoutY="260" styleClass="save-button" />
     </children>
 </AnchorPane>
 

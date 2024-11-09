@@ -1,34 +1,37 @@
 /* addDoc.css */
+.vbox {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
 
 .header-label {
-    font-size: 24px;
-    font-weight: bold;
-    text-fill: #333; /* Màu chữ */
-}
-
-.menu-button {
-    -fx-background-color: #4CAF50; /* Màu nền */
-    -fx-text-fill: white; /* Màu chữ */
-    -fx-padding: 10px 20px; /* Padding cho nút */
-    -fx-font-size: 14px; /* Kích thước chữ */
-    -fx-border-radius: 5px; /* Bo góc cho nút */
-}
-
-.menu-button:hover {
-    -fx-background-color: #45a049; /* Màu khi di chuột qua nút */
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
 }
 
 .text-field {
-    -fx-pref-width: 300px; /* Chiều rộng cố định cho TextField */
-    -fx-padding: 10px; /* Padding cho TextField */
-    -fx-border-radius: 5px; /* Bo góc cho TextField */
+    -fx-pref-width: 300px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-text-fill: #333333;
 }
 
-.vbox {
-    -fx-background-color: #f9f9f9; /* Màu nền cho VBox */
-    -fx-padding: 20; /* Padding cho VBox */
-    -fx-spacing: 15; /* Khoảng cách giữa các phần tử */
-    -fx-border-color: #ddd; /* Màu viền cho VBox */
-    -fx-border-width: 1; /* Độ dày viền */
-    -fx-background-insets: 5; /* Lề của màu nền */
+.menu-button {
+    -fx-pref-width: 150px;
+    -fx-background-color: #4CAF50; /* Màu xanh lá */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
 }
+
+.menu-button:hover {
+    -fx-background-color: #45A049; /* Màu xanh đậm khi hover */
+}
+

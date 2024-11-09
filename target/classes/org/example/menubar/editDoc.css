@@ -1,16 +1,18 @@
-/* addDoc.css */
-.vbox {
+/* editDoc.css */
+.anchor-pane {
     -fx-background-color: #f9f9f9;
     -fx-border-color: #cccccc;
     -fx-border-width: 2px;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
+    -fx-padding: 20px;
 }
 
-.header-label {
-    -fx-font-size: 24px;
+.label {
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
+    -fx-padding: 0 0 15 0;
 }
 
 .text-field {
@@ -22,16 +24,22 @@
     -fx-text-fill: #333333;
 }
 
-.menu-button {
+.date-picker {
+    -fx-pref-width: 300px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+}
+
+.save-button {
     -fx-pref-width: 150px;
-    -fx-background-color: #4CAF50; /* Màu xanh lá */
+    -fx-background-color: #5cb85c; /* Màu xanh lá nhạt */
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
 }
 
-.menu-button:hover {
-    -fx-background-color: #45A049; /* Màu xanh đậm khi hover */
+.save-button:hover {
+    -fx-background-color: #4cae4c; /* Xanh đậm hơn khi hover */
 }
-
