@@ -6,8 +6,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 public class EditDocumentController {
@@ -22,6 +25,8 @@ public class EditDocumentController {
     private TextField publisherField;
     @FXML
     private DatePicker publishedDatePicker;
+    private final DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private Stage stage;
     private Document document;
@@ -49,7 +54,29 @@ public class EditDocumentController {
         publisherField.setText(document.getPublisher());
         publishedDatePicker.setValue(LocalDate.parse(document.getPublishedDate()));
     }
+    public void initialize() {
+        //  hiển thị đúng định dạng dd/MM/yyyy
+        publishedDatePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? date.format(inputFormatter) : "";
+            }
 
+            @Override
+            public LocalDate fromString(String string) {
+                if (string == null || string.isEmpty()) {
+                    return null;
+                }
+                try {
+                    // Chuyển chuỗi thành LocalDate theo định dạng dd/MM/yyyy
+                    return LocalDate.parse(string, inputFormatter);
+                } catch (DateTimeParseException e) {
+                    showAlert("Lỗi", "Ngày nhập sai định dạng. Vui lòng nhập theo định dạng dd/MM/yyyy.");
+                    return null;
+                }
+            }
+        });
+    }
     @FXML
     private void handleSaveChanges() {
         // Tạo một hộp thoại xác nhận
@@ -65,7 +92,13 @@ public class EditDocumentController {
             document.setTitle(titleField.getText());
             document.setAuthor(authorField.getText());
             document.setPublisher(publisherField.getText());
-            document.setPublishedDate(publishedDatePicker.getValue().toString());
+            LocalDate publishedDate = publishedDatePicker.getValue();
+            if (publishedDate == null) {
+                showAlert("Error", "Please select a published date.");
+                return;
+            }
+            String formattedDate = publishedDate.format(outputFormatter);
+            document.setPublishedDate(formattedDate);
 
             documentManager.updateDocument(document); // Cập nhật tài liệu trong cơ sở dữ liệu
 
@@ -76,13 +109,21 @@ public class EditDocumentController {
             stage.close();
         } else {
             // Nếu người dùng chọn Cancel hoặc đóng hộp thoại, không thực hiện thay đổi
-            Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-            cancelAlert.setTitle("Hủy thay đổi");
-            cancelAlert.setHeaderText(null);
-            cancelAlert.setContentText("Các thay đổi không được lưu.");
-            cancelAlert.showAndWait();
+           // Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
+            //cancelAlert.setTitle("Hủy thay đổi");
+            //cancelAlert.setHeaderText(null);
+            //cancelAlert.setContentText("Các thay đổi không được lưu.");
+            //cancelAlert.showAndWait();
+            showAlert("Changes Discarded", "Your changes were not saved.");
         }
     }
-
+    // Hàm hiển thị thông báo
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
 
