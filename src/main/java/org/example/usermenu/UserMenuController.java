@@ -124,10 +124,10 @@ public class UserMenuController implements Initializable {
       return;
     }
 
-    boolean success = documentManager.returnDocument(selectedDocument.getId());
+    boolean success = documentManager.returnDocument(selectedDocument.getId(), currentUserId);
     if (success) {
       showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
-      refreshTable();
+      refreshTable(); // Tải lại dữ liệu sau khi trả tài liệu
     } else {
       showAlert("Thất bại", "Không thể trả tài liệu. Vui lòng thử lại.");
     }

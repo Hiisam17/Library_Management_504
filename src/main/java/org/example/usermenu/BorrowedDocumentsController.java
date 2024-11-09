@@ -63,7 +63,7 @@ public class BorrowedDocumentsController implements Initializable {
             return;
         }
 
-        boolean success = documentManager.returnDocument(selectedDocument.getId());
+        boolean success = documentManager.returnDocument(selectedDocument.getId(), userId);
         if (success) {
             showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
             refreshTable(); // Tải lại danh sách tài liệu đã mượn sau khi trả tài liệu
@@ -74,7 +74,7 @@ public class BorrowedDocumentsController implements Initializable {
     }
 
     private void refreshTable() {
-        ObservableList<Document> borrowedDocument = FXCollections.observableArrayList(documentManager.getBorrowedDocumentsByUserId("4")); // Sử dụng id >= 4
+        ObservableList<Document> borrowedDocument = FXCollections.observableArrayList(documentManager.getBorrowedDocumentsByUserId(userId));
         borrowedDocumentTableView.setItems(borrowedDocument);
     }
 

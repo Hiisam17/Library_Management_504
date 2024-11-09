@@ -248,15 +248,40 @@ public class DocumentManager {
         return documents;
     }
 
-    public boolean returnDocument(String id) {
+    public boolean returnDocument(String documentId, String userId) {
+        String checkBorrowedSql = "SELECT * FROM borrowed_documents WHERE document_id = ? AND user_id = ?";
         String returnSql = "UPDATE document SET isAvailable = 1 WHERE id = ?";
+        String deleteBorrowedSql = "DELETE FROM borrowed_documents WHERE document_id = ? AND user_id = ?";
 
-        try (Connection conn = dbManager.SQL_connect();
-             PreparedStatement pstmt = conn.prepareStatement(returnSql)) {
+        try (Connection conn = SQL_connect();
+             PreparedStatement checkStmt = conn.prepareStatement(checkBorrowedSql);
+             PreparedStatement returnStmt = conn.prepareStatement(returnSql);
+             PreparedStatement deleteBorrowedStmt = conn.prepareStatement(deleteBorrowedSql)) {
 
-            pstmt.setString(1, id);
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
+            // Kiểm tra xem tài liệu có được mượn bởi người dùng này không
+            checkStmt.setString(1, documentId);
+            checkStmt.setString(2, userId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("Tài liệu không được mượn bởi người dùng này.");
+                return false;
+            }
+
+            // Cập nhật trạng thái của tài liệu để đánh dấu là đã trả
+            returnStmt.setString(1, documentId);
+            int rowsAffected = returnStmt.executeUpdate();
+            if (rowsAffected > 0) {
+                // Xóa thông tin mượn tài liệu khỏi bảng borrowed_documents
+                deleteBorrowedStmt.setString(1, documentId);
+                deleteBorrowedStmt.setString(2, userId);
+                deleteBorrowedStmt.executeUpdate();
+
+                System.out.println("Trả tài liệu thành công.");
+                return true;
+            } else {
+                System.out.println("Không thể trả tài liệu.");
+                return false;
+            }
 
         } catch (SQLException e) {
             System.out.println("Lỗi khi trả tài liệu: " + e.getMessage());
@@ -292,4 +317,6 @@ public class DocumentManager {
         }
         return results;
     }
+
+
 }
