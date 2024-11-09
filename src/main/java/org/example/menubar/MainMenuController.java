@@ -50,6 +50,8 @@ public class MainMenuController {
     private TableColumn<Document, String> publisherColumn;
     @FXML
     private TableColumn<Document, String> publishedDateColumn;
+    @FXML
+    private TableColumn<Document, Boolean> isAvailableColumn;
 
     private ObservableList<Document> documentList = FXCollections.observableArrayList();
     private final DocumentManager documentManager;
@@ -137,6 +139,20 @@ public class MainMenuController {
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         publisherColumn.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         publishedDateColumn.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
+        isAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("isAvailable"));
+
+        // Sử dụng cellFactory tùy chỉnh để hiển thị 1 và 0 thay vì TRUE và FALSE
+        isAvailableColumn.setCellFactory(column -> new TableCell<Document, Boolean>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item ? "1" : "0");
+                }
+            }
+        });
 
         // Gán ObservableList vào TableView
         documentTableView.setItems(documentList);
@@ -241,6 +257,16 @@ public class MainMenuController {
         APIIntegration.parseBookInfo(jsonResponse);
     }
 
+    @FXML
+    private void handleReload() {
+        // Gọi phương thức lấy danh sách tài liệu ban đầu từ DocumentManager
+        List<Document> allDocuments = documentManager.getAllDocument();
+
+        // Đặt lại danh sách tài liệu vào TableView
+        documentTableView.getItems().setAll(allDocuments);
+    }
+
+
     // Hàm hiển thị thông báo
     void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -254,7 +280,7 @@ public class MainMenuController {
         documentTableView.getItems().clear();
 
         // Lấy danh sách tài liệu từ cơ sở dữ liệu thông qua documentManager
-        List<Document> documents = documentManager.getAllDocuments();
+        List<Document> documents = documentManager.getAllDocument();
 
         // Kiểm tra nếu không có tài liệu nào hoặc lỗi kết nối cơ sở dữ liệu
         if (documents == null) {

@@ -7,12 +7,11 @@ import static javafx.scene.input.DataFormat.URL;
 public class DatabaseManager {
 
     private String url;
-    private static final String DB_URL = "jdbc:sqlite:library.db";
+    private static final String DB_URL = "jdbc:sqlite:liba.db";
 
     public DatabaseManager(String url) {
         this.url = url;
         //dropTableIfExists(); // Xóa bảng nếu tồn tại
-        createNewTable(); // Gọi phương thức tạo bảng
     }
 
     public DatabaseManager() {

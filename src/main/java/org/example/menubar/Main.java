@@ -31,7 +31,7 @@ public class Main extends Application {
             LoginController controller = loader.getController();
             controller.setMainApp(this);
 
-            Scene scene = new Scene(root, 600, 400);
+            Scene scene = new Scene(root, 1200, 800);
 
             // Thêm đoạn code để tải file CSS
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("login.css")).toExternalForm());
@@ -56,7 +56,7 @@ public class Main extends Application {
                 LoginController controller = loader.getController();
                 controller.setMainApp(this);
 
-                Scene scene = new Scene(root, 600, 400);
+                Scene scene = new Scene(root, 1200, 800);
                 scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("login.css")).toExternalForm());
 
                 // Tạo một cửa sổ mới

@@ -10,7 +10,7 @@ public class Document {
     private String author;        // Tác giả của tài liệu
     private String publisher;       // nhà xuất bản
     private String publishedDate;             // Năm xuất bản của tài liệu
-    private boolean isAvailable= true;   // Tình trạng khả dụng của tài liệu
+    private boolean isAvailable = true;   // Tình trạng khả dụng của tài liệu
 
     /**
      * Khởi tạo một tài liệu mới với thông tin cơ bản.
@@ -19,14 +19,15 @@ public class Document {
      * @param author Tác giả của tài liệu.
      * @param publishedDate   Năm xuất bản của tài liệu.
      */
-    public Document( String id, String title, String author, String publisher,String publishedDate ) {
+    public Document(String id, String title, String author, String publisher, String publishedDate, boolean isAvailable)  {
         this.id = id;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.publishedDate = publishedDate;
-
+        this.isAvailable = isAvailable;
     }
+
 
     // Constructor không tham số (mặc định)
     public Document() {}

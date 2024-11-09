@@ -77,7 +77,7 @@ public class LoginController {
                     }
 
                     Stage stage = (Stage) usernameField.getScene().getWindow();
-                    stage.setScene(new Scene(mainMenuRoot, 600, 400));
+                    stage.setScene(new Scene(mainMenuRoot, 1200, 800));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

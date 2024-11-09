@@ -2,10 +2,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.DeleteDocumentController" spacing="10" alignment="CENTER">
-    <Label text="Nhập ID của tài liệu cần xóa:"/>
-    <TextField fx:id="deleteIdField" promptText="ID tài liệu"/>
-    <Button text="Xác nhận Xóa" onAction="#handleConfirmDelete"/>
-    <Button text="Hủy" onAction="#handleCancel"/>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.DeleteDocumentController" spacing="10" alignment="CENTER" stylesheets="@deleteDoc.css" styleClass="vbox">
+    <Label text="Nhập ID của tài liệu cần xóa:" styleClass="label"/>
+    <TextField fx:id="deleteIdField" promptText="ID tài liệu" styleClass="text-field"/>
+    <Button text="Xác nhận Xóa" onAction="#handleConfirmDelete" styleClass="confirm-button"/>
+    <Button text="Hủy" onAction="#handleCancel" styleClass="cancel-button"/>
 </VBox>
+
 
