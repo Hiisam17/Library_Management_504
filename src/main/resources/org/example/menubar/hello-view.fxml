@@ -12,14 +12,14 @@
 <HBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.LoginController" spacing="0" style="-fx-background-color: #D3D3D3;" stylesheets="@login.css">
 
     <!-- Phần bên trái (Thông tin tiêu đề) -->
-    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #2E3B55; -fx-pref-width: 300;">
+    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #2E3B55; -fx-pref-width: 600;">
         <Label text="Library" style="-fx-text-fill: #FFFFFF; -fx-font-size: 36px; -fx-font-weight: bold;"/>
         <Label text="Books and Knowledge" style="-fx-text-fill: #FFFFFF; -fx-font-size: 18px;"/>
         <Label text="© All Rights Reserved" style="-fx-text-fill: #FFFFFF; -fx-font-size: 10px; -fx-padding: 20 0 0 0;"/>
     </VBox>
 
     <!-- Phần bên phải (Khu vực đăng nhập) -->
-    <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #FFFFFF; -fx-padding: 30;" prefWidth="400">
+    <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #FFFFFF; -fx-padding: 30;" prefWidth="600">
         <Label text="Secure Login" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
         <VBox alignment="CENTER_LEFT" spacing="10">

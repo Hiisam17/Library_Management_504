@@ -18,64 +18,79 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
-
 <?import javafx.scene.control.TableView?>
 
-<AnchorPane prefHeight="576.0" prefWidth="1050.0" style="-fx-background-color: #E0E0E0;" stylesheets="@main_menu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.menubar.MainMenuController">
+<AnchorPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #E0E0E0;" stylesheets="@main_menu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.menubar.MainMenuController">
     <children>
         <!-- Sidebar bên trái -->
-        <VBox alignment="TOP_CENTER" prefWidth="256.0" style="-fx-background-color: #E0E0E0;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="TOP_CENTER" prefWidth="300" style="-fx-background-color: #E0E0E0;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0">
             <children>
-                <ImageView fitHeight="73.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="80.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@library.png" />
                     </image>
                 </ImageView>
-                <Label style="-fx-font-size: 20px; -fx-padding: 10 0 20 0;" text="Library Manager" />
-                <Button fx:id="btnAddDocument" graphicTextGap="22.0" onAction="#handleAddDocument" prefHeight="42.0" prefWidth="259.0" text="Thêm Tài Liệu" textFill="#e7e5e5">
+                <Label style="-fx-font-size: 22px; -fx-padding: 15 0 25 0;" text="Library Manager" />
+                <Button fx:id="btnReload" graphicTextGap="22.0" onAction="#handleReload" prefHeight="50.0" prefWidth="260.0" text="Menu" textFill="#e7e5e5">
                     <graphic>
-                        <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@menu.jpg" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnAddDocument" graphicTextGap="22.0" onAction="#handleAddDocument" prefHeight="50.0" prefWidth="260.0" text="Thêm Tài Liệu" textFill="#e7e5e5">
+                    <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@add.png" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="btnDeleteDocument" graphicTextGap="22.0" onAction="#handleDeleteDocument" prefHeight="42.0" prefWidth="259.0" text="Xóa Tài Liệu" textFill="#e7e5e5" >
+                <Button fx:id="btnDeleteDocument" graphicTextGap="22.0" onAction="#handleDeleteDocument" prefHeight="50.0" prefWidth="260.0" text="Xóa Tài Liệu" textFill="#e7e5e5">
                     <graphic>
-                        <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@delete.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="btnEditDocument" graphicTextGap="22.0" onAction="#handleEditDocument" prefHeight="42.0" prefWidth="259.0" text="Sửa Tài Liệu" textFill="#e7e5e5" >
+                <Button fx:id="btnEditDocument" graphicTextGap="22.0" onAction="#handleEditDocument" prefHeight="50.0" prefWidth="260.0" text="Sửa Tài Liệu" textFill="#e7e5e5">
                     <graphic>
-                        <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@edit.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="btnSearchDocument" graphicTextGap="22.0" onAction="#handleLogout" prefHeight="42.0" prefWidth="259.0" text="Đăng xuất" textFill="#e7e5e5" />
+                <Button fx:id="btnSearchDocument" graphicTextGap="22.0" onAction="#handleLogout" prefHeight="50.0" prefWidth="260.0" text="Đăng xuất" textFill="#e7e5e5" >
+                    <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@logout.png" />
+                            </image>
+                    </ImageView>
+                    </graphic>
+                </Button>
             </children>
         </VBox>
 
-
-
-
         <!-- Main content area -->
-        <StackPane layoutX="258.0" prefHeight="576.0" prefWidth="793.0" style="-fx-background-color: #02030A;">
+        <StackPane style="-fx-background-color: #02030A;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.leftAnchor="300.0">
             <children>
                 <!-- Panel Overview -->
-                <VBox fx:id="pnlOverview" prefHeight="554.0" prefWidth="793.0" spacing="10">
+                <VBox fx:id="pnlOverview" spacing="10" prefHeight="760.0" prefWidth="850.0">
                     <children>
-                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 20;">
+                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 25;">
                             <children>
-                                <TextField fx:id="searchField" promptText="Nhập tiêu đề sách" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" />
-                                <Button fx:id="SearchDocument" graphicTextGap="22.0" onAction="#handleSearchDocument" prefHeight="42.0" prefWidth="149.0" text="Tìm kiếm" textFill="#e7e5e5">
+                                <TextField fx:id="searchField" promptText="Nhập tiêu đề sách"
+                                           style="-fx-background-color: #FFFFFF; -fx-border-color: #B7C3D7; -fx-border-width: 2px; -fx-border-radius: 2em; -fx-prompt-text-fill: #B7C3D7; -fx-text-fill: #000000;"
+                                           prefWidth="600.0" />
+                                <Button fx:id="SearchDocument" graphicTextGap="22.0" onAction="#handleSearchDocument" prefHeight="42.0" prefWidth="160.0" text="Tìm kiếm" textFill="#e7e5e5">
                                     <graphic>
                                         <ImageView fitHeight="23.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
@@ -87,40 +102,45 @@
                             </children>
                         </HBox>
                         <Label style="-fx-font-size: 24px;" text="Chào mừng đến với Quản lý Thư viện" textFill="#e7e5e5" />
-                        <ScrollPane prefHeight="320.0" prefWidth="746.0">
+                        <ScrollPane prefHeight="400.0" prefWidth="800.0">
                             <content>
-                                <VBox fx:id="pnItems" prefWidth="744.0" spacing="5.0" style="-fx-background-color: #02030A;">
-                                   <children>
-                                       <TableView fx:id="documentTableView" prefHeight="300" prefWidth="400">
-                                           <columns>
-                                               <TableColumn fx:id="idColumn" prefWidth="100" text="ID">
-                                                   <cellValueFactory>
-                                          <PropertyValueFactory property="id" />
-                                       </cellValueFactory>
-                                               </TableColumn>
-                                               <TableColumn fx:id="titleColumn" prefWidth="150" text="Tiêu đề">
-                                                   <cellValueFactory>
-                                          <PropertyValueFactory property="title" />
-                                       </cellValueFactory>
-                                               </TableColumn>
-                                               <TableColumn fx:id="authorColumn" prefWidth="150" text="Tác giả">
-                                                   <cellValueFactory>
-                                          <PropertyValueFactory property="author" />
-                                       </cellValueFactory>
-                                               </TableColumn>
-                                               <TableColumn fx:id="publisherColumn" prefWidth="100" text="Nhà xuất bản">
-                                                   <cellValueFactory>
-                                          <PropertyValueFactory property="publisher" />
-                                       </cellValueFactory>
-                                               </TableColumn>
-                                               <TableColumn fx:id="publishedDateColumn" prefWidth="100" text="Ngày xuất bản">
-                                                   <cellValueFactory>
-                                          <PropertyValueFactory property="publishedDate" />
-                                       </cellValueFactory>
-                                               </TableColumn>
-                                           </columns>
-                                       </TableView>
-                                   </children>
+                                <VBox fx:id="pnItems" spacing="5.0" style="-fx-background-color: #02030A;">
+                                    <children>
+                                        <TableView fx:id="documentTableView" prefHeight="400.0" prefWidth="850.0">
+                                            <columns>
+                                                <TableColumn fx:id="idColumn" prefWidth="100" text="ID">
+                                                    <cellValueFactory>
+                                                        <PropertyValueFactory property="id" />
+                                                    </cellValueFactory>
+                                                </TableColumn>
+                                                <TableColumn fx:id="titleColumn" prefWidth="250" text="Tiêu đề">
+                                                    <cellValueFactory>
+                                                        <PropertyValueFactory property="title" />
+                                                    </cellValueFactory>
+                                                </TableColumn>
+                                                <TableColumn fx:id="authorColumn" prefWidth="250" text="Tác giả">
+                                                    <cellValueFactory>
+                                                        <PropertyValueFactory property="author" />
+                                                    </cellValueFactory>
+                                                </TableColumn>
+                                                <TableColumn fx:id="publisherColumn" prefWidth="100" text="Nhà xuất bản">
+                                                    <cellValueFactory>
+                                                        <PropertyValueFactory property="publisher" />
+                                                    </cellValueFactory>
+                                                </TableColumn>
+                                                <TableColumn fx:id="publishedDateColumn" prefWidth="100" text="Ngày xuất bản">
+                                                    <cellValueFactory>
+                                                        <PropertyValueFactory property="publishedDate" />
+                                                    </cellValueFactory>
+                                                </TableColumn>
+                                                <TableColumn fx:id="isAvailableColumn" prefWidth="100" text="Trạng thái">
+                                                    <cellValueFactory>
+                                                        <PropertyValueFactory property="isAvailable" />
+                                                    </cellValueFactory>
+                                                </TableColumn>
+                                            </columns>
+                                        </TableView>
+                                    </children>
                                 </VBox>
                             </content>
                         </ScrollPane>
@@ -130,3 +150,4 @@
         </StackPane>
     </children>
 </AnchorPane>
+

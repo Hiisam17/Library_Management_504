@@ -24,7 +24,7 @@ public class DocumentManager {
         alert.showAndWait();
     }
     private boolean isDocumentDuplicate(String title, String author, String publishedDate) {
-        String checkDuplicateSql = "SELECT COUNT(*) FROM documents WHERE title = ? AND author = ? AND publishedDate = ?";
+        String checkDuplicateSql = "SELECT COUNT(*) FROM document WHERE title = ? AND author = ? AND publishedDate = ?";
         try (Connection conn = SQL_connect();
              PreparedStatement stmt = conn.prepareStatement(checkDuplicateSql)) {
             stmt.setString(1, title);
@@ -38,8 +38,8 @@ public class DocumentManager {
         }
     }
     public boolean insertDocument(String id, String title, String author, String publisher, String publishedDate) {
-        String checkIdSql = "SELECT COUNT(*) FROM documents WHERE id = ?";
-        String insertSql = "INSERT INTO documents (id, title, author, publisher, publishedDate) VALUES (?, ?, ?, ?, ?)";
+        String checkIdSql = "SELECT COUNT(*) FROM document WHERE id = ?";
+        String insertSql = "INSERT INTO document (id, title, author, publisher, publishedDate) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = SQL_connect();
              PreparedStatement checkIdStmt = conn.prepareStatement(checkIdSql)) {
@@ -75,46 +75,14 @@ public class DocumentManager {
         }
     }
 
-
-
-    public List<Document> getAllDocuments() {
-        List<Document> documents = new ArrayList<>();
-        String sql = "SELECT * FROM documents";
-
-        try (Connection conn = SQL_connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                Document document = new Document();
-                document.setId(rs.getString("id"));
-                document.setTitle(rs.getString("title"));
-                document.setAuthor(rs.getString("author"));
-                document.setPublisher(rs.getString("publisher"));
-                document.setPublishedDate(rs.getString("publishedDate"));
-                documents.add(document);
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return documents;
-    }
-
     public void deleteDocumentById(String id) {
-        String sql = "DELETE FROM documents WHERE id = ?";
-
+        String sql = "DELETE FROM document WHERE id = ?";
         try (Connection conn = SQL_connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, id);
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Đã xóa tài liệu có ID: " + id);
-            } else {
-                System.out.println("Không tìm thấy tài liệu với ID: " + id);
-            }
+            pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Lỗi khi xóa tài liệu: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -125,7 +93,7 @@ public class DocumentManager {
             return; // Dừng lại nếu tài liệu trùng lặp
         }
 
-        String sql = "UPDATE documents SET title = ?, author = ?, publisher = ?, publishedDate = ? WHERE id = ?";
+        String sql = "UPDATE document SET title = ?, author = ?, publisher = ?, publishedDate = ? WHERE id = ?";
 
         try (Connection conn = DatabaseManager.SQL_connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
