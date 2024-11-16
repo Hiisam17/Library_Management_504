@@ -31,21 +31,21 @@ public class DatabaseManager {
         return conn; // Nếu kết nối thất bại, conn sẽ là null
     }
 
-    public void createNewTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS documents (\n"
-                + " id TEXT NOT NULL,\n"
-                + " title TEXT NOT NULL,\n"
-                + " author TEXT NOT NULL,\n"
-                + " publisher TEXT,\n"
-                + " publishedDate TEXT\n"
-                + ");";
+    public static void createTables() {
+        String createBorrowedDocumentsTable = "CREATE TABLE IF NOT EXISTS borrowed_documents (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id TEXT NOT NULL, " +
+                "document_id TEXT NOT NULL, " +
+                "borrow_date DATE NOT NULL, " +
+                "FOREIGN KEY (user_id) REFERENCES users(id), " +
+                "FOREIGN KEY (document_id) REFERENCES document(id)" +
+                ");";
 
         try (Connection conn = SQL_connect();
              Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            System.out.println("Bảng 'documents' đã được tạo hoặc đã tồn tại.");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            stmt.execute(createBorrowedDocumentsTable);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

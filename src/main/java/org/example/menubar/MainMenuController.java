@@ -151,7 +151,7 @@ public class MainMenuController {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item ? "1" : "0");
+                    setText(item ? "Có sẵn" : "Đang được mượn");
                 }
             }
         });
