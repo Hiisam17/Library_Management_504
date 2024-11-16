@@ -59,6 +59,7 @@ public class MainMenuController {
     public MainMenuController() {
         this.documentManager = new DocumentManager(new DatabaseManager());
     }
+
     public void setStage(Stage stage) {
         this.stage = stage;
         stage.setTitle("Library Manager");
@@ -67,6 +68,7 @@ public class MainMenuController {
     public Stage getStage() {
         return this.stage;
     }
+
     @FXML
     public void handleLogout(ActionEvent actionEvent) {
         // Tạo một Alert xác nhận
@@ -249,13 +251,6 @@ public class MainMenuController {
 
     @FXML
     private TextField searchField;
-
-    @FXML
-    private void handleSearch() {
-        String query = searchField.getText();
-        String jsonResponse = APIIntegration.getBookInfoByTitle(query);
-        APIIntegration.parseBookInfo(jsonResponse);
-    }
 
     @FXML
     private void handleReload() {

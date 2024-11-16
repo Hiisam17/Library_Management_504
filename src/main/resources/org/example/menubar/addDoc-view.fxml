@@ -11,6 +11,11 @@
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="Thêm Tài Liệu Mới" styleClass="header-label"/>
+
+    <!-- Trường nhập ISBN để tìm kiếm -->
+    <TextField fx:id="searchField" promptText="Nhập ISBN để tìm kiếm" styleClass="text-field"/>
+    <Button text="Tìm kiếm thông tin từ API" onAction="#handleSearchAPI" styleClass="menu-button"/>
+
     <TextField fx:id="idField" promptText="ID" styleClass="text-field"/>
     <TextField fx:id="titleField" promptText="Tiêu đề" styleClass="text-field"/>
     <TextField fx:id="authorField" promptText="Tác giả" styleClass="text-field"/>

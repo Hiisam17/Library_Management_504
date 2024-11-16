@@ -1,9 +1,33 @@
+
+.main-container {
+    -fx-background-color: #F8F9FA;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
 .header-label {
-    -fx-font-size: 18px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
 }
 
 .menu-button {
-    -fx-padding: 10px;
-    -fx-font-size: 14px;
+    -fx-background-color: #3498DB;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.menu-button:hover {
+    -fx-background-color: #2980B9;
+}
+
+.table-view {
+    -fx-border-color: #B0BEC5;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-background-color: #FFFFFF;
 }

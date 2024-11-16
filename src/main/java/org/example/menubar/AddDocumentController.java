@@ -43,6 +43,9 @@ public class AddDocumentController {
     @FXML
     private DatePicker publishedDatePicker;
 
+    @FXML
+    private TextField searchField;
+
     private Runnable onDocumentAddedCallback; // Callback để thông báo khi tài liệu được thêm
 
     // Các thuộc tính và phương thức hiện tại khác như titleField, authorField...
@@ -76,50 +79,87 @@ public class AddDocumentController {
             }
         });
     }
+
     // Xử lý sự kiện nút Lưu
     @FXML
-        private void handleSaveDocument() {
-            Document newDocument = new Document();
-            newDocument.setId(idField.getText());
-            newDocument.setTitle(titleField.getText());
-            newDocument.setAuthor(authorField.getText());
-            newDocument.setPublisher(publisherField.getText());
+    private void handleSaveDocument() {
+        Document newDocument = new Document();
+        newDocument.setId(idField.getText());
+        newDocument.setTitle(titleField.getText());
+        newDocument.setAuthor(authorField.getText());
+        newDocument.setPublisher(publisherField.getText());
 
-            LocalDate publishedDate = publishedDatePicker.getValue();
+        LocalDate publishedDate = publishedDatePicker.getValue();
         if (publishedDate == null) {
             showAlert("Error", "Please select a published date.");
             return; // Dừng việc lưu tài liệu
         }
-            String formattedDate = publishedDate.format(outputFormatter);
-            newDocument.setPublishedDate(formattedDate);
+        String formattedDate = publishedDate.format(outputFormatter);
+        newDocument.setPublishedDate(formattedDate);
 
-            if ( !newDocument.getId().isEmpty() && !newDocument.getTitle().isEmpty() && !newDocument.getAuthor().isEmpty() && !newDocument.getPublishedDate().isEmpty()) {
-                try {
-                    // Use DocumentManager to insert the document
-                    DocumentManager documentManager = new DocumentManager(new DatabaseManager());
-                    if(documentManager.insertDocument(idField.getText(),
-                            titleField.getText(),
-                            authorField.getText(),
-                            publisherField.getText(),
-                            formattedDate)) {
-                        showAlert("Success", "Document added successfully!");
+        if (!newDocument.getId().isEmpty() && !newDocument.getTitle().isEmpty() && !newDocument.getAuthor().isEmpty() && !newDocument.getPublishedDate().isEmpty()) {
+            try {
+                // Use DocumentManager to insert the document
+                DocumentManager documentManager = new DocumentManager(new DatabaseManager());
+                if (documentManager.insertDocument(idField.getText(),
+                        titleField.getText(),
+                        authorField.getText(),
+                        publisherField.getText(),
+                        formattedDate)) {
+                    showAlert("Success", "Document added successfully!");
+                }
+
+                // Call the callback to refresh the TableView
+                if (onDocumentAddedCallback != null) {
+                    onDocumentAddedCallback.run();
+                }
+
+                clearFields(); // Clear fields after saving
+            } catch (Exception e) {
+                showAlert("Error", "Failed to add document to the database.");
+                e.printStackTrace();
+            }
+        } else {
+            showAlert("Error", "Please fill in all required fields.");
+        }
+    }
+
+    @FXML
+    private void handleSearchAPI() {
+        try {
+            String query = searchField.getText();
+            String jsonResponse = APIIntegration.getBookInfoByTitle(query);
+
+            // Gọi parseBookInfo và nhận về đối tượng Document
+            Document document = APIIntegration.parseBookInfo(jsonResponse);
+
+            // Kiểm tra kết quả và cập nhật giao diện
+            if (document != null) {
+                titleField.setText(document.getTitle());
+                authorField.setText(document.getAuthor());
+                publisherField.setText(document.getPublisher());
+                if (!document.getPublishedDate().isEmpty()) {
+                    try {
+                        if (document.getPublishedDate().length() == 4) { // Chỉ có năm
+                            publishedDatePicker.setValue(LocalDate.of(
+                                    Integer.parseInt(document.getPublishedDate()), 1, 1));
+                        } else if (document.getPublishedDate().length() == 7) { // Có năm và tháng (YYYY-MM)
+                            publishedDatePicker.setValue(LocalDate.parse(document.getPublishedDate() + "-01"));
+                        } else { // Định dạng đầy đủ YYYY-MM-DD
+                            publishedDatePicker.setValue(LocalDate.parse(document.getPublishedDate()));
+                        }
+                    } catch (DateTimeParseException e) {
+                        System.err.println("Lỗi khi phân tích ngày xuất bản: " + e.getMessage());
                     }
-
-                    // Call the callback to refresh the TableView
-                    if (onDocumentAddedCallback != null) {
-                        onDocumentAddedCallback.run();
-                    }
-
-                    clearFields(); // Clear fields after saving
-                } catch (Exception e) {
-                    showAlert("Error", "Failed to add document to the database.");
-                    e.printStackTrace();
                 }
             } else {
-                showAlert("Error", "Please fill in all required fields.");
+                System.out.println("Không có dữ liệu để cập nhật.");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Lỗi trong quá trình tìm kiếm.");
         }
-
+    }
 
     // Hàm khởi tạo để nhận tham chiếu Stage
     public void setStage(Stage stage) {
