@@ -1,0 +1,17 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.usermenu.UserInfoController">
+    <Label text="Thông tin người dùng"/>
+    <Label text="ID:"/>
+    <TextField fx:id="userIdLabel" editable="false"/>
+    <Label text="Tên:"/>
+    <TextField fx:id="userNameField" editable="false"/>
+    <Label text="Email:"/>
+    <TextField fx:id="userEmailField" editable="false"/>
+    <Label text="Tuổi:"/> <!-- Thêm nhãn tuổi -->
+    <TextField fx:id="userAgeField" editable="false"/> <!-- Thêm trường tuổi -->
+    <Button text="Đóng" onAction="#handleClose"/>
+    <Button text="Chỉnh sửa thông tin" onAction="#handleOpenEditDialog"/>
+</VBox>

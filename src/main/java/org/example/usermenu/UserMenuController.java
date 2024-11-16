@@ -24,7 +24,6 @@ public class UserMenuController implements Initializable {
   private static UserMenuController instance;
   private String currentUserId;
 
-  private Stage stage;
 
   @FXML
   private TableView<Document> documentTableView;
@@ -46,6 +45,8 @@ public class UserMenuController implements Initializable {
 
   @FXML
   private TableColumn<Document, Boolean> isAvailableColumn;
+
+  private Stage stage;
 
 
   private DocumentManager documentManager;
@@ -152,21 +153,56 @@ public class UserMenuController implements Initializable {
   }
 
   @FXML
+  private void handleUserInfo() {
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/menubar/user-info-view.fxml"));
+      Parent userInfoRoot = loader.load();
+
+      // Lấy UserInfoController và truyền thông tin người dùng
+      UserInfoController controller = loader.getController();
+      controller.setUserId(currentUserId);
+
+      Stage stage = new Stage();
+      stage.setTitle("Thông tin người dùng");
+      stage.setScene(new Scene(userInfoRoot, 400, 300));
+      stage.show();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void refreshTable() {
+    ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getAllDocument());
+    documentTableView.setItems(document);
+  }
+
+  private void showAlert(String title, String message) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
+  public UserMenuController() {
+    instance = this;
+  }
+
+  public static UserMenuController getInstance() {
+    return instance;
+  }
+
+  public void setCurrentUserId(String userId) {
+    this.currentUserId = userId;
+    refreshTable();
+  }
+
+  @FXML
   private void handleReload() {
     // Gọi phương thức lấy danh sách tài liệu ban đầu từ DocumentManager
     List<Document> allDocuments = documentManager.getAllDocument();
 
     // Đặt lại danh sách tài liệu vào TableView
     documentTableView.getItems().setAll(allDocuments);
-  }
-
-  public void setStage(Stage stage) {
-    this.stage = stage;
-    stage.setTitle("Library Manager");
-  }
-  // Phương thức getter để lấy stage
-  public Stage getStage() {
-    return this.stage;
   }
 
   @FXML
@@ -198,37 +234,5 @@ public class UserMenuController implements Initializable {
     }
     // Nếu người dùng chọn "Hủy" hoặc đóng Alert, sẽ không làm gì cả
   }
-  private void restartApp() throws IOException {
-    // Tạo lại đối tượng Main và gọi phương thức restart
-    Main mainApp = new Main();
-    Main.getInstance().restartApp();
-  }
-
-  public void refreshTable() {
-    ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getAllDocument());
-    documentTableView.setItems(document);
-  }
-
-  private void showAlert(String title, String message) {
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setTitle(title);
-    alert.setContentText(message);
-    alert.showAndWait();
-  }
-
-  public UserMenuController() {
-    instance = this;
-  }
-
-  public static UserMenuController getInstance() {
-    return instance;
-  }
-
-  public void setCurrentUserId(String userId) {
-    this.currentUserId = userId;
-    refreshTable();
-  }
-
-
 
 }
