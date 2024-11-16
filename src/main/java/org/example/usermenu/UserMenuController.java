@@ -151,6 +151,25 @@ public class UserMenuController implements Initializable {
     }
   }
 
+  @FXML
+  private void handleUserInfo() {
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/menubar/user-info-view.fxml"));
+      Parent userInfoRoot = loader.load();
+
+      // Lấy UserInfoController và truyền thông tin người dùng
+      UserInfoController controller = loader.getController();
+      controller.setUserId(currentUserId);
+
+      Stage stage = new Stage();
+      stage.setTitle("Thông tin người dùng");
+      stage.setScene(new Scene(userInfoRoot, 400, 300));
+      stage.show();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public void refreshTable() {
     ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getAllDocument());
     documentTableView.setItems(document);

@@ -14,6 +14,7 @@
 
     <Label text="Chào mừng đến với Quản lý Thư viện - Người Dùng" styleClass="header-label"/>
     <!-- Các nút chức năng -->
+    <Button text="Thông tin người dùng" onAction="#handleUserInfo"/>
     <Button text="Mượn Tài Liệu" onAction="#handleBorrowDocument" styleClass="menu-button"/>
     <Button text="Danh Sách Tài Liệu Đã Mượn" onAction="#handleShowBorrowedDocuments" styleClass="menu-button"/>
     <Button text="Tìm Kiếm" onAction="#handleSearch" styleClass="menu-button"/>
