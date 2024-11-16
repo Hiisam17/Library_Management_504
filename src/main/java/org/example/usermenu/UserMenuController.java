@@ -12,18 +12,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.example.menubar.Document;
-import org.example.menubar.DocumentManager;
-import org.example.menubar.DatabaseManager;
-import org.example.menubar.SearchDocController;
+import org.example.menubar.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class UserMenuController implements Initializable {
   private static UserMenuController instance;
 
+  private Stage stage;
 
   @FXML
   private TableView<Document> documentTableView;
@@ -143,6 +143,59 @@ public class UserMenuController implements Initializable {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  @FXML
+  private void handleReload() {
+    // Gọi phương thức lấy danh sách tài liệu ban đầu từ DocumentManager
+    List<Document> allDocuments = documentManager.getAllDocument();
+
+    // Đặt lại danh sách tài liệu vào TableView
+    documentTableView.getItems().setAll(allDocuments);
+  }
+
+  public void setStage(Stage stage) {
+    this.stage = stage;
+    stage.setTitle("Library Manager");
+  }
+  // Phương thức getter để lấy stage
+  public Stage getStage() {
+    return this.stage;
+  }
+
+  @FXML
+  public void handleLogout(ActionEvent actionEvent) {
+    // Tạo một Alert xác nhận
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Xác nhận Đăng xuất");
+    alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+    alert.setContentText("Chọn OK để đăng xuất hoặc Hủy để quay lại.");
+
+    // Hiển thị Alert và chờ người dùng phản hồi
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.isPresent() && result.get() == ButtonType.OK) {
+      if (stage != null) {
+        stage.close(); // Đóng cửa sổ chính
+        stage=null;
+      }
+      try {
+        Main mainInstance = Main.getInstance();
+        if (mainInstance != null) {
+          mainInstance.restartApp();
+        } else {
+          System.err.println("Lỗi: Main chưa được khởi tạo.");
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+    }
+    // Nếu người dùng chọn "Hủy" hoặc đóng Alert, sẽ không làm gì cả
+  }
+  private void restartApp() throws IOException {
+    // Tạo lại đối tượng Main và gọi phương thức restart
+    Main mainApp = new Main();
+    Main.getInstance().restartApp();
   }
 
   public void refreshTable() {

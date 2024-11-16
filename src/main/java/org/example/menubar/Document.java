@@ -32,6 +32,14 @@ public class Document {
     // Constructor không tham số (mặc định)
     public Document() {}
 
+    public Document(String title, String author, String publisher, String publishedDate) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+    }
+
     // Phương thức truy cập (getter) cho các thuộc tính
     public String getId() {
         return id;
