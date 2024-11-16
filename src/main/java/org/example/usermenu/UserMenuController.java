@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 
 public class UserMenuController implements Initializable {
   private static UserMenuController instance;
+  private String currentUserId;
 
   private Stage stage;
 
@@ -87,7 +88,7 @@ public class UserMenuController implements Initializable {
       return;
     }
 
-    boolean success = documentManager.borrowDocument(selectedDocument.getId());
+    boolean success = documentManager.borrowDocument(selectedDocument.getId(), currentUserId);
     if (success) {
       showAlert("Thành công", "Bạn đã mượn tài liệu thành công.");
       refreshTable(); // Tải lại dữ liệu sau khi mượn tài liệu
@@ -101,8 +102,13 @@ public class UserMenuController implements Initializable {
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/menubar/borrowed-documents-view.fxml"));
       Parent root = loader.load();
+
+      BorrowedDocumentsController controller = loader.getController();
+      controller.setUserId(currentUserId);
+      controller.refreshBorrowedDocuments(currentUserId);
+
       Stage stage = new Stage();
-      stage.setTitle("Danh Sách Tài Liệu Đã Mượn");
+      stage.setTitle("Borrowed Documents List");
       stage.setScene(new Scene(root));
       stage.show();
     } catch (IOException e) {
@@ -118,10 +124,10 @@ public class UserMenuController implements Initializable {
       return;
     }
 
-    boolean success = documentManager.returnDocument(selectedDocument.getId());
+    boolean success = documentManager.returnDocument(selectedDocument.getId(), currentUserId);
     if (success) {
       showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
-      refreshTable();
+      refreshTable(); // Tải lại dữ liệu sau khi trả tài liệu
     } else {
       showAlert("Thất bại", "Không thể trả tài liệu. Vui lòng thử lại.");
     }
@@ -199,9 +205,8 @@ public class UserMenuController implements Initializable {
   }
 
   public void refreshTable() {
-    // Lấy danh sách tài liệu từ cơ sở dữ liệu và cập nhật vào TableView
-    ObservableList<Document> documents = FXCollections.observableArrayList(documentManager.getAllDocument());
-    documentTableView.setItems(documents);
+    ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getAllDocument());
+    documentTableView.setItems(document);
   }
 
   private void showAlert(String title, String message) {
@@ -218,5 +223,12 @@ public class UserMenuController implements Initializable {
   public static UserMenuController getInstance() {
     return instance;
   }
+
+  public void setCurrentUserId(String userId) {
+    this.currentUserId = userId;
+    refreshTable();
+  }
+
+
 
 }

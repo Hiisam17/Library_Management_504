@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class BorrowedDocumentsController implements Initializable {
+    private String userId;
 
     @FXML
     private TableView<Document> borrowedDocumentTableView;
@@ -36,6 +37,10 @@ public class BorrowedDocumentsController implements Initializable {
     private TableColumn<Document, String> publishedDateColumn;
 
     private DocumentManager documentManager;
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -58,7 +63,7 @@ public class BorrowedDocumentsController implements Initializable {
             return;
         }
 
-        boolean success = documentManager.returnDocument(selectedDocument.getId());
+        boolean success = documentManager.returnDocument(selectedDocument.getId(), userId);
         if (success) {
             showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
             refreshTable(); // Tải lại danh sách tài liệu đã mượn sau khi trả tài liệu
@@ -69,8 +74,8 @@ public class BorrowedDocumentsController implements Initializable {
     }
 
     private void refreshTable() {
-        ObservableList<Document> borrowedDocuments = FXCollections.observableArrayList(documentManager.getBorrowedDocuments());
-        borrowedDocumentTableView.setItems(borrowedDocuments);
+        ObservableList<Document> borrowedDocument = FXCollections.observableArrayList(documentManager.getBorrowedDocumentsByUserId(userId));
+        borrowedDocumentTableView.setItems(borrowedDocument);
     }
 
     private void showAlert(String title, String message) {
@@ -78,5 +83,10 @@ public class BorrowedDocumentsController implements Initializable {
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void refreshBorrowedDocuments(String userId) {
+        ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getBorrowedDocumentsByUserId(userId));
+        borrowedDocumentTableView.setItems(document);
     }
 }

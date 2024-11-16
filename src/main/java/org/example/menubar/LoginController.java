@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.usermenu.UserMenuController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,12 +55,12 @@ public class LoginController {
         String password = passwordField.getText();
 
         if (mainApp != null) {
-            Boolean isAdmin = validateLogin(username, password);
-            if (isAdmin != null) {
-                System.out.println("Login successful! Is Admin: " + isAdmin);
+            String userId = validateLogin(username, password);
+            if (userId != null) {
+                System.out.println("Login successful! User ID: " + userId);
                 try {
                     FXMLLoader loader;
-                    if (isAdmin) {
+                    if (isAdmin(userId)) {
                         loader = new FXMLLoader(getClass().getResource("menu-view.fxml"));
                     } else {
                         loader = new FXMLLoader(getClass().getResource("user-view.fxml"));
@@ -67,13 +68,13 @@ public class LoginController {
                     Parent mainMenuRoot = loader.load();
 
                     // Lấy controller và thiết lập Stage
-                    if (isAdmin) {
+                    if (isAdmin(userId)) {
                         MainMenuController controller = loader.getController();
                         controller.setStage((Stage) usernameField.getScene().getWindow());
-                    } //else {
-                       // UserMenuController controller = loader.getController();
-                      //  controller.setStage((Stage) usernameField.getScene().getWindow());
-                   // }
+                    } else {
+                        UserMenuController controller = loader.getController();
+                        controller.setCurrentUserId(userId);
+                    }
 
                     Stage stage = (Stage) usernameField.getScene().getWindow();
                     stage.setScene(new Scene(mainMenuRoot, 1200, 800));
@@ -99,8 +100,8 @@ public class LoginController {
 
 
 
-    private Boolean validateLogin(String username, String password) {
-        String sql = "SELECT is_admin FROM users WHERE user_name = ? AND password = ?";
+    private String validateLogin(String username, String password) {
+        String sql = "SELECT id, is_admin FROM users WHERE user_name = ? AND password = ?";
 
         try (Connection conn = SQL_connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -110,20 +111,18 @@ public class LoginController {
 
             ResultSet rs = pstmt.executeQuery();
 
-            // Nếu có kết quả, lấy giá trị của cột is_admin dưới dạng số nguyên
             if (rs.next()) {
-                int isAdminInt = rs.getInt("is_admin"); // Lấy is_admin dưới dạng int
-                boolean isAdmin = isAdminInt == 1; // Kiểm tra nếu giá trị là 1 thì là admin
-                System.out.println("Debug - isAdmin (int): " + isAdminInt + ", isAdmin (boolean): " + isAdmin);
-                return isAdmin;
+                String userId = rs.getString("id");
+                return userId;
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
-        return null; // Trả về null nếu thông tin đăng nhập không hợp lệ
+        return null;
     }
+
     @FXML
     private void handleRegister(ActionEvent actionEvent) {
         try {
@@ -171,6 +170,27 @@ public class LoginController {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private boolean isAdmin(String userId) {
+        String sql = "SELECT is_admin FROM users WHERE id = ?";
+
+        try (Connection conn = SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, userId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("is_admin") == 1;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
     }
 }
 
