@@ -62,7 +62,7 @@ public class LoginController {
             }
 
             System.out.println("Login successful! User ID: " + loginResult.userId);
-            User user;
+            User user ;
             if (loginResult.isAdmin) {
                 user = new AdminUser(username, password);
             } else {

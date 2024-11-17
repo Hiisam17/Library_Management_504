@@ -1,0 +1,52 @@
+/* Toàn bộ giao diện */
+.root {
+    -fx-padding: 20;
+    -fx-background-color: #f9f9f9;
+}
+
+/* Tiêu đề */
+.label-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 0 0 15 0;
+}
+
+/* Nhãn */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+}
+
+/* Trường thông tin */
+.text-field {
+    -fx-background-color: #eaeaea;
+    -fx-padding: 5;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+/* Nút */
+.button {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.button:hover {
+    -fx-background-color: #1565c0;
+}
+
+.button-close {
+    -fx-background-color: #d32f2f;
+}
+
+.button-close:hover {
+    -fx-background-color: #b71c1c;
+}

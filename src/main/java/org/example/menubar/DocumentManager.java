@@ -318,5 +318,22 @@ public class DocumentManager {
         return results;
     }
 
+    // Phương thức tạo bảng reviews
+    public static void createTables() {
+        String createReviewsTable = "CREATE TABLE IF NOT EXISTS reviews ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "documentId TEXT NOT NULL,"
+                + "userId TEXT NOT NULL,"
+                + "rating INTEGER NOT NULL,"
+                + "comment TEXT,"
+                + "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP"
+                + ");";
 
+        try (Connection conn = SQL_connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(createReviewsTable);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

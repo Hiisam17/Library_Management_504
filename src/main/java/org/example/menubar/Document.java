@@ -11,6 +11,7 @@ public class Document {
     private String publisher;       // nhà xuất bản
     private String publishedDate;             // Năm xuất bản của tài liệu
     private boolean isAvailable = true;   // Tình trạng khả dụng của tài liệu
+    private String reviews;
 
     /**
      * Khởi tạo một tài liệu mới với thông tin cơ bản.
@@ -97,5 +98,9 @@ public class Document {
     @Override
     public String toString() {
         return "ID: " + id + ", Title: " + title + ", Author: " + author + ", PublishedDate: " + publishedDate + ", Available: " + isAvailable;
+    }
+
+    public String getReviews() {
+        return reviews;
     }
 }
