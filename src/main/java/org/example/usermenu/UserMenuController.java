@@ -135,22 +135,22 @@ public class UserMenuController implements Initializable {
   }
 
   @FXML
-  private void handleSearch() {
-    try {
-      // Tải FXML của giao diện tìm kiếm
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/menubar/SearchDoc-view.fxml"));
-      Scene scene = new Scene(fxmlLoader.load());
+  private void handleSearchDocument() {
+    // Lấy từ khóa từ thanh tìm kiếm
+    String keyword = searchField.getText().trim().toLowerCase();
 
-      // Tạo cửa sổ mới cho giao diện tìm kiếm
-      Stage searchStage = new Stage();
-      searchStage.setTitle("Tìm kiếm Tài liệu");
-      searchStage.setScene(scene);
-      searchStage.initModality(Modality.APPLICATION_MODAL); // Chặn cửa sổ khác cho đến khi đóng
-      searchStage.show();
-    } catch (IOException e) {
-      e.printStackTrace();
+    if (keyword.isEmpty()) {
+      showAlert("Lỗi", "Vui lòng nhập từ khóa tìm kiếm.");
+      return;
     }
+
+    // Lấy kết quả tìm kiếm từ DocumentManager
+    ObservableList<Document> searchResults = FXCollections.observableArrayList(documentManager.searchDocuments(keyword));
+    documentTableView.setItems(searchResults);
   }
+
+  @FXML
+  private TextField searchField;
 
   @FXML
   private void handleUserInfo() {

@@ -88,7 +88,7 @@
                         <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 25;">
                             <children>
                                 <TextField fx:id="searchField" prefHeight="43.0" prefWidth="657.0" promptText="Nhập tiêu đề sách" style="-fx-background-color: #FFFFFF; -fx-border-color: #B7C3D7; -fx-border-width: 2px; -fx-border-radius: 2em; -fx-prompt-text-fill: #B7C3D7; -fx-text-fill: #000000;" />
-                                <Button fx:id="SearchDocument" graphicTextGap="22.0" onAction="#handleSearch" prefHeight="42.0" prefWidth="191.0" text="Tìm kiếm" textFill="#e7e5e5">
+                                <Button fx:id="SearchDocument" graphicTextGap="22.0" onAction="#handleSearchDocument" prefHeight="42.0" prefWidth="191.0" text="Tìm kiếm" textFill="#e7e5e5">
                                     <graphic>
                                         <ImageView fitHeight="23.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
