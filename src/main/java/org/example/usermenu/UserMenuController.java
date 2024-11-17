@@ -188,6 +188,7 @@ public class UserMenuController implements Initializable {
   }
 
   public static UserMenuController getInstance() {
+
     return instance;
   }
 

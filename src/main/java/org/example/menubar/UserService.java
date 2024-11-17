@@ -48,7 +48,7 @@ public class UserService {
       pstmt.setString(1, userId);
       ResultSet rs = pstmt.executeQuery();
       if (rs.next()) {
-        return new User(
+        return new RegularUser(
                 rs.getString("id"),
                 rs.getString("name"),
                 rs.getString("email"),

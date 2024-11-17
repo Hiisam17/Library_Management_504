@@ -1,6 +1,8 @@
 package org.example.menubar;
 
-public class User {
+import javafx.stage.Stage;
+
+public abstract class User {
   private String username;
   private String password;
   private String role; // "admin" or "user"
@@ -10,7 +12,7 @@ public class User {
   private String email;
   private int age;
 
-  public User(String username, String password, String role) {
+  public  User(String username, String password, String role) {
     this.username = username;
     this.password = password;
     this.role = role;
@@ -79,4 +81,7 @@ public class User {
     this.email = email;
     this.age = age;
   }
+    public abstract void LoginLoad(String UserId, Stage stage);
 }
+
+

@@ -13,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.usermenu.UserMenuController;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -26,7 +27,7 @@ import static org.example.menubar.DatabaseManager.SQL_connect;
 
 public class MainMenuController {
     private Stage stage;
-
+    private String currentUserId;
     @FXML
     private TextField idField;
     @FXML
@@ -69,6 +70,7 @@ public class MainMenuController {
         return this.stage;
     }
 
+    public void setCurrentUserId(String userId) { this.currentUserId =userId;}
     @FXML
     public void handleLogout(ActionEvent actionEvent) {
         // Tạo một Alert xác nhận
