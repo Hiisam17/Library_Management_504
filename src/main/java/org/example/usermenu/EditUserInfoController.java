@@ -1,6 +1,7 @@
 package org.example.usermenu;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.menubar.User;
@@ -13,6 +14,10 @@ public class EditUserInfoController {
   private TextField userEmailField;
   @FXML
   private TextField userAgeField;
+  @FXML
+  private Button editButton;
+  @FXML
+  private Button saveButton;
 
   private String userId;
 
@@ -34,7 +39,8 @@ public class EditUserInfoController {
 
   @FXML
   private void handleEditUserInfo() {
-    String newUsername = userNameField.getText();
+    enableEditing(true);
+    /*String newUsername = userNameField.getText();
     String newEmail = userEmailField.getText();
     int newAge = Integer.parseInt(userAgeField.getText());
     boolean success = UserService.updateUser(userId, newUsername, newEmail, newAge);
@@ -42,10 +48,10 @@ public class EditUserInfoController {
       System.out.println("Cập nhật thông tin người dùng thành công.");
     } else {
       System.out.println("Cập nhật thông tin người dùng thất bại.");
-    }
+    }*/
   }
 
-  @FXML
+  /*@FXML
   private void handleSave() {
     String newUsername = userNameField.getText();
     String newEmail = userEmailField.getText();
@@ -57,7 +63,7 @@ public class EditUserInfoController {
       System.out.println("Cập nhật thông tin người dùng thất bại.");
     }
     handleClose();
-  }
+  }*/
 
   @FXML
   private void handleCancel() {
@@ -68,4 +74,39 @@ public class EditUserInfoController {
     Stage stage = (Stage) userNameField.getScene().getWindow();
     stage.close();
   }
+
+  @FXML
+  private void handleSaveUserInfo() {
+    try {
+
+      // Thực hiện lưu thông tin vào database hoặc xử lý logic ở đây
+      String newUsername = userNameField.getText();
+      String newEmail = userEmailField.getText();
+      int newAge = Integer.parseInt(userAgeField.getText());
+      boolean success = UserService.updateUser(userId, newUsername, newEmail, newAge);
+      if (success) {
+        System.out.println("Cập nhật thông tin người dùng thành công.");
+      } else {
+        System.out.println("Cập nhật thông tin người dùng thất bại.");
+      }
+
+      // Tắt chế độ chỉnh sửa
+      enableEditing(false);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("Lỗi khi lưu thông tin.");
+    }
+  }
+
+
+  private void enableEditing(boolean enable) {
+    userNameField.setEditable(enable);
+    userEmailField.setEditable(enable);
+    userAgeField.setEditable(enable);
+
+    editButton.setVisible(!enable);
+    saveButton.setVisible(enable);
+  }
+
 }
