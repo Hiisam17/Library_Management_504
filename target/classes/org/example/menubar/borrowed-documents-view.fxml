@@ -18,7 +18,7 @@
     <Button text="Trả Tài Liệu" onAction="#handleReturnDocument" styleClass="menu-button" />
 
     <!-- Bảng hiển thị danh sách tài liệu đã mượn -->
-    <TableView fx:id="borrowedDocumentTableView" prefHeight="800" prefWidth="1200" styleClass="table-view">
+    <TableView fx:id="borrowedDocumentTableView" prefHeight="800" prefWidth="1200" styleClass="table-view" stylesheets="@table.css">
         <columns>
             <TableColumn text="ID" fx:id="idColumn" prefWidth="160">
                 <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>

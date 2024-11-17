@@ -3,6 +3,8 @@ package org.example.usermenu;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -10,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.menubar.*;
@@ -56,7 +59,19 @@ public class UserMenuController implements Initializable {
     // Khởi tạo DocumentManager (cần kết nối đến cơ sở dữ liệu qua DatabaseManager)
     documentManager = new DocumentManager(new DatabaseManager());
 
-    // Thiết lập các cột trong bảng TableView
+    // Định dạng cột
+    idColumn.setStyle("-fx-alignment: CENTER;"); // Căn giữa
+    titleColumn.setStyle("-fx-alignment: CENTER_LEFT;"); // Căn trái
+    authorColumn.setStyle("-fx-alignment: CENTER_LEFT;");
+    publisherColumn.setStyle("-fx-alignment: CENTER_LEFT;");
+    publishedDateColumn.setStyle("-fx-alignment: CENTER;");
+    isAvailableColumn.setStyle("-fx-alignment: CENTER;");
+
+    // Đặt chiều rộng tối thiểu cho các cột
+    titleColumn.setMinWidth(200);
+    authorColumn.setMinWidth(200);
+
+    // Khởi tạo các cột của TableView
     idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
     titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
     authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -76,6 +91,35 @@ public class UserMenuController implements Initializable {
         }
       }
     });
+
+    TableColumn<Document, Void> actionColumn = new TableColumn<>("Hành động");
+
+    actionColumn.setCellFactory(param -> new TableCell<>() {
+      private final Button detailButton = new Button("Chi tiết");
+
+      {
+        // Xử lý sự kiện khi nhấn nút
+        detailButton.setOnAction(event -> {
+          Document doc = getTableView().getItems().get(getIndex());
+          showBookDetails(doc); // Gọi hàm hiển thị đánh giá
+        });
+
+        // Tùy chỉnh giao diện nút
+        detailButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white; -fx-cursor: hand;");
+      }
+
+      @Override
+      protected void updateItem(Void item, boolean empty) {
+        super.updateItem(item, empty);
+        if (empty) {
+          setGraphic(null); // Nếu hàng rỗng, không hiển thị nút
+        } else {
+          setGraphic(detailButton); // Hiển thị nút trong ô
+        }
+      }
+    });
+
+    documentTableView.getColumns().add(actionColumn);
 
     // Tải dữ liệu từ SQL và hiển thị
     refreshTable();
@@ -233,6 +277,29 @@ public class UserMenuController implements Initializable {
 
     }
     // Nếu người dùng chọn "Hủy" hoặc đóng Alert, sẽ không làm gì cả
+  }
+
+  private void showBookDetails(Document doc) {
+    // Tạo cửa sổ mới
+    Stage dialogStage = new Stage();
+    dialogStage.setTitle("Đánh giá sách: " + doc.getTitle());
+    dialogStage.initModality(Modality.WINDOW_MODAL);
+
+    // Nội dung đánh giá (ví dụ: hiển thị từ cơ sở dữ liệu hoặc danh sách tĩnh)
+    Label reviewLabel = new Label("Đánh giá của người dùng:\n\n" + doc.getReviews());
+    reviewLabel.setWrapText(true);
+
+    // Bố cục hộp thoại
+    VBox dialogVBox = new VBox(10, reviewLabel);
+    dialogVBox.setPadding(new Insets(20));
+    dialogVBox.setAlignment(Pos.CENTER);
+
+    // Cảnh (Scene)
+    Scene dialogScene = new Scene(dialogVBox, 400, 200);
+    dialogStage.setScene(dialogScene);
+
+    // Hiển thị cửa sổ
+    dialogStage.showAndWait();
   }
 
 }

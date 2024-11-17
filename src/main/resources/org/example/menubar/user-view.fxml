@@ -116,7 +116,7 @@
                             <content>
                                 <VBox fx:id="pnItems" spacing="5.0" style="-fx-background-color: #02030A;">
                                     <children>
-                                        <TableView fx:id="documentTableView" prefHeight="400.0" prefWidth="850.0">
+                                        <TableView fx:id="documentTableView" prefHeight="400.0" prefWidth="850.0" stylesheets="@table.css">
                                             <!-- Các cột của bảng TableView -->
                                             <columns>
                                                 <TableColumn fx:id="idColumn" prefWidth="100" text="ID">

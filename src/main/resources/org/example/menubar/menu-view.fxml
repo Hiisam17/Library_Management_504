@@ -111,7 +111,7 @@
    </children>
                         </HBox>
 
-                        <ScrollPane prefHeight="400.0" prefWidth="800.0">
+                        <ScrollPane prefHeight="400.0" prefWidth="800.0" stylesheets="@table.css">
                             <!-- Nội dung TableView hiện tại -->
                             <content>
                                 <VBox fx:id="pnItems" spacing="5.0" style="-fx-background-color: #02030A;">
