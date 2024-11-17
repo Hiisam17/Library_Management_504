@@ -336,4 +336,63 @@ public class DocumentManager {
             System.out.println(e.getMessage());
         }
     }
+
+    // Thêm đánh giá và nhận xét
+    public boolean addReview(String documentId, String userId, int rating, String comment) {
+        String sql = "INSERT INTO reviews(documentId, userId, rating, comment) VALUES(?, ?, ?, ?)";
+
+        try (Connection conn = dbManager.SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, documentId);
+            pstmt.setString(2, userId);
+            pstmt.setInt(3, rating);
+            pstmt.setString(4, comment);
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    // Lấy danh sách đánh giá và nhận xét
+    public List<Review> getReviews(String documentId) {
+        List<Review> reviews = new ArrayList<>();
+        String sql = "SELECT r.*, u.name AS userName FROM reviews r JOIN users u ON r.userId = u.id WHERE r.documentId = ?";
+
+        try (Connection conn = dbManager.SQL_connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, documentId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Review review = new Review();
+                review.setId(rs.getInt("id"));
+                review.setDocumentId(rs.getString("documentId"));
+                review.setUserId(rs.getString("userId"));
+                review.setUserName(rs.getString("userName")); // Set user name
+                review.setRating(rs.getInt("rating"));
+                review.setComment(rs.getString("comment"));
+
+                // Kiểm tra giá trị null trước khi gọi toLocalDateTime()
+                Timestamp timestamp = rs.getTimestamp("timestamp");
+                if (timestamp != null) {
+                    review.setTimestamp(timestamp.toLocalDateTime());
+                } else {
+                    review.setTimestamp(null); // Hoặc giá trị mặc định khác nếu cần
+                }
+
+                reviews.add(review);
+
+                // In ra để debug
+                System.out.println("Review ID: " + review.getId());
+                System.out.println("User Name: " + review.getUserName());
+                System.out.println("Rating: " + review.getRating());
+                System.out.println("Comment: " + review.getComment());
+            }
+        } catch (SQLException e) {
+            System.out.println("Error executing query: " + e.getMessage());
+        }
+        return reviews;
+    }
 }

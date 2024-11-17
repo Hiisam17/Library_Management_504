@@ -359,26 +359,48 @@ public class MainMenuController {
     }
 
     private void showBookDetails(Document doc) {
+        // In ra để debug
+        System.out.println("Phương thức showBookDetails được gọi");
+
         // Tạo cửa sổ mới
         Stage dialogStage = new Stage();
         dialogStage.setTitle("Đánh giá sách: " + doc.getTitle());
         dialogStage.initModality(Modality.WINDOW_MODAL);
 
-        // Nội dung đánh giá (ví dụ: hiển thị từ cơ sở dữ liệu hoặc danh sách tĩnh)
-        Label reviewLabel = new Label("Đánh giá của người dùng:\n\n" + doc.getReviews());
-        reviewLabel.setWrapText(true);
+        // Lấy danh sách đánh giá từ cơ sở dữ liệu
+        DocumentManager documentManager = new DocumentManager(new DatabaseManager());
+        List<Review> reviews = documentManager.getReviews(doc.getId());
 
-        // Bố cục hộp thoại
-        VBox dialogVBox = new VBox(10, reviewLabel);
-        dialogVBox.setPadding(new Insets(20));
-        dialogVBox.setAlignment(Pos.CENTER);
+        // In ra để debug
+        System.out.println("Số lượng đánh giá: " + reviews.size());
+
+        // Tạo nội dung hiển thị đánh giá
+        VBox reviewBox = new VBox(10);
+        reviewBox.setPadding(new Insets(20));
+        reviewBox.setAlignment(Pos.CENTER_LEFT);
+
+        for (Review review : reviews) {
+            String reviewText = review.getUserName() + ": " + review.getRating() + " - " + review.getComment() + " (" + review.getTimestamp() + ")";
+            Label reviewLabel = new Label(reviewText);
+            reviewLabel.setWrapText(true);
+            reviewBox.getChildren().add(reviewLabel);
+
+            // In ra để debug
+            System.out.println("Đánh giá: " + reviewText);
+        }
 
         // Cảnh (Scene)
-        Scene dialogScene = new Scene(dialogVBox, 400, 200);
+        Scene dialogScene = new Scene(reviewBox, 400, 200);
         dialogStage.setScene(dialogScene);
+
+        // In ra để debug
+        System.out.println("Hiển thị cửa sổ đánh giá");
 
         // Hiển thị cửa sổ
         dialogStage.showAndWait();
+
+        // In ra để debug
+        System.out.println("Đóng cửa sổ đánh giá");
     }
 
 }
