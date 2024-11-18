@@ -173,6 +173,9 @@ public class UserMenuController implements Initializable {
     if (success) {
       showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
       refreshTable(); // Tải lại dữ liệu sau khi trả tài liệu
+
+      // Hiển thị cửa sổ đánh giá
+      showRateBookDialog(selectedDocument, currentUserId);
     } else {
       showAlert("Thất bại", "Không thể trả tài liệu. Vui lòng thử lại.");
     }
@@ -323,6 +326,36 @@ public class UserMenuController implements Initializable {
 
     // In ra để debug
     System.out.println("Đóng cửa sổ đánh giá");
+  }
+
+  @FXML
+  private void handleRateBook() {
+    Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
+    if (selectedDocument == null) {
+      showAlert("Thông báo", "Vui lòng chọn tài liệu để đánh giá.");
+      return;
+    }
+
+    // Hiển thị cửa sổ đánh giá
+    showRateBookDialog(selectedDocument, currentUserId);
+  }
+
+  private void showRateBookDialog(Document doc, String userId) {
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/menubar/rate-book-view.fxml"));
+      Parent root = loader.load();
+
+      RateBookController controller = loader.getController();
+      controller.setDocument(doc);
+      controller.setUserId(userId);
+
+      Stage stage = new Stage();
+      stage.setTitle("Đánh giá sách: " + doc.getTitle());
+      stage.setScene(new Scene(root));
+      stage.showAndWait();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }
