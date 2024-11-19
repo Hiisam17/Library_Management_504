@@ -43,6 +43,7 @@
 
                 <Button text="Đánh giá sách" onAction="#handleRateBook"/>
 
+                <Label fx:id="clockLabel" layoutX="10" layoutY="10" />
 
                 <Button fx:id="btnBorrowDocument" graphicTextGap="22.0" onAction="#handleBorrowDocument" prefHeight="50.0" prefWidth="260.0" text="Mượn tài liệu" textFill="#e7e5e5">
                     <graphic>

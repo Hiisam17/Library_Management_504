@@ -1,5 +1,7 @@
 package org.example.usermenu;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +17,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.menubar.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -26,6 +31,9 @@ import java.util.ResourceBundle;
 public class UserMenuController implements Initializable {
   private static UserMenuController instance;
   private String currentUserId;
+
+  @FXML
+  private Label clockLabel;
 
 
   @FXML
@@ -123,6 +131,14 @@ public class UserMenuController implements Initializable {
 
     // Tải dữ liệu từ SQL và hiển thị
     refreshTable();
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+      LocalDateTime now = LocalDateTime.now();
+      clockLabel.setText(now.format(formatter));
+    }));
+    timeline.setCycleCount(Timeline.INDEFINITE);
+    timeline.play();
   }
 
   @FXML
