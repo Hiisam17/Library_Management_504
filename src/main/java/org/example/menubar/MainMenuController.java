@@ -141,6 +141,8 @@ public class MainMenuController {
     @FXML
     public void initialize() {
 
+        updateBookCounts(); // Cập nhật số lượng sách
+
         // Định dạng cột
         idColumn.setStyle("-fx-alignment: CENTER;"); // Căn giữa
         titleColumn.setStyle("-fx-alignment: CENTER_LEFT;"); // Căn trái
@@ -401,6 +403,26 @@ public class MainMenuController {
 
         // In ra để debug
         System.out.println("Đóng cửa sổ đánh giá");
+    }
+
+    @FXML
+    private Label totalBooksLabel;
+
+    @FXML
+    private Label availableBooksLabel;
+
+    private void updateBookCounts() {
+        try {
+            // Lấy dữ liệu từ database hoặc danh sách
+            int totalBooks = documentManager.getTotalBooksFromDatabase(); // Hoặc getTotalBooks()
+            int availableBooks = documentManager.getAvailableBooksFromDatabase(); // Hoặc getAvailableBooks()
+
+            // Cập nhật nhãn
+            totalBooksLabel.setText("Tổng số sách: " + totalBooks);
+            availableBooksLabel.setText("Sách có sẵn: " + availableBooks);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

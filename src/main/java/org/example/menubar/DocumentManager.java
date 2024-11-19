@@ -395,4 +395,29 @@ public class DocumentManager {
         }
         return reviews;
     }
+
+    public int getTotalBooksFromDatabase() throws SQLException {
+        String query = "SELECT COUNT(*) FROM document";
+        try (Connection conn = dbManager.SQL_connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public int getAvailableBooksFromDatabase() throws SQLException {
+        String query = "SELECT COUNT(*) FROM document WHERE isAvailable = 1";
+        try (Connection conn = dbManager.SQL_connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
 }
