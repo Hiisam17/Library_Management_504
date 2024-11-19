@@ -75,8 +75,7 @@ public class UserMenuController implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
 
     documentManager = new DocumentManager(dbManager);
-    
-    // Cập nhật thông tin tổng số sách
+
     updateBookCounts();
 
     // Định dạng cột
@@ -247,6 +246,7 @@ public class UserMenuController implements Initializable {
   }
 
   public void refreshTable() {
+    updateBookCounts();
     ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getAllDocument());
     documentTableView.setItems(document);
   }

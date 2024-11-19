@@ -1,6 +1,9 @@
 package org.example.usermenu;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -8,10 +11,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
+import javafx.stage.Stage;
 import org.example.menubar.Document;
 import org.example.menubar.DocumentManager;
 import org.example.menubar.DatabaseManager;
+import org.example.menubar.RateBookController;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -66,6 +72,7 @@ public class BorrowedDocumentsController implements Initializable {
         boolean success = documentManager.returnDocument(selectedDocument.getId(), userId);
         if (success) {
             showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
+            showRateBookDialog(selectedDocument, userId);
             refreshTable(); // Tải lại danh sách tài liệu đã mượn sau khi trả tài liệu
             UserMenuController.getInstance().refreshTable(); // Cập nhật lại bảng trong giao diện người dùng
         } else {
@@ -88,5 +95,23 @@ public class BorrowedDocumentsController implements Initializable {
     public void refreshBorrowedDocuments(String userId) {
         ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getBorrowedDocumentsByUserId(userId));
         borrowedDocumentTableView.setItems(document);
+    }
+
+    private void showRateBookDialog(Document doc, String userId) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/menubar/rate-book-view.fxml"));
+            Parent root = loader.load();
+
+            RateBookController controller = loader.getController();
+            controller.setDocument(doc);
+            controller.setUserId(userId);
+
+            Stage stage = new Stage();
+            stage.setTitle("Đánh giá sách: " + doc.getTitle());
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

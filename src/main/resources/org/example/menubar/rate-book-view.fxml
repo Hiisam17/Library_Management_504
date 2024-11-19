@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.RateBookController">
-    <Label text="Đánh giá sách"/>
-    <TextField fx:id="ratingField" promptText="Nhập đánh giá (1-5)"/>
-    <TextArea fx:id="commentField" promptText="Nhập nhận xét"/>
-    <Button text="Gửi đánh giá" onAction="#handleSubmitRating"/>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.menubar.RateBookController" spacing="10" alignment="CENTER" stylesheets="@rate-view.css">
+    <Label text="Đánh giá sách" styleClass="title-label" />
+    <TextField fx:id="ratingField" promptText="Nhập đánh giá (1-5)" styleClass="input-field" />
+    <TextArea fx:id="commentField" promptText="Nhập nhận xét" styleClass="input-field" />
+    <Button text="Gửi đánh giá" onAction="#handleSubmitRating" styleClass="submit-button" />
 </VBox>
+

@@ -336,6 +336,8 @@ public class MainMenuController {
     }
 
     void refreshTable() {
+
+        updateBookCounts();
         // Xóa sạch dữ liệu cũ trong bảng
         documentTableView.getItems().clear();
 
