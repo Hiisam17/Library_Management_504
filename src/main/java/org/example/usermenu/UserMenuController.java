@@ -22,6 +22,10 @@ import org.example.menubar.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -61,11 +65,19 @@ public class UserMenuController implements Initializable {
 
 
   private DocumentManager documentManager;
+  private final DatabaseManager dbManager = new DatabaseManager();
+
+  public void setDocumentManager(DocumentManager documentManager) {
+    this.documentManager = documentManager;
+  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    // Khởi tạo DocumentManager (cần kết nối đến cơ sở dữ liệu qua DatabaseManager)
-    documentManager = new DocumentManager(new DatabaseManager());
+
+    documentManager = new DocumentManager(dbManager);
+    
+    // Cập nhật thông tin tổng số sách
+    updateBookCounts();
 
     // Định dạng cột
     idColumn.setStyle("-fx-alignment: CENTER;"); // Căn giữa
@@ -370,6 +382,26 @@ public class UserMenuController implements Initializable {
       stage.setScene(new Scene(root));
       stage.showAndWait();
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @FXML
+  private Label totalBooksLabel;
+
+  @FXML
+  private Label availableBooksLabel;
+
+  private void updateBookCounts() {
+    try {
+      // Lấy dữ liệu từ database hoặc danh sách
+      int totalBooks = documentManager.getTotalBooksFromDatabase(); // Hoặc getTotalBooks()
+      int availableBooks = documentManager.getAvailableBooksFromDatabase(); // Hoặc getAvailableBooks()
+
+      // Cập nhật nhãn
+      totalBooksLabel.setText("Tổng số sách: " + totalBooks);
+      availableBooksLabel.setText("Sách có sẵn: " + availableBooks);
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }

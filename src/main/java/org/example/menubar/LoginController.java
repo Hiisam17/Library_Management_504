@@ -78,10 +78,6 @@ public class LoginController {
         System.exit(0);
     }
 
-    //connect to SQL
-
-
-
     private void showAlert(String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Lỗi");

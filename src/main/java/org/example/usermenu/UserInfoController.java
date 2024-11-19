@@ -31,6 +31,8 @@ public class UserInfoController {
 
   private String userId;
 
+  private Stage stage;
+
   public void setUserId(String userId) {
     this.userId = userId;
     loadUserInfo();
@@ -51,40 +53,12 @@ public class UserInfoController {
   @FXML
   private void handleEditUserInfo() {
     enableEditing(true);
-    /*String newUsername = userNameField.getText();
-    String newEmail = userEmailField.getText();
-    int newAge = Integer.parseInt(userAgeField.getText());
-    boolean success = UserService.updateUser(userId, newUsername, newEmail, newAge);
-    if (success) {
-      System.out.println("Cập nhật thông tin người dùng thành công.");
-    } else {
-      System.out.println("Cập nhật thông tin người dùng thất bại.");
-    }*/
   }
 
   @FXML
   private void handleClose() {
     Stage stage = (Stage) userIdLabel.getScene().getWindow();
     stage.close();
-  }
-
-  @FXML
-  private void handleOpenEditDialog() {
-    try {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/menubar/edit-user-info-view.fxml"));
-      Parent parent = loader.load();
-
-      EditUserInfoController controller = loader.getController();
-      controller.setUserId(userId);
-
-      Stage stage = new Stage();
-      stage.initModality(Modality.APPLICATION_MODAL);
-      stage.setTitle("Chỉnh sửa thông tin người dùng");
-      stage.setScene(new Scene(parent));
-      stage.showAndWait();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   @FXML

@@ -40,6 +40,7 @@ public class Main extends Application {
 
             primaryStage.setTitle("Đăng nhập");
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false); // Không cho phép thay đổi kích thước
             primaryStage.show();
         }
     }

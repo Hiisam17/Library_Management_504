@@ -5,7 +5,7 @@
 
 <?import javafx.scene.layout.HBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="800" prefWidth="1200"
       fx:controller="org.example.usermenu.UserInfoController"
       stylesheets="@userInfo.css" styleClass="main-container"
       spacing="15" alignment="CENTER">
@@ -14,7 +14,7 @@
     <Label text="Thông tin người dùng" styleClass="label-title"/>
 
     <!-- Form thông tin -->
-    <VBox spacing="10" alignment="CENTER_LEFT" style="-fx-pref-width: 350;">
+    <VBox spacing="10" alignment="CENTER_LEFT" prefHeight="800" prefWidth="1200">
         <Label text="ID:"/>
         <TextField fx:id="userIdLabel" editable="false" styleClass="text-field"/>
 

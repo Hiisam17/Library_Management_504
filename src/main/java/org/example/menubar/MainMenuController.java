@@ -1,5 +1,7 @@
 package org.example.menubar;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,12 +18,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.usermenu.UserMenuController;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +61,8 @@ public class MainMenuController {
     private TableColumn<Document, String> publishedDateColumn;
     @FXML
     private TableColumn<Document, Boolean> isAvailableColumn;
+    @FXML
+    private Label clockLabel;
 
     private ObservableList<Document> documentList = FXCollections.observableArrayList();
     private final DocumentManager documentManager;
@@ -210,6 +217,14 @@ public class MainMenuController {
         documentTableView.setItems(documentList);
 
         refreshTable(); // Cập nhật TableView
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            LocalDateTime now = LocalDateTime.now();
+            clockLabel.setText(now.format(formatter));
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     // Xử lý sự kiện nút Xóa Tài Liệu

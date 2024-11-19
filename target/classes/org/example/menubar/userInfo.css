@@ -50,3 +50,12 @@
 .button-close:hover {
     -fx-background-color: #b71c1c;
 }
+
+.main-container {
+    -fx-min-width: 600px;
+    -fx-max-width: 600px;
+    -fx-pref-width: 600px;
+    -fx-min-height: 400px;
+    -fx-max-height: 400px;
+    -fx-pref-height: 400px;
+}

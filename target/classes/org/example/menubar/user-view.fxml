@@ -23,14 +23,22 @@
 <AnchorPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #E0E0E0;" stylesheets="@main_menu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.usermenu.UserMenuController">
     <children>
         <!-- Sidebar bên trái -->
-        <VBox alignment="TOP_CENTER" prefWidth="300" style="-fx-background-color: #E0E0E0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox layoutX="40" layoutY="40" spacing="10" alignment="TOP_CENTER" prefWidth="300" style="-fx-background-color: #E0E0E0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <ImageView fitHeight="80.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@library.png" />
                     </image>
                 </ImageView>
+
                 <Label style="-fx-font-size: 22px; -fx-padding: 15 0 25 0;" text="Library Manager" />
+
+                <StackPane layoutX="40" layoutY="40" style="-fx-background-color: #FFCC00; -fx-border-color: #FF9900; -fx-border-width: 3; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 10;">
+                    <children>
+                        <Label fx:id="clockLabel" text="00:00:00" style="-fx-font-size: 22px; -fx-text-fill: #000000;"/>
+                    </children>
+                </StackPane>
+
                 <Button fx:id="btnReload" graphicTextGap="22.0" onAction="#handleReload" prefHeight="50.0" prefWidth="260.0" text="Menu" textFill="#e7e5e5">
                     <graphic>
                         <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
@@ -41,9 +49,15 @@
                     </graphic>
                 </Button>
 
-                <Button text="Đánh giá sách" onAction="#handleRateBook"/>
-
-                <Label fx:id="clockLabel" layoutX="10" layoutY="10" />
+                <Button fx:id="btnRateBooks" graphicTextGap="22.0" onAction="#handleRateBook" prefHeight="50.0" prefWidth="260.0" text="Đánh giá sách" textFill="#e7e5e5">
+                    <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@menu.jpg" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
 
                 <Button fx:id="btnBorrowDocument" graphicTextGap="22.0" onAction="#handleBorrowDocument" prefHeight="50.0" prefWidth="260.0" text="Mượn tài liệu" textFill="#e7e5e5">
                     <graphic>
