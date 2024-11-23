@@ -34,7 +34,6 @@ public class Document {
     public Document() {}
 
     public Document(String title, String author, String publisher, String publishedDate) {
-        this.id = id;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
@@ -97,7 +96,7 @@ public class Document {
      */
     @Override
     public String toString() {
-        return "ID: " + id + ", Title: " + title + ", Author: " + author + ", PublishedDate: " + publishedDate + ", Available: " + isAvailable;
+        return STR."ID: \{id}, Title: \{title}, Author: \{author}, PublishedDate: \{publishedDate}, Available: \{isAvailable}";
     }
 
     public String getReviews() {

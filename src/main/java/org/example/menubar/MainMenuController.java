@@ -35,7 +35,6 @@ import static org.example.menubar.DatabaseManager.SQL_connect;
 
 public class MainMenuController {
     private Stage stage;
-    private String currentUserId;
     @FXML
     private TextField idField;
     @FXML
@@ -80,7 +79,8 @@ public class MainMenuController {
         return this.stage;
     }
 
-    public void setCurrentUserId(String userId) { this.currentUserId =userId;}
+    public void setCurrentUserId(String userId) {
+    }
     @FXML
     public void handleLogout(ActionEvent actionEvent) {
         // Tạo một Alert xác nhận
@@ -278,26 +278,6 @@ public class MainMenuController {
             e.printStackTrace();
         }
     }
-
-
-    // Xử lý sự kiện nút Tìm Kiếm Tài Liệu
-    /*@FXML
-    private void handleSearchDocument() {
-        try {
-            // Tải FXML của giao diện tìm kiếm
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/menubar/SearchDoc-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-
-            // Tạo cửa sổ mới cho giao diện tìm kiếm
-            Stage searchStage = new Stage();
-            searchStage.setTitle("Tìm kiếm Tài liệu");
-            searchStage.setScene(scene);
-            searchStage.initModality(Modality.APPLICATION_MODAL); // Chặn cửa sổ khác cho đến khi đóng
-            searchStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @FXML
     private void handleSearchDocument() {

@@ -127,8 +127,8 @@ public class AddDocumentController {
     @FXML
     private void handleSearchAPI() {
         try {
-            String query = searchField.getText();
-            String jsonResponse = APIIntegration.getBookInfoByTitle(query);
+            String query = searchField.getText(); // Lấy nội dung từ thanh tìm kiếm
+            String jsonResponse = APIIntegration.getBookInfoByTitle(query); // Gửi yêu cầu đến API
 
             // Gọi parseBookInfo và nhận về đối tượng Document
             Document document = APIIntegration.parseBookInfo(jsonResponse);
@@ -138,19 +138,31 @@ public class AddDocumentController {
                 titleField.setText(document.getTitle());
                 authorField.setText(document.getAuthor());
                 publisherField.setText(document.getPublisher());
-                if (!document.getPublishedDate().isEmpty()) {
+
+                String publishedDate = document.getPublishedDate();
+                if (publishedDate != null && !publishedDate.isEmpty()) {
                     try {
-                        if (document.getPublishedDate().length() == 4) { // Chỉ có năm
-                            publishedDatePicker.setValue(LocalDate.of(
-                                    Integer.parseInt(document.getPublishedDate()), 1, 1));
-                        } else if (document.getPublishedDate().length() == 7) { // Có năm và tháng (YYYY-MM)
-                            publishedDatePicker.setValue(LocalDate.parse(document.getPublishedDate() + "-01"));
+                        if (publishedDate.length() == 4) { // Chỉ có năm
+                            // Hiển thị năm trong TextField thay vì DatePicker
+                            publishedDatePicker.getEditor().setText(publishedDate);
+                        } else if (publishedDate.length() == 7) { // Có năm và tháng (YYYY-MM)
+                            LocalDate date = LocalDate.parse(publishedDate + "-01");
+                            publishedDatePicker.setValue(date);
                         } else { // Định dạng đầy đủ YYYY-MM-DD
-                            publishedDatePicker.setValue(LocalDate.parse(document.getPublishedDate()));
+                            LocalDate date = LocalDate.parse(publishedDate);
+                            publishedDatePicker.setValue(date);
                         }
                     } catch (DateTimeParseException e) {
                         System.err.println("Lỗi khi phân tích ngày xuất bản: " + e.getMessage());
+                        // Chỉ in ra năm nếu ngày tháng không hợp lệ
+                        if (publishedDate.matches("\\d{4}")) {
+                            publishedDatePicker.getEditor().setText(publishedDate);
+                        } else {
+                            System.out.println("Định dạng ngày xuất bản không hợp lệ.");
+                        }
                     }
+                } else {
+                    System.out.println("Ngày xuất bản không có trong dữ liệu API.");
                 }
             } else {
                 System.out.println("Không có dữ liệu để cập nhật.");
@@ -160,6 +172,8 @@ public class AddDocumentController {
             System.out.println("Lỗi trong quá trình tìm kiếm.");
         }
     }
+
+
 
     // Hàm khởi tạo để nhận tham chiếu Stage
     public void setStage(Stage stage) {

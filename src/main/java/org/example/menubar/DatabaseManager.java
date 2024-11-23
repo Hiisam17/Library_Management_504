@@ -6,11 +6,9 @@ import static javafx.scene.input.DataFormat.URL;
 
 public class DatabaseManager {
 
-    private String url;
     private static final String DB_URL = "jdbc:sqlite:liba.db";
 
     public DatabaseManager(String url) {
-        this.url = url;
         //dropTableIfExists(); // Xóa bảng nếu tồn tại
     }
 
@@ -48,20 +46,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-
-/*    // Phương thức xóa bảng nếu tồn tại
-    public void dropTableIfExists() {
-        String sql = "DROP TABLE IF EXISTS documents";
-
-        try (Connection conn = SQL_connect();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            System.out.println("Bảng 'documents' đã được xóa.");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    } */
-
 
 }
 
