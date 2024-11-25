@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.document.BorrowedDocumentsController" alignment="CENTER" spacing="15" stylesheets="@../../styles/user/user.css" styleClass="main-container">
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <!-- Tiêu đề nổi bật -->
+    <Label text="Danh Sách Tài Liệu Đã Mượn" styleClass="header-label"/>
+
+    <!-- Nút trả tài liệu với phong cách cải tiến -->
+    <Button text="Trả Tài Liệu" onAction="#handleReturnDocument" styleClass="menu-button" />
+
+    <!-- Bảng hiển thị danh sách tài liệu đã mượn -->
+    <TableView fx:id="borrowedDocumentTableView" prefHeight="800" prefWidth="1200" styleClass="table-view" stylesheets="@../../styles/common/table.css">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn" prefWidth="160">
+                <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Tiêu đề" fx:id="titleColumn" prefWidth="360">
+                <cellValueFactory><PropertyValueFactory property="title"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Tác giả" fx:id="authorColumn" prefWidth="320">
+                <cellValueFactory><PropertyValueFactory property="author"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Nhà xuất bản" fx:id="publisherColumn" prefWidth="240">
+                <cellValueFactory><PropertyValueFactory property="publisher"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Ngày xuất bản" fx:id="publishedDateColumn" prefWidth="240">
+                <cellValueFactory><PropertyValueFactory property="publishedDate"/></cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+</VBox>

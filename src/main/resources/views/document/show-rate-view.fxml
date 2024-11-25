@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.review.BookReviewDialogController" spacing="10" alignment="TOP_LEFT" style="-fx-background-color: #F9F9F9; -fx-padding: 15;">
+    <!-- Tiêu đề -->
+    <Label text="Đánh giá sách" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333333;" alignment="CENTER" VBox.vgrow="NEVER" />
+
+    <!-- Vùng hiển thị đánh giá -->
+    <ScrollPane fitToWidth="true" style="-fx-background: #F9F9F9; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+        <VBox fx:id="reviewContainer" spacing="15" style="-fx-padding: 10;">
+            <!-- Nội dung đánh giá sẽ được thêm động trong controller -->
+        </VBox>
+    </ScrollPane>
+
+    <!-- Nút đóng -->
+    <Button text="Đóng" onAction="#handleClose" style="-fx-background-color: #FF5733; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-cursor: hand;"/>
+</VBox>
+
