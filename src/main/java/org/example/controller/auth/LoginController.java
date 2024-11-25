@@ -16,6 +16,9 @@ import org.example.model.AdminUser;
 import org.example.Main;
 import org.example.model.RegularUser;
 import org.example.model.User;
+import org.example.repository.UserLogin;
+import org.example.util.DialogUtils;
+import org.example.util.FXMLUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,9 +28,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.example.repository.DatabaseManager.SQL_connect;
+import static org.example.util.DialogUtils.showAlert;
 
 public class LoginController {
     private Main mainApp;
+    private final DialogUtils dialogUtils = new DialogUtils();
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
@@ -55,100 +60,44 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if (mainApp != null) {
-            LoginResult loginResult = validateLogin(username, password);
-            if (loginResult == null) {
-                showAlert("Đăng nhập thất bại!", "Tên đăng nhập hoặc mật khẩu không đúng.");
-                return;
+            if (mainApp != null) {
+                UserLogin userlogin = new UserLogin();
+                UserLogin.LoginResult loginResult = userlogin.validateLogin(username, password);
+
+                if (loginResult == null) {
+                    DialogUtils.showAlert("Đăng nhập thất bại!", "Tên đăng nhập hoặc mật khẩu không đúng.");
+                    return;
+                }
+
+                User user = loginResult.isAdmin
+                        ? new AdminUser(username, password)
+                        : new RegularUser(username, password);
+
+                user.LoginLoad(loginResult.userId, (Stage) usernameField.getScene().getWindow());
             }
 
-            System.out.println("Login successful! User ID: " + loginResult.userId);
-            User user ;
-            if (loginResult.isAdmin) {
-                user = new AdminUser(username, password);
-            } else {
-                user = new RegularUser(username, password);
-            }
 
-            // Gọi phương thức LoginLoad để tải giao diện tương ứng
-            user.LoginLoad(loginResult.userId,(Stage) usernameField.getScene().getWindow());
-        }
     }
     @FXML
     private void handleExit() {
         System.exit(0);
     }
 
-    private void showAlert(String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Lỗi");
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
         @FXML
         private void handleRegister(ActionEvent actionEvent) {
             try {
-                // Tải giao diện FXML cho cửa sổ đăng ký
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user/UserDAO.fxml"));
-                Parent root = loader.load(); // Tải tệp FXML
-
-                // Tạo một Stage mới cho cửa sổ đăng ký
-                Stage stage = new Stage();
-                stage.setTitle("Đăng ký");
-                stage.initModality(Modality.APPLICATION_MODAL); // Đặt cửa sổ này ở trên cửa sổ chính
-                stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow()); // Đặt chủ sở hữu của cửa sổ hiện tại
-
-                // Tạo Scene với root từ tệp FXML
-                Scene scene = new Scene(root);
-
-                // Thêm CSS nếu tồn tại
-                URL cssURL = getClass().getResource("/styles/auth/login.css");
-                if (cssURL != null) {
-                    scene.getStylesheets().add(cssURL.toExternalForm());
-                } else {
-                    System.out.println("Không tìm thấy tệp CSS, tiếp tục mà không có CSS.");
-                }
-
-                stage.setScene(scene); // Đặt Scene cho Stage
-
-                // Hiển thị cửa sổ mới
-                stage.showAndWait(); // Đợi cửa sổ đăng ký đóng
-
+                // Sử dụng FXMLUtils để mở giao diện đăng ký
+                FXMLUtils.openWindow(
+                        "/views/user/UserDAO.fxml", // Đường dẫn FXML
+                        "Đăng ký",                  // Tiêu đề cửa sổ
+                        (Stage) usernameField.getScene().getWindow(), // Cửa sổ cha
+                        "/styles/auth/login.css"   // Đường dẫn CSS
+                );
             } catch (IOException e) {
-                // Thông báo lỗi khi không tải được tệp FXML
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Lỗi: " + e.getMessage());
-                alert.showAndWait(); // Hiển thị thông báo lỗi
+                DialogUtils.showAlert("Không thể mở cửa sổ Đăng ký", e.getMessage());
                 e.printStackTrace();
             }
         }
-    private LoginResult validateLogin(String username, String password) {
-        String sql = "SELECT id, is_admin FROM users WHERE user_name = ? AND password = ?";
-        try (Connection conn = SQL_connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return new LoginResult(rs.getString("id"), rs.getInt("is_admin") == 1);
-            }
-        } catch (SQLException e) {
-            System.out.println("Lỗi khi truy vấn cơ sở dữ liệu: " + e.getMessage());
-        }
-        return null;
-    }
-    private static class LoginResult {
-        final String userId;
-        final boolean isAdmin;
-
-        LoginResult(String userId, boolean isAdmin) {
-            this.userId = userId;
-            this.isAdmin = isAdmin;
-        }
-    }
 
 }
 

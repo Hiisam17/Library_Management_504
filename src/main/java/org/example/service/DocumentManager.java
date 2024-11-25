@@ -4,12 +4,14 @@ import javafx.scene.control.Alert;
 import org.example.repository.DatabaseManager;
 import org.example.model.Document;
 import org.example.model.Review;
+import org.example.util.DialogUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.repository.DatabaseManager.SQL_connect;
+import static org.example.util.DialogUtils.showAlert;
 
 public class DocumentManager {
 
@@ -19,13 +21,6 @@ public class DocumentManager {
         this.dbManager = dbManager;
     }
 
-    private void showAlert(String title, String message, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
     private boolean isDocumentDuplicate(String title, String author, String publishedDate) {
         String checkDuplicateSql = "SELECT COUNT(*) FROM document WHERE title = ? AND author = ? AND publishedDate = ?";
         try (Connection conn = SQL_connect();
@@ -51,13 +46,13 @@ public class DocumentManager {
             checkIdStmt.setString(1, id);
             ResultSet rsId = checkIdStmt.executeQuery();
             if (rsId.next() && rsId.getInt(1) > 0) {
-                showAlert("Error", "ID đã tồn tại!", Alert.AlertType.ERROR);
+                showAlert("Error", "ID đã tồn tại!");
                 return false;
             }
 
             // Kiểm tra trùng title, author, publishedDate bằng phương thức isDocumentDuplicate
             if (isDocumentDuplicate(title, author, publishedDate)) {
-                showAlert("Error", "Tài liệu đã tồn tại!", Alert.AlertType.ERROR);
+                showAlert("Error", "Tài liệu đã tồn tại!");
                 return false;
             }
 
@@ -92,7 +87,7 @@ public class DocumentManager {
     public void updateDocument(Document document) {
         // Kiểm tra xem tài liệu có trùng lặp hay không trước khi cập nhật
         if (isDocumentDuplicate(document.getTitle(), document.getAuthor(), document.getPublishedDate())) {
-            showAlert("Error", "Tài liệu đã tồn tại, không thể cập nhật.", Alert.AlertType.ERROR);
+            showAlert("Error", "Tài liệu đã tồn tại, không thể cập nhật.");
             return; // Dừng lại nếu tài liệu trùng lặp
         }
 
@@ -109,13 +104,13 @@ public class DocumentManager {
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
-                showAlert("Success", "Cập nhật tài liệu thành công.", Alert.AlertType.INFORMATION);
+                showAlert("Success", "Cập nhật tài liệu thành công.");
             } else {
-                showAlert("Error", "Không tìm thấy tài liệu với ID: " + document.getId(), Alert.AlertType.ERROR);
+                showAlert("Error", "Không tìm thấy tài liệu với ID: " + document.getId());
             }
 
         } catch (SQLException e) {
-            showAlert("Error", "Lỗi khi cập nhật tài liệu: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Lỗi khi cập nhật tài liệu: " + e.getMessage());
         }
     }
 

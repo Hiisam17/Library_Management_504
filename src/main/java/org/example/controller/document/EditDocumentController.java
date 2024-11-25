@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
+import static org.example.util.DialogUtils.showAlert;
+
 public class EditDocumentController {
 
     @FXML
@@ -119,13 +121,6 @@ public class EditDocumentController {
             showAlert("Changes Discarded", "Your changes were not saved.");
         }
     }
-    // Hàm hiển thị thông báo
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 }
 

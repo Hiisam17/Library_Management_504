@@ -9,6 +9,8 @@ import org.example.repository.DatabaseManager;
 import org.example.model.Document;
 import org.example.service.DocumentManager;
 
+import static org.example.util.DialogUtils.showAlert;
+
 public class RateBookController {
   @FXML
   private TextField ratingField;
@@ -57,10 +59,4 @@ public class RateBookController {
     stage.close();
   }
 
-  private void showAlert(String title, String message) {
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setTitle(title);
-    alert.setContentText(message);
-    alert.showAndWait();
-  }
 }

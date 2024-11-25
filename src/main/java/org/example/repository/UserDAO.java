@@ -9,6 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import org.example.util.DialogUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +18,7 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 import static org.example.repository.DatabaseManager.SQL_connect;
+import static org.example.util.DialogUtils.showAlert;
 
 public class UserDAO {
     @FXML
@@ -32,16 +35,6 @@ public class UserDAO {
 
     private Stage stage;
 
-    @FXML
-    public void initialize() {
-        try {
-            // Tải hình ảnh vào ImageView
-            Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png")));
-            logoImageView.setImage(logo);
-        } catch (NullPointerException e) {
-            System.err.println("Không tìm thấy hình ảnh: Image_login.png");
-        }
-    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -49,7 +42,7 @@ public class UserDAO {
 
     private boolean validateRegister(String username, String password, String confirmPassword) {
         if (!password.equals(confirmPassword)) {
-            showAlert("Thông báo", "Mật khẩu không khớp!", Alert.AlertType.ERROR);
+            showAlert("Thông báo", "Mật khẩu không khớp!");
             return false;
         }
 
@@ -64,7 +57,7 @@ public class UserDAO {
             ResultSet rs = checkStmt.executeQuery();
 
             if (rs.next() && rs.getInt(1) > 0) {
-                showAlert("Thông báo", "Tên người dùng đã tồn tại!", Alert.AlertType.ERROR);
+                showAlert("Thông báo", "Tên người dùng đã tồn tại!");
                 return false;
             }
 
@@ -84,13 +77,6 @@ public class UserDAO {
         return false;
     }
 
-    private void showAlert(String title, String message, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
     @FXML
     private void DAOhandleRegister(ActionEvent actionEvent) {
@@ -99,12 +85,12 @@ public class UserDAO {
         String confirmPassword = confirmPasswordField.getText();
 
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            showAlert("Lỗi", "Vui lòng điền tất cả các trường!", Alert.AlertType.ERROR);
+            showAlert("Lỗi", "Vui lòng điền tất cả các trường!");
             return;
         }
 
         if (validateRegister(username, password, confirmPassword)) {
-            showAlert("Thành công", "Đăng ký thành công!", Alert.AlertType.INFORMATION);
+            showAlert("Thành công", "Đăng ký thành công!");
         }
     }
 

@@ -17,10 +17,14 @@ import org.example.model.Document;
 import org.example.service.DocumentManager;
 import org.example.repository.DatabaseManager;
 import org.example.controller.review.RateBookController;
+import org.example.util.DialogUtils;
+import org.example.util.FXMLUtils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static org.example.util.DialogUtils.showAlert;
 
 public class BorrowedDocumentsController implements Initializable {
     private String userId;
@@ -86,13 +90,6 @@ public class BorrowedDocumentsController implements Initializable {
         borrowedDocumentTableView.setItems(borrowedDocument);
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     public void refreshBorrowedDocuments(String userId) {
         ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getBorrowedDocumentsByUserId(userId));
         borrowedDocumentTableView.setItems(document);
@@ -100,19 +97,26 @@ public class BorrowedDocumentsController implements Initializable {
 
     private void showRateBookDialog(Document doc, String userId) {
         try {
+            // Sử dụng FXML để tải FXML và lấy root và controller
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/document/rate-book-view.fxml"));
-            Parent root = loader.load();
+            Parent root = loader.getRoot();
 
+            // Truy cập controller và thiết lập dữ liệu
             RateBookController controller = loader.getController();
             controller.setDocument(doc);
             controller.setUserId(userId);
 
-            Stage stage = new Stage();
-            stage.setTitle("Đánh giá sách: " + doc.getTitle());
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
+            // Mở cửa sổ với giao diện đã thiết lập
+            FXMLUtils.openWindow(
+                    String.valueOf(root),
+                    "Đánh giá sách: " + doc.getTitle(),
+                    null, // Không có cửa sổ cha
+                    null  // Không sử dụng CSS
+            );
         } catch (IOException e) {
+            DialogUtils.showAlert("Lỗi khi mở cửa sổ đánh giá sách", e.getMessage());
             e.printStackTrace();
         }
     }
+
 }
