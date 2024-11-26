@@ -28,6 +28,7 @@ import static org.example.util.DialogUtils.showAlert;
 
 public class BorrowedDocumentsController implements Initializable {
     private String userId;
+    private final DialogUtils dialogUtils = new DialogUtils();
 
     @FXML
     private TableView<Document> borrowedDocumentTableView;
@@ -77,7 +78,7 @@ public class BorrowedDocumentsController implements Initializable {
         boolean success = documentManager.returnDocument(selectedDocument.getId(), userId);
         if (success) {
             showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
-            showRateBookDialog(selectedDocument, userId);
+            dialogUtils.showRateBookDialog(selectedDocument, userId);
             refreshTable(); // Tải lại danh sách tài liệu đã mượn sau khi trả tài liệu
             UserMenuController.getInstance().refreshTable(); // Cập nhật lại bảng trong giao diện người dùng
         } else {
@@ -95,28 +96,6 @@ public class BorrowedDocumentsController implements Initializable {
         borrowedDocumentTableView.setItems(document);
     }
 
-    private void showRateBookDialog(Document doc, String userId) {
-        try {
-            // Sử dụng FXML để tải FXML và lấy root và controller
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/document/rate-book-view.fxml"));
-            Parent root = loader.getRoot();
 
-            // Truy cập controller và thiết lập dữ liệu
-            RateBookController controller = loader.getController();
-            controller.setDocument(doc);
-            controller.setUserId(userId);
-
-            // Mở cửa sổ với giao diện đã thiết lập
-            FXMLUtils.openWindow(
-                    String.valueOf(root),
-                    "Đánh giá sách: " + doc.getTitle(),
-                    null, // Không có cửa sổ cha
-                    null  // Không sử dụng CSS
-            );
-        } catch (IOException e) {
-            DialogUtils.showAlert("Lỗi khi mở cửa sổ đánh giá sách", e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
 }
