@@ -1,6 +1,10 @@
 package org.example.repository;
 
+import org.example.service.DatabaseService;
+
 import java.sql.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class DatabaseManager {
 
@@ -37,10 +41,10 @@ public class DatabaseManager {
                 "FOREIGN KEY (document_id) REFERENCES document(id)" +
                 ");";
 
-        try (Connection conn = SQL_connect();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(createBorrowedDocumentsTable);
-        } catch (SQLException e) {
+        Future<String> result = DatabaseService.executeQueryAsync(createBorrowedDocumentsTable);
+        try {
+            System.out.println(result.get());
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
