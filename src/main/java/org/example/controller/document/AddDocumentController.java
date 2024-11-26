@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import static org.example.util.DialogUtils.showAlert;
+
 public class AddDocumentController {
 
 
@@ -67,13 +69,16 @@ public class AddDocumentController {
             @Override
             public LocalDate fromString(String string) {
                 if (string == null || string.isEmpty()) {
-                    return null;
+                    return null; // Trường hợp chuỗi rỗng
                 }
                 try {
-                    // Chuyển chuỗi thành LocalDate theo định dạng dd/MM/yyyy
-                    return LocalDate.parse(string, inputFormatter);
+                    if (string.matches("\\d{4}")) { // Nếu chỉ nhập năm (yyyy)
+                        return LocalDate.of(Integer.parseInt(string), 1, 1); // Chuyển thành ngày đầu năm
+                    } else { // Nếu nhập ngày đầy đủ (dd/MM/yyyy)
+                        return LocalDate.parse(string, inputFormatter); // Chuyển chuỗi thành LocalDate
+                    }
                 } catch (DateTimeParseException e) {
-                    showAlert("Lỗi", "Ngày nhập sai định dạng. Vui lòng nhập theo định dạng dd/MM/yyyy.");
+                    showAlert("Lỗi", "Ngày nhập sai định dạng. Vui lòng nhập theo định dạng dd/MM/yyyy hoặc yyyy.");
                     return null;
                 }
             }
@@ -89,24 +94,38 @@ public class AddDocumentController {
         newDocument.setAuthor(authorField.getText());
         newDocument.setPublisher(publisherField.getText());
 
-        LocalDate publishedDate = publishedDatePicker.getValue();
-        if (publishedDate == null) {
-            showAlert("Error", "Please select a published date.");
-            return; // Dừng việc lưu tài liệu
-        }
-        String formattedDate = publishedDate.format(outputFormatter);
-        newDocument.setPublishedDate(formattedDate);
+        // Lấy dữ liệu từ DatePicker
+        String rawDate = publishedDatePicker.getEditor().getText(); // Lấy chuỗi người dùng nhập vào
+        String formattedDate;
 
-        if (!newDocument.getId().isEmpty() && !newDocument.getTitle().isEmpty() && !newDocument.getAuthor().isEmpty() && !newDocument.getPublishedDate().isEmpty()) {
+        try {
+            if (rawDate.matches("\\d{4}")) { // Kiểm tra nếu chỉ có năm (yyyy)
+                formattedDate = rawDate; // Giữ nguyên
+            } else { // Ngày đầy đủ theo dd/MM/yyyy
+                LocalDate date = LocalDate.parse(rawDate, inputFormatter); // Chuyển sang LocalDate
+                formattedDate = date.format(outputFormatter); // Định dạng lại thành yyyy-MM-dd
+            }
+            newDocument.setPublishedDate(formattedDate); // Lưu ngày vào Document
+        } catch (DateTimeParseException e) {
+            showAlert("Lỗi", "Hãy nhập ngày theo định dạng dd/MM/yyyy hoặc yyyy.");
+            return; // Dừng việc lưu nếu ngày không hợp lệ
+        }
+
+        // Kiểm tra các trường thông tin trước khi lưu
+        if (!newDocument.getId().isEmpty() &&
+                !newDocument.getTitle().isEmpty() &&
+                !newDocument.getAuthor().isEmpty() &&
+                !newDocument.getPublishedDate().isEmpty()) {
             try {
                 // Use DocumentManager to insert the document
                 DocumentManager documentManager = new DocumentManager(new DatabaseManager());
-                if (documentManager.insertDocument(idField.getText(),
-                        titleField.getText(),
-                        authorField.getText(),
-                        publisherField.getText(),
-                        formattedDate)) {
-                    showAlert("Success", "Document added successfully!");
+                if (documentManager.insertDocument(
+                        newDocument.getId(),
+                        newDocument.getTitle(),
+                        newDocument.getAuthor(),
+                        newDocument.getPublisher(),
+                        newDocument.getPublishedDate())) {
+                    showAlert("Thành công", "Tài liệu được thêm thành công!");
                 }
 
                 // Call the callback to refresh the TableView
@@ -116,13 +135,14 @@ public class AddDocumentController {
 
                 clearFields(); // Clear fields after saving
             } catch (Exception e) {
-                showAlert("Error", "Failed to add document to the database.");
+                showAlert("Lỗi", "Không thể thêm tài liệu.");
                 e.printStackTrace();
             }
         } else {
-            showAlert("Error", "Please fill in all required fields.");
+            showAlert("Lỗi", "Hãy điền tất cả các trường.");
         }
     }
+
 
     @FXML
     private void handleSearchAPI() {
@@ -140,29 +160,21 @@ public class AddDocumentController {
                 publisherField.setText(document.getPublisher());
 
                 String publishedDate = document.getPublishedDate();
-                if (publishedDate != null && !publishedDate.isEmpty()) {
-                    try {
-                        if (publishedDate.length() == 4) { // Chỉ có năm
-                            // Hiển thị năm trong TextField thay vì DatePicker
-                            publishedDatePicker.getEditor().setText(publishedDate);
-                        } else if (publishedDate.length() == 7) { // Có năm và tháng (YYYY-MM)
-                            LocalDate date = LocalDate.parse(publishedDate + "-01");
-                            publishedDatePicker.setValue(date);
-                        } else { // Định dạng đầy đủ YYYY-MM-DD
-                            LocalDate date = LocalDate.parse(publishedDate);
-                            publishedDatePicker.setValue(date);
-                        }
-                    } catch (DateTimeParseException e) {
-                        System.err.println("Lỗi khi phân tích ngày xuất bản: " + e.getMessage());
-                        // Chỉ in ra năm nếu ngày tháng không hợp lệ
-                        if (publishedDate.matches("\\d{4}")) {
-                            publishedDatePicker.getEditor().setText(publishedDate);
-                        } else {
-                            System.out.println("Định dạng ngày xuất bản không hợp lệ.");
-                        }
+                if (publishedDate == null || publishedDate.isEmpty()) {
+                    publishedDate = "9999"; // Gán năm mặc định nếu không có dữ liệu
+                }
+
+                try {
+                    if (publishedDate.length() == 4) { // Chỉ có năm
+                        publishedDatePicker.getEditor().setText(publishedDate); // Hiển thị năm
+                    } else if (publishedDate.length() == 7) { // Có năm và tháng (YYYY-MM)
+                        publishedDatePicker.getEditor().setText(publishedDate.substring(0, 4));
+                    } else { // Định dạng đầy đủ YYYY-MM-DD
+                        LocalDate date = LocalDate.parse(publishedDate);
+                        publishedDatePicker.setValue(date);
                     }
-                } else {
-                    System.out.println("Ngày xuất bản không có trong dữ liệu API.");
+                } catch (DateTimeParseException e) {
+                    System.err.println("Lỗi khi phân tích ngày xuất bản: " + e.getMessage());
                 }
             } else {
                 System.out.println("Không có dữ liệu để cập nhật.");
@@ -172,6 +184,7 @@ public class AddDocumentController {
             System.out.println("Lỗi trong quá trình tìm kiếm.");
         }
     }
+
 
 
 
@@ -190,12 +203,7 @@ public class AddDocumentController {
     }
 
     // Hàm hiển thị thông báo
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 
     // Xử lý sự kiện nút Quay lại
     @FXML

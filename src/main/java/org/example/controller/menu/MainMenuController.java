@@ -1,5 +1,6 @@
 package org.example.controller.menu;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,6 +29,8 @@ import org.example.util.SessionManager;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 
@@ -103,7 +106,6 @@ public class MainMenuController implements Initializable {
         publisherColumn.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         publishedDateColumn.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
         isAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("isAvailable"));
-
         isAvailableColumn.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(Boolean item, boolean empty) {

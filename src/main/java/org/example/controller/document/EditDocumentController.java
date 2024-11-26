@@ -51,16 +51,38 @@ public class EditDocumentController {
 
     public void setDocument(Document document) {
         this.document = document;
+
+        // Cập nhật các trường giao diện
         idField.setText(document.getId());
         idField.setEditable(false); // Không cho phép chỉnh sửa ID
         titleField.setText(document.getTitle());
         authorField.setText(document.getAuthor());
         publisherField.setText(document.getPublisher());
-        publishedDatePicker.setValue(LocalDate.parse(document.getPublishedDate()));
+
+        // Xử lý ngày xuất bản
+        String rawDate = document.getPublishedDate();
+
+        if (rawDate != null && !rawDate.isEmpty()) {
+            try {
+                if (rawDate.matches("\\d{4}")) { // Nếu chỉ có năm
+                    LocalDate date = LocalDate.of(Integer.parseInt(rawDate), 1, 1);
+                    publishedDatePicker.setValue(date);
+                } else {
+                    LocalDate date = LocalDate.parse(rawDate, outputFormatter);
+                    publishedDatePicker.setValue(date);
+                }
+            } catch (DateTimeParseException e) {
+                showAlert("Lỗi", "Ngày xuất bản không hợp lệ: " + rawDate);
+                publishedDatePicker.setValue(null);
+            }
+        } else {
+            publishedDatePicker.setValue(null);
+        }
     }
+
     public void initialize() {
-        //  hiển thị đúng định dạng dd/MM/yyyy
-        publishedDatePicker.setConverter(new StringConverter<LocalDate>() {
+        // Cài đặt converter để hiển thị đúng định dạng dd/MM/yyyy
+        publishedDatePicker.setConverter(new StringConverter<>() {
             @Override
             public String toString(LocalDate date) {
                 return (date != null) ? date.format(inputFormatter) : "";
@@ -69,13 +91,16 @@ public class EditDocumentController {
             @Override
             public LocalDate fromString(String string) {
                 if (string == null || string.isEmpty()) {
-                    return null;
+                    return null; // Nếu chuỗi trống, trả về null
                 }
                 try {
-                    // Chuyển chuỗi thành LocalDate theo định dạng dd/MM/yyyy
-                    return LocalDate.parse(string, inputFormatter);
+                    if (string.matches("\\d{4}")) { // Nếu chỉ nhập năm
+                        return LocalDate.of(Integer.parseInt(string), 1, 1);
+                    } else {
+                        return LocalDate.parse(string, inputFormatter); // dd/MM/yyyy
+                    }
                 } catch (DateTimeParseException e) {
-                    showAlert("Lỗi", "Ngày nhập sai định dạng. Vui lòng nhập theo định dạng dd/MM/yyyy.");
+                    showAlert("Lỗi", "Ngày không hợp lệ. Vui lòng nhập ngày theo định dạng dd/MM/yyyy hoặc yyyy.");
                     return null;
                 }
             }
@@ -96,15 +121,24 @@ public class EditDocumentController {
             document.setTitle(titleField.getText());
             document.setAuthor(authorField.getText());
             document.setPublisher(publisherField.getText());
-            LocalDate publishedDate = publishedDatePicker.getValue();
-            if (publishedDate == null) {
-                showAlert("Error", "Please select a published date.");
-                return;
-            }
-            String formattedDate = publishedDate.format(outputFormatter);
-            document.setPublishedDate(formattedDate);
 
-            documentManager.updateDocument(document); // Cập nhật tài liệu trong cơ sở dữ liệu
+            String rawDate = publishedDatePicker.getEditor().getText();
+            String formattedDate;
+
+            try {
+                if (rawDate.matches("\\d{4}")) { // Chỉ có năm
+                    formattedDate = rawDate;
+                } else {
+                    LocalDate date = LocalDate.parse(rawDate, inputFormatter);
+                    formattedDate = date.format(outputFormatter); // yyyy-MM-dd
+                }
+                document.setPublishedDate(formattedDate); // Lưu ngày vào Document
+            } catch (DateTimeParseException e) {
+                showAlert("Lỗi", "Ngày không hợp lệ. Vui lòng kiểm tra và nhập lại.");
+                return; // Dừng việc lưu nếu ngày không hợp lệ
+            }
+
+            documentManager.updateDocument(document);
 
             if (onDocumentEdited != null) {
                 onDocumentEdited.run();
@@ -112,15 +146,10 @@ public class EditDocumentController {
 
             stage.close();
         } else {
-            // Nếu người dùng chọn Cancel hoặc đóng hộp thoại, không thực hiện thay đổi
-           // Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-            //cancelAlert.setTitle("Hủy thay đổi");
-            //cancelAlert.setHeaderText(null);
-            //cancelAlert.setContentText("Các thay đổi không được lưu.");
-            //cancelAlert.showAndWait();
-            showAlert("Changes Discarded", "Your changes were not saved.");
+            showAlert("Hủy thay đổi", "Thay đổi của bạn không được lưu.");
         }
     }
-
 }
+
+
 
