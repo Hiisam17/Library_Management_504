@@ -47,14 +47,6 @@ public class LoginController {
     @FXML
     private ImageView logoImageView; // Thêm ImageView cho logo
 
-    // Phương thức khởi tạo
-    @FXML
-    public void initialize() {
-        // Tải hình ảnh vào ImageView
-        //Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Image_login.png"))); // Đường dẫn đến hình ảnh
-        //logoImageView.setImage(logo);
-    }
-
     @FXML
     private void handleLogin() {
         String username = usernameField.getText();
