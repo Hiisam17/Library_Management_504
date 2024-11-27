@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 import org.example.model.User;
 import org.example.service.UserService;
 
+import static org.example.util.DialogUtils.showAlert;
+
 public class UserInfoController {
   @FXML
   private TextField userIdLabel;
@@ -61,11 +63,19 @@ public class UserInfoController {
       String newUsername = userNameField.getText();
       String newEmail = userEmailField.getText();
       int newAge = Integer.parseInt(userAgeField.getText());
-      boolean success = UserService.updateUser(userId, newUsername, newEmail, newAge);
-      if (success) {
-        System.out.println("Cập nhật thông tin người dùng thành công.");
-      } else {
-        System.out.println("Cập nhật thông tin người dùng thất bại.");
+
+      if (!isValidName(newUsername)) {
+        showAlert("Lỗi","Tên không đuọc chứa ký hiệu đặc biệt.");
+        return;
+      }
+
+      // Kiểm tra định dạng email
+      if (!isValidEmail(newEmail)) {
+        showAlert("Lỗi","Email không hợp lệ.");
+        return;
+      }
+      if (!isValidAge(newAge)){
+        showAlert("Thất bại","Cập nhật thông tin người dùng thất bại.");
       }
 
       // Tắt chế độ chỉnh sửa
@@ -85,5 +95,19 @@ public class UserInfoController {
     editButton.setVisible(!enable);
     saveButton.setVisible(enable);
   }
+  // Hàm kiểm tra tên không chứa ký tự đặc biệt
+  private boolean isValidName(String name) {
+    String nameRegex = "^[a-zA-ZÀ-ỹ\\s]+$";
+    return name != null && name.matches(nameRegex);
+  }
 
+
+  // Hàm kiểm tra định dạng email
+  private boolean isValidEmail(String email) {
+    String emailRegex = "^[\\w-\\.]+@[\\w-\\.]+\\.[a-z]{2,}$"; // Biểu thức regex kiểm tra email
+    return email != null && email.matches(emailRegex);
+  }
+  private boolean isValidAge(int age){
+    return age>0;
+  }
 }

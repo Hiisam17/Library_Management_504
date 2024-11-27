@@ -1,6 +1,7 @@
 package org.example;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -45,6 +46,10 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.setResizable(false); // Không cho phép thay đổi kích thước
             primaryStage.show();
+            primaryStage.setOnCloseRequest(event -> {
+                Platform.exit(); // Kết thúc JavaFX Application Thread
+                System.exit(0);  // Kết thúc tất cả tiến trình
+            });
         }
     }
     public void restartApp() throws IOException {
@@ -66,13 +71,14 @@ public class Main extends Application {
                 scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/auth/login.css")).toExternalForm());
 
                 // Tạo một cửa sổ mới
-                Stage newStage = new Stage();
-                newStage.setTitle("Đăng nhập");
-                newStage.setScene(scene);
-                newStage.show(); // Hiển thị cửa sổ mới
-
-                // Cập nhật primaryStage để giữ tham chiếu đến cửa sổ mới
-                primaryStage = newStage;
+                primaryStage.setTitle("Đăng nhập");
+                primaryStage.setScene(scene);
+                primaryStage.setResizable(false); // Không cho phép thay đổi kích thước
+                primaryStage.show();
+                primaryStage.setOnCloseRequest(event -> {
+                    Platform.exit(); // Kết thúc JavaFX Application Thread
+                    System.exit(0);  // Kết thúc tất cả tiến trình
+                });
 
             } catch (IOException e) {
                 e.printStackTrace();
