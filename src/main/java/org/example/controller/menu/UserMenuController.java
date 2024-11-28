@@ -216,11 +216,6 @@ public class UserMenuController implements Initializable {
 
   @FXML
   private void handleReload() {
-    /*// Gọi phương thức lấy danh sách tài liệu ban đầu từ DocumentManager
-    List<Document> allDocuments = documentManager.getAllDocument();
-
-    // Đặt lại danh sách tài liệu vào TableView
-    documentTableView.getItems().setAll(allDocuments);*/
     refreshTable();
   }
 

@@ -1,5 +1,6 @@
 package org.example.controller.document;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -14,8 +15,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.example.util.DialogUtils.showAlert;
+import static org.example.util.DialogUtils.showConfirmation;
 
 public class EditDocumentController {
 
@@ -36,6 +40,7 @@ public class EditDocumentController {
     private Document document;
     private DocumentManager documentManager;
     private Runnable onDocumentEdited;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -108,43 +113,40 @@ public class EditDocumentController {
     }
     @FXML
     private void handleSaveChanges() {
-        // Tạo một hộp thoại xác nhận
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận sửa đổi");
-        alert.setHeaderText("Bạn có chắc muốn lưu các thay đổi?");
-        alert.setContentText("Các thay đổi sẽ được áp dụng cho tài liệu này.");
+        if (showConfirmation("Xác nhận", "Bạn có chắc chắn muốn tiếp tục?")) {
+            // Tiến hành lưu thay đổi trong một Task (tạo luồng riêng biệt)
+            executorService.submit(() -> {
+                // Cập nhật thông tin tài liệu
+                document.setTitle(titleField.getText());
+                document.setAuthor(authorField.getText());
+                document.setPublisher(publisherField.getText());
 
-        // Hiển thị hộp thoại và chờ người dùng phản hồi
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Nếu người dùng chọn OK, tiến hành lưu thay đổi
-            document.setTitle(titleField.getText());
-            document.setAuthor(authorField.getText());
-            document.setPublisher(publisherField.getText());
+                String rawDate = publishedDatePicker.getEditor().getText();
+                String formattedDate;
 
-            String rawDate = publishedDatePicker.getEditor().getText();
-            String formattedDate;
-
-            try {
-                if (rawDate.matches("\\d{4}")) { // Chỉ có năm
-                    formattedDate = rawDate;
-                } else {
-                    LocalDate date = LocalDate.parse(rawDate, inputFormatter);
-                    formattedDate = date.format(outputFormatter); // yyyy-MM-dd
+                try {
+                    if (rawDate.matches("\\d{4}")) { // Chỉ có năm
+                        formattedDate = rawDate;
+                    } else {
+                        LocalDate date = LocalDate.parse(rawDate, inputFormatter);
+                        formattedDate = date.format(outputFormatter); // yyyy-MM-dd
+                    }
+                    document.setPublishedDate(formattedDate); // Lưu ngày vào Document
+                } catch (DateTimeParseException e) {
+                    showAlert("Lỗi", "Ngày không hợp lệ. Vui lòng kiểm tra và nhập lại.");
+                    return; // Dừng việc lưu nếu ngày không hợp lệ
                 }
-                document.setPublishedDate(formattedDate); // Lưu ngày vào Document
-            } catch (DateTimeParseException e) {
-                showAlert("Lỗi", "Ngày không hợp lệ. Vui lòng kiểm tra và nhập lại.");
-                return; // Dừng việc lưu nếu ngày không hợp lệ
-            }
 
-            documentManager.updateDocument(document);
+                documentManager.updateDocument(document);
 
-            if (onDocumentEdited != null) {
-                onDocumentEdited.run();
-            }
-
-            stage.close();
+                // Cập nhật giao diện khi hoàn thành công việc (trên UI thread)
+                Platform.runLater(() -> {
+                    if (onDocumentEdited != null) {
+                        onDocumentEdited.run();
+                    }
+                    stage.close();
+                });
+            });
         } else {
             showAlert("Hủy thay đổi", "Thay đổi của bạn không được lưu.");
         }

@@ -1,5 +1,6 @@
 package org.example.util;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,23 +17,24 @@ import java.util.Optional;
 
 public class DialogUtils {
     public static void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 
-    public static void showConfirmation(String title, String message, Runnable onConfirm) {
+    public static boolean showConfirmation(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            onConfirm.run();
-        }
-    }
 
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
     public void showRateBookDialog(Document doc, String userId) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/document/rate-book-view.fxml"));

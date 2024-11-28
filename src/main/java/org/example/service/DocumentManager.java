@@ -73,13 +73,28 @@ public class DocumentManager {
         }
     }
 
-    public void deleteDocumentById(String id) {
-        String sql = "DELETE FROM document WHERE id = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    public boolean deleteDocumentById(String id) {
+        String checkSql = "SELECT COUNT(*) FROM document WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
             pstmt.setString(1, id);
-            pstmt.executeUpdate();
+            ResultSet rs = pstmt.executeQuery();
+
+            // Kiểm tra nếu tài liệu không tồn tại
+            if (rs.next() && rs.getInt(1) == 0) {
+                return false;  // Tài liệu không tồn tại
+            }
+
+            // Tiến hành xóa tài liệu nếu tồn tại
+            String deleteSql = "DELETE FROM document WHERE id = ?";
+            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+                deleteStmt.setString(1, id);
+                deleteStmt.executeUpdate();
+            }
+
+            return true;  // Xóa thành công
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;  // Lỗi khi xóa
         }
     }
 

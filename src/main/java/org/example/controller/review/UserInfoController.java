@@ -58,34 +58,50 @@ public class UserInfoController {
   @FXML
   private void handleSaveUserInfo() {
     try {
-
-      // Thực hiện lưu thông tin vào database hoặc xử lý logic ở đây
+      // Lấy thông tin người dùng từ các trường nhập liệu
       String newUsername = userNameField.getText();
       String newEmail = userEmailField.getText();
-      int newAge = Integer.parseInt(userAgeField.getText());
+      String ageText = userAgeField.getText();
 
+      // Kiểm tra nếu có bất kỳ trường nào bị thiếu
+      if (newUsername == null || newUsername.trim().isEmpty() ||
+              newEmail == null || newEmail.trim().isEmpty() ||
+              ageText == null || ageText.trim().isEmpty()) {
+        showAlert("Lỗi", "Vui lòng điền đủ các trường.");
+        return;
+      }
+
+      // Chuyển đổi tuổi thành kiểu int
+      int newAge = Integer.parseInt(ageText);
+
+      // Kiểm tra tên người dùng hợp lệ
       if (!isValidName(newUsername)) {
-        showAlert("Lỗi","Tên không đuọc chứa ký hiệu đặc biệt.");
+        showAlert("Lỗi", "Tên không được chứa ký hiệu đặc biệt.");
         return;
       }
 
-      // Kiểm tra định dạng email
+      // Kiểm tra định dạng email hợp lệ
       if (!isValidEmail(newEmail)) {
-        showAlert("Lỗi","Email không hợp lệ.");
+        showAlert("Lỗi", "Email không hợp lệ.");
         return;
       }
-      if (!isValidAge(newAge)){
-        showAlert("Thất bại","Cập nhật thông tin người dùng thất bại.");
+
+      // Kiểm tra độ tuổi hợp lệ
+      if (!isValidAge(newAge)) {
+        showAlert("Thất bại", "Tuổi không phù hợp.");
+        return;
       }
 
+      // Lưu thông tin người dùng vào database hoặc xử lý logic ở đây
       // Tắt chế độ chỉnh sửa
       enableEditing(false);
 
     } catch (Exception e) {
       e.printStackTrace();
-      System.out.println("Lỗi khi lưu thông tin.");
+      showAlert("Lỗi", "Đã xảy ra lỗi khi lưu thông tin.");
     }
   }
+
 
   private void enableEditing(boolean enable) {
     userNameField.setEditable(enable);

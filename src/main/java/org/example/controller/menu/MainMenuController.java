@@ -33,6 +33,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+import static org.example.util.DialogUtils.showAlert;
+
 
 public class MainMenuController implements Initializable {
     private Stage stage;
@@ -177,7 +179,7 @@ public class MainMenuController implements Initializable {
 
             stage.showAndWait(); // Đợi cho đến khi cửa sổ được đóng
         } catch (IOException e) {
-            DialogUtils.showAlert("Lỗi", "Không thể tải giao diện thêm tài liệu.");
+            showAlert("Lỗi", "Không thể tải giao diện thêm tài liệu.");
             e.printStackTrace();
         }
     }
@@ -210,7 +212,7 @@ public class MainMenuController implements Initializable {
     private void handleEditDocument() {
         Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
         if (selectedDocument == null) {
-            DialogUtils.showAlert("Thông báo", "Vui lòng chọn tài liệu để sửa.");
+            showAlert("Thông báo", "Vui lòng chọn tài liệu để sửa.");
             return;
         }
 
@@ -241,7 +243,7 @@ public class MainMenuController implements Initializable {
         String keyword = searchField.getText().trim().toLowerCase();
         
         if (keyword.isEmpty()) {
-            DialogUtils.showAlert("Lỗi", "Vui lòng nhập từ khóa tìm kiếm.");
+            showAlert("Lỗi", "Vui lòng nhập từ khóa tìm kiếm.");
             return;
         }
 
@@ -273,11 +275,9 @@ public class MainMenuController implements Initializable {
     public void setDocumentList(ObservableList<Document> documentList) {
         this.documentList = documentList;
     }
-    
-    
-    public void deleteDocumentById(String id) {
-        documentManager.deleteDocumentById(id); // Gọi phương thức trong DatabaseManager
-        refreshTable(); // Cập nhật lại TableView sau khi xóa
+
+    public boolean deleteDocumentById(String id) {
+        return documentManager.deleteDocumentById(id);
     }
 
     private void updateBookCounts() {

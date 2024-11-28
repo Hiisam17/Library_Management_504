@@ -53,7 +53,7 @@ public class RateBookController {
     // Lưu đánh giá vào cơ sở dữ liệu
     DocumentManager documentManager = new DocumentManager(new DatabaseManager());
     documentManager.addReview(document.getId(), userId, rating, comment);
-
+    showAlert("Thành công","Cảm ơn vì đánh giá của bạn.");
     // Đóng cửa sổ đánh giá
     Stage stage = (Stage) ratingField.getScene().getWindow();
     stage.close();

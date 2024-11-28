@@ -1,5 +1,6 @@
 package org.example.controller.document;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
@@ -15,6 +16,9 @@ import org.example.service.DocumentManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.example.util.DialogUtils.showAlert;
 
@@ -22,6 +26,7 @@ public class AddDocumentController {
 
 
     private static MainMenuController mainMenuController;
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
 
     public static void setMainMenuController(MainMenuController mainMenuController) {
@@ -94,99 +99,103 @@ public class AddDocumentController {
         newDocument.setAuthor(authorField.getText());
         newDocument.setPublisher(publisherField.getText());
 
-        // Lấy dữ liệu từ DatePicker
-        String rawDate = publishedDatePicker.getEditor().getText(); // Lấy chuỗi người dùng nhập vào
+        String rawDate = publishedDatePicker.getEditor().getText();
         String formattedDate;
 
         try {
-            if (rawDate.matches("\\d{4}")) { // Kiểm tra nếu chỉ có năm (yyyy)
-                formattedDate = rawDate; // Giữ nguyên
-            } else { // Ngày đầy đủ theo dd/MM/yyyy
-                LocalDate date = LocalDate.parse(rawDate, inputFormatter); // Chuyển sang LocalDate
-                formattedDate = date.format(outputFormatter); // Định dạng lại thành yyyy-MM-dd
+            if (rawDate.matches("\\d{4}")) {
+                formattedDate = rawDate;
+            } else {
+                LocalDate date = LocalDate.parse(rawDate, inputFormatter);
+                formattedDate = date.format(outputFormatter);
             }
-            newDocument.setPublishedDate(formattedDate); // Lưu ngày vào Document
+            newDocument.setPublishedDate(formattedDate);
         } catch (DateTimeParseException e) {
             showAlert("Lỗi", "Hãy nhập ngày theo định dạng dd/MM/yyyy hoặc yyyy.");
-            return; // Dừng việc lưu nếu ngày không hợp lệ
+            return;
         }
 
-        // Kiểm tra các trường thông tin trước khi lưu
-        if (!newDocument.getId().isEmpty() &&
-                !newDocument.getTitle().isEmpty() &&
-                !newDocument.getAuthor().isEmpty() &&
-                !newDocument.getPublishedDate().isEmpty()) {
+        if (newDocument.getId().isEmpty() || newDocument.getTitle().isEmpty() || newDocument.getAuthor().isEmpty()
+                || newDocument.getPublishedDate().isEmpty()) {
+            showAlert("Lỗi", "Hãy điền tất cả các trường.");
+            return;
+        }
+
+        // Thực hiện lưu trong ExecutorService
+        executorService.execute(() -> {
             try {
-                // Use DocumentManager to insert the document
                 DocumentManager documentManager = new DocumentManager(new DatabaseManager());
-                if (documentManager.insertDocument(
+                boolean success = documentManager.insertDocument(
                         newDocument.getId(),
                         newDocument.getTitle(),
                         newDocument.getAuthor(),
                         newDocument.getPublisher(),
-                        newDocument.getPublishedDate())) {
-                    showAlert("Thành công", "Tài liệu được thêm thành công!");
-                }
+                        newDocument.getPublishedDate()
+                );
 
-                // Call the callback to refresh the TableView
-                if (onDocumentAddedCallback != null) {
-                    onDocumentAddedCallback.run();
-                }
-
-                clearFields(); // Clear fields after saving
+                Platform.runLater(() -> {
+                    if (success) {
+                        showAlert("Thành công", "Tài liệu được thêm thành công!");
+                        if (onDocumentAddedCallback != null) {
+                            onDocumentAddedCallback.run();
+                        }
+                        clearFields();
+                    } else {
+                        showAlert("Lỗi", "Không thể thêm tài liệu.");
+                    }
+                });
             } catch (Exception e) {
-                showAlert("Lỗi", "Không thể thêm tài liệu.");
+                Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi khi thêm tài liệu."));
                 e.printStackTrace();
             }
-        } else {
-            showAlert("Lỗi", "Hãy điền tất cả các trường.");
-        }
+        });
     }
 
 
     @FXML
     private void handleSearchAPI() {
-        try {
-            String query = searchField.getText(); // Lấy nội dung từ thanh tìm kiếm
-            String jsonResponse = APIIntegration.getBookInfoByTitle(query); // Gửi yêu cầu đến API
-
-            // Gọi parseBookInfo và nhận về đối tượng Document
-            Document document = APIIntegration.parseBookInfo(jsonResponse);
-
-            // Kiểm tra kết quả và cập nhật giao diện
-            if (document != null) {
-                titleField.setText(document.getTitle());
-                authorField.setText(document.getAuthor());
-                publisherField.setText(document.getPublisher());
-
-                String publishedDate = document.getPublishedDate();
-                if (publishedDate == null || publishedDate.isEmpty()) {
-                    publishedDate = "9999"; // Gán năm mặc định nếu không có dữ liệu
-                }
-
-                try {
-                    if (publishedDate.length() == 4) { // Chỉ có năm
-                        publishedDatePicker.getEditor().setText(publishedDate); // Hiển thị năm
-                    } else if (publishedDate.length() == 7) { // Có năm và tháng (YYYY-MM)
-                        publishedDatePicker.getEditor().setText(publishedDate.substring(0, 4));
-                    } else { // Định dạng đầy đủ YYYY-MM-DD
-                        LocalDate date = LocalDate.parse(publishedDate);
-                        publishedDatePicker.setValue(date);
-                    }
-                } catch (DateTimeParseException e) {
-                    System.err.println("Lỗi khi phân tích ngày xuất bản: " + e.getMessage());
-                }
-            } else {
-                System.out.println("Không có dữ liệu để cập nhật.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Lỗi trong quá trình tìm kiếm.");
+        String query = searchField.getText();
+        if (query.isEmpty()) {
+            showAlert("Lỗi", "Vui lòng nhập từ khóa để tìm kiếm.");
+            return;
         }
+
+        executorService.execute(() -> {
+            try {
+                String jsonResponse = APIIntegration.getBookInfoByTitle(query);
+                Document document = APIIntegration.parseBookInfo(jsonResponse);
+
+                Platform.runLater(() -> {
+                    if (document != null) {
+                        titleField.setText(document.getTitle());
+                        authorField.setText(document.getAuthor());
+                        publisherField.setText(document.getPublisher());
+
+                        String publishedDate = document.getPublishedDate();
+                        if (publishedDate == null || publishedDate.isEmpty()) {
+                            publishedDate = "9999";
+                        }
+
+                        try {
+                            if (publishedDate.length() == 4) {
+                                publishedDatePicker.getEditor().setText(publishedDate);
+                            } else {
+                                LocalDate date = LocalDate.parse(publishedDate);
+                                publishedDatePicker.setValue(date);
+                            }
+                        } catch (DateTimeParseException e) {
+                            System.err.println("Lỗi khi phân tích ngày xuất bản: " + e.getMessage());
+                        }
+                    } else {
+                        showAlert("Thông báo", "Không tìm thấy thông tin sách.");
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi trong quá trình tìm kiếm."));
+                e.printStackTrace();
+            }
+        });
     }
-
-
-
 
     // Hàm khởi tạo để nhận tham chiếu Stage
     public void setStage(Stage stage) {
@@ -202,9 +211,6 @@ public class AddDocumentController {
         publishedDatePicker.setValue(null);
     }
 
-    // Hàm hiển thị thông báo
-
-
     // Xử lý sự kiện nút Quay lại
     @FXML
     private void handleBack() {
@@ -212,6 +218,10 @@ public class AddDocumentController {
         if (stage != null) {
             stage.close(); // Đóng cửa sổ hiện tại
         }
+    }
+
+    public void shutdownExecutor() {
+        executorService.shutdownNow();
     }
 }
 

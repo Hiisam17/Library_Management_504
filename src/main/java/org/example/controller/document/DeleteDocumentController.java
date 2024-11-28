@@ -1,11 +1,12 @@
 package org.example.controller.document;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.util.DialogUtils;
 import org.example.controller.menu.MainMenuController;
 import javafx.concurrent.Task;
+import static org.example.util.DialogUtils.showAlert;
 
 public class DeleteDocumentController {
 
@@ -14,7 +15,6 @@ public class DeleteDocumentController {
 
     private Stage stage;
     private MainMenuController mainMenuController;
-    //private final DialogUtils dialogUtils = new DialogUtils();
 
     public void setMainMenuController(MainMenuController mainMenuController) {
         this.mainMenuController = mainMenuController;
@@ -35,32 +35,36 @@ public class DeleteDocumentController {
                 @Override
                 protected Void call() throws Exception {
                     try {
-                        // Gọi phương thức xóa từ MainMenuController
-                        mainMenuController.deleteDocumentById(id);
-                        mainMenuController.refreshTable(); // Cập nhật lại danh sách
+                        // Gọi phương thức xóa từ MainMenuController và kiểm tra kết quả
+                        boolean isDeleted = mainMenuController.deleteDocumentById(id);
+                        if (isDeleted) {
+                            // Cập nhật lại danh sách sau khi xóa thành công
+                            Platform.runLater(() -> {
+                                mainMenuController.refreshTable(); // Đảm bảo gọi trên UI thread
+                                showAlert("Thông báo", "Tài liệu đã được xóa thành công.");
+                            });
+                        } else {
+                            // Hiển thị thông báo lỗi nếu ID không tồn tại
+                            Platform.runLater(() -> {
+                                showAlert("Lỗi", "Id không tồn tại");
+                            });
+                        }
                     } catch (Exception e) {
+                        // Xử lý ngoại lệ nếu có
                         updateMessage("Lỗi khi xóa tài liệu: " + e.getMessage());
                         e.printStackTrace();
+                        // Hiển thị lỗi trong trường hợp có ngoại lệ
+                        Platform.runLater(() -> showAlert("Lỗi", "Có lỗi khi thực hiện xóa tài liệu."));
                     }
                     return null;
                 }
             };
 
-            // Xử lý khi task hoàn tất
-            deleteTask.setOnSucceeded(event -> {
-                DialogUtils.showAlert("Thông báo", "Tài liệu đã được xóa thành công.");
-                stage.close(); // Đóng cửa sổ sau khi xóa xong
-            });
-
-            // Xử lý khi task gặp lỗi
-            deleteTask.setOnFailed(event -> {
-                DialogUtils.showAlert("Lỗi", deleteTask.getMessage());
-            });
-
             // Chạy task trong một thread riêng
             new Thread(deleteTask).start();
         } else {
-            DialogUtils.showAlert("Lỗi", "Vui lòng nhập ID của tài liệu cần xóa.");
+            // Thông báo khi ID trống
+            showAlert("Lỗi", "Vui lòng nhập ID tài liệu cần xóa.");
         }
     }
 

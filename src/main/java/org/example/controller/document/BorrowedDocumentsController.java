@@ -1,5 +1,6 @@
 package org.example.controller.document;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,7 +23,11 @@ import org.example.util.FXMLUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.example.util.DialogUtils.showAlert;
 
@@ -49,6 +54,7 @@ public class BorrowedDocumentsController implements Initializable {
     private TableColumn<Document, String> publishedDateColumn;
 
     private DocumentManager documentManager;
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public void setUserId(String userId) {
         this.userId = userId;
@@ -75,20 +81,29 @@ public class BorrowedDocumentsController implements Initializable {
             return;
         }
 
-        boolean success = documentManager.returnDocument(selectedDocument.getId(), userId);
-        if (success) {
-            showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
-            dialogUtils.showRateBookDialog(selectedDocument, userId);
-            refreshTable(); // Tải lại danh sách tài liệu đã mượn sau khi trả tài liệu
-            UserMenuController.getInstance().refreshTable(); // Cập nhật lại bảng trong giao diện người dùng
-        } else {
-            showAlert("Thất bại", "Không thể trả tài liệu. Vui lòng thử lại.");
-        }
+        executorService.execute(() -> {
+            boolean success = documentManager.returnDocument(selectedDocument.getId(), userId);
+
+            Platform.runLater(() -> {
+                if (success) {
+                    dialogUtils.showAlert("Thành công", "Bạn đã trả tài liệu thành công.");
+                    dialogUtils.showRateBookDialog(selectedDocument, userId);
+                    refreshTable(); // Tải lại danh sách tài liệu đã mượn sau khi trả tài liệu
+                    UserMenuController.getInstance().refreshTable(); // Cập nhật lại bảng trong giao diện người dùng
+                } else {
+                    dialogUtils.showAlert("Thất bại", "Không thể trả tài liệu. Vui lòng thử lại.");
+                }
+            });
+        });
     }
 
     private void refreshTable() {
-        ObservableList<Document> borrowedDocument = FXCollections.observableArrayList(documentManager.getBorrowedDocumentsByUserId(userId));
-        borrowedDocumentTableView.setItems(borrowedDocument);
+        executorService.execute(() -> {
+            List<Document> documents = documentManager.getBorrowedDocumentsByUserId(userId);
+            ObservableList<Document> borrowedDocuments = FXCollections.observableArrayList(documents);
+
+            Platform.runLater(() -> borrowedDocumentTableView.setItems(borrowedDocuments));
+        });
     }
 
     public void refreshBorrowedDocuments(String userId) {
@@ -96,6 +111,7 @@ public class BorrowedDocumentsController implements Initializable {
         borrowedDocumentTableView.setItems(document);
     }
 
-
-
+    public void shutdownExecutor() {
+        executorService.shutdown();
+    }
 }
