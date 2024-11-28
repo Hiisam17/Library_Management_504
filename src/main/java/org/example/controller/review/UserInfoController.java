@@ -96,18 +96,18 @@ public class UserInfoController {
     saveButton.setVisible(enable);
   }
   // Hàm kiểm tra tên không chứa ký tự đặc biệt
-  private boolean isValidName(String name) {
+  public boolean isValidName(String name) {
     String nameRegex = "^[a-zA-ZÀ-ỹ\\s]+$";
     return name != null && name.matches(nameRegex);
   }
 
 
   // Hàm kiểm tra định dạng email
-  private boolean isValidEmail(String email) {
+  public boolean isValidEmail(String email) {
     String emailRegex = "^[\\w-\\.]+@[\\w-\\.]+\\.[a-z]{2,}$"; // Biểu thức regex kiểm tra email
     return email != null && email.matches(emailRegex);
   }
-  private boolean isValidAge(int age){
-    return age>0;
+  public boolean isValidAge(int age){
+    return age > 0 && age <= 200;
   }
 }

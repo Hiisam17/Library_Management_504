@@ -5,6 +5,7 @@ module org.example {
     requires org.json;
     requires java.sql;
     requires java.desktop;
+    requires org.testng;
 
     //opens org.example.menubar to javafx.fxml;
     //opens org.example.usermenu to javafx.fxml;
