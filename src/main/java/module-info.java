@@ -28,4 +28,8 @@ module org.example {
     opens org.example.util to javafx.fxml;
     exports org.example;
     opens org.example to javafx.fxml;
+
+    exports org.example.controller to javafx.fxml;
+    opens org.example.controller to javafx.fxml;
+
 }
