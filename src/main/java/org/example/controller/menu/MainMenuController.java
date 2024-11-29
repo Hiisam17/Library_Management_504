@@ -295,4 +295,19 @@ public class MainMenuController implements Initializable {
         availableBooksLabel.setText("Sách có sẵn: " + availableBooks);
     }
 
+    @FXML
+    private void handleManageUser() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/menu/ManageUsersView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Quản lý người dùng");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

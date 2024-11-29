@@ -92,10 +92,6 @@ public class Main extends Application {
         return instance;
     }
 
-    public UserService getUserService() {
-        return userService;
-    }
-
     public static void main(String[] args) {
         launch(args);
     }

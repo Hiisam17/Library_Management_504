@@ -84,6 +84,15 @@
                         </ImageView>
                     </graphic>
                 </Button>
+                <Button fx:id="btnManageUser" graphicTextGap="22.0" onAction="#handleManageUser" prefHeight="50.0" prefWidth="260.0" text="Quản  lí nguời dùng" textFill="#e7e5e5">
+                    <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../images/logout.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </children>
         </VBox>
 
