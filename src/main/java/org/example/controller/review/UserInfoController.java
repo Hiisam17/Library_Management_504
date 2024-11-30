@@ -93,6 +93,12 @@ public class UserInfoController {
       }
 
       // Lưu thông tin người dùng vào database hoặc xử lý logic ở đây
+      boolean success = UserService.updateUser(userId, newUsername, newEmail, newAge);
+      if (success) {
+        showAlert("Thành công","Cập nhật thông tin người dùng thành công.");
+      } else {
+        showAlert("Lỗi","Cập nhật thông tin người dùng thất bại.");
+      }
       // Tắt chế độ chỉnh sửa
       enableEditing(false);
 

@@ -38,6 +38,7 @@ public class DeleteDocumentController {
                         // Gọi phương thức xóa từ MainMenuController và kiểm tra kết quả
                         boolean isDeleted = mainMenuController.deleteDocumentById(id);
                         if (isDeleted) {
+
                             // Cập nhật lại danh sách sau khi xóa thành công
                             Platform.runLater(() -> {
                                 mainMenuController.refreshTable(); // Đảm bảo gọi trên UI thread
