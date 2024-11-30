@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.example.repository.DatabaseManager.SQL_connect;
+import static org.example.repository.DatabaseManager.getInstance;
 
 public class UserService {
   @FXML
@@ -25,7 +25,7 @@ public class UserService {
   public boolean addUser(User user) {
     String sql = "INSERT INTO users (user_name, password, role) VALUES (?, ?, ?)";
 
-    try (Connection conn = SQL_connect();
+    try (Connection conn = getInstance().getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
       pstmt.setString(1, user.getUsername());
@@ -44,7 +44,7 @@ public class UserService {
 
   public static User getUserById(String userId) {
     String sql = "SELECT * FROM users WHERE id = ?";
-    try (Connection conn = SQL_connect();
+    try (Connection conn = getInstance().getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
       pstmt.setString(1, userId);
       ResultSet rs = pstmt.executeQuery();
@@ -77,7 +77,7 @@ public class UserService {
 
   public static boolean updateUser(String userId, String newName, String newEmail, int newAge) {
     String sql = "UPDATE users SET name = ?, email = ?, age = ? WHERE id = ?";
-    try (Connection conn = SQL_connect();
+    try (Connection conn = getInstance().getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
       pstmt.setString(1, newName);
       pstmt.setString(2, newEmail);

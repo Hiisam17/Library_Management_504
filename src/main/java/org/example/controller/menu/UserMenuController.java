@@ -30,6 +30,7 @@ import static org.example.util.DialogUtils.showAlert;
 public class UserMenuController implements Initializable {
   private static UserMenuController instance;
   private String currentUserId;
+  DatabaseManager dbManager = DatabaseManager.getInstance();
 
   @FXML
   private Label clockLabel;
@@ -63,7 +64,6 @@ public class UserMenuController implements Initializable {
 
   private Stage stage;
   private DocumentManager documentManager;
-  private final DatabaseManager dbManager = new DatabaseManager();
   private final DialogUtils dialogUtils = new DialogUtils();
   private final SessionManager sessionManager = new SessionManager();
   private final ClockManager clockManager = new ClockManager();

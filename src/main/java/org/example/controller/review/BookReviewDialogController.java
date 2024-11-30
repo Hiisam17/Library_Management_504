@@ -17,9 +17,10 @@ public class BookReviewDialogController {
 
     private DocumentManager documentManager;
     private Document currentDocument;
+    DatabaseManager dbManager = DatabaseManager.getInstance();
 
     public void initialize() {
-        documentManager = new DocumentManager(new DatabaseManager());
+        documentManager = new DocumentManager(dbManager);
     }
 
     // Thiết lập dữ liệu và hiển thị đánh giá

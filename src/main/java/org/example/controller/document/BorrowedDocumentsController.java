@@ -34,6 +34,7 @@ import static org.example.util.DialogUtils.showAlert;
 public class BorrowedDocumentsController implements Initializable {
     private String userId;
     private final DialogUtils dialogUtils = new DialogUtils();
+    DatabaseManager dbManager = DatabaseManager.getInstance();
 
     @FXML
     private TableView<Document> borrowedDocumentTableView;
@@ -62,7 +63,7 @@ public class BorrowedDocumentsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        documentManager = new DocumentManager(new DatabaseManager());
+        documentManager = new DocumentManager(dbManager);
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));

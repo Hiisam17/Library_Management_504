@@ -13,6 +13,7 @@ import org.example.repository.DatabaseManager;
 import org.example.service.APIIntegration;
 import org.example.service.DocumentManager;
 
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -26,6 +27,7 @@ public class AddDocumentController {
 
 
     private static MainMenuController mainMenuController;
+    DatabaseManager dbManager = DatabaseManager.getInstance();
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
 
@@ -124,7 +126,7 @@ public class AddDocumentController {
         // Thực hiện lưu trong ExecutorService
         executorService.execute(() -> {
             try {
-                DocumentManager documentManager = new DocumentManager(new DatabaseManager());
+                DocumentManager documentManager = new DocumentManager(dbManager);
                 boolean success = documentManager.insertDocument(
                         newDocument.getId(),
                         newDocument.getTitle(),

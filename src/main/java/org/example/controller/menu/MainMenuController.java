@@ -1,6 +1,5 @@
 package org.example.controller.menu;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,8 +28,6 @@ import org.example.util.SessionManager;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import static org.example.util.DialogUtils.showAlert;
@@ -72,12 +69,12 @@ public class MainMenuController implements Initializable {
 
     private ObservableList<Document> documentList = FXCollections.observableArrayList();
     private DocumentManager documentManager;
-    private final DatabaseManager dbManager = new DatabaseManager();
+    DatabaseManager dbManager = DatabaseManager.getInstance();
     private final DialogUtils dialogUtils = new DialogUtils();
     private final SessionManager sessionManager = new SessionManager();
 
     public MainMenuController() {
-        this.documentManager = new DocumentManager(new DatabaseManager());
+        this.documentManager = new DocumentManager(dbManager);
     }
 
     public void setStage(Stage stage) {
@@ -94,12 +91,30 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        documentManager = new DocumentManager(dbManager);
-        setupTableColumns();
-        ClockManager.startClock(clockLabel);
-        refreshTable();
-        updateBookCounts();
+        try {
+            // Kiểm tra kết nối trước
+            if (dbManager.getConnection().isClosed()) {
+                throw new SQLException("Database connection is closed!");
+            }
+
+            // Cấu hình bảng
+            setupTableColumns();
+
+            // Khởi động đồng hồ
+            ClockManager.startClock(clockLabel);
+
+            // Làm mới dữ liệu và cập nhật số liệu
+            refreshTable();
+            updateBookCounts();
+        } catch (SQLException e) {
+            showAlert("Database Error", "Could not initialize database connection.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            showAlert("Initialization Error", "An error occurred during initialization.");
+            e.printStackTrace();
+        }
     }
+
 
     private void setupTableColumns() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -298,7 +313,7 @@ public class MainMenuController implements Initializable {
     @FXML
     private void handleManageUser() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/menu/ManageUsersView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user/ManageUsersView.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
