@@ -92,6 +92,13 @@ public class Main extends Application {
         return instance;
     }
 
+    @Override
+    public void stop() {
+        // Đóng kết nối cơ sở dữ liệu khi ứng dụng thoát
+        DatabaseManager.getInstance().closeConnection();
+        System.out.println("Database connection closed.");
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

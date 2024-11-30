@@ -27,7 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.example.repository.DatabaseManager.SQL_connect;
+import static org.example.repository.DatabaseManager.DB_URL;
 import static org.example.util.DialogUtils.showAlert;
 
 public class LoginController {

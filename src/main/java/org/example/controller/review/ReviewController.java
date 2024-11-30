@@ -19,6 +19,7 @@ public class ReviewController {
   private TextArea commentField;
   @FXML
   private ListView<String> reviewListView;
+  DatabaseManager dbManager = DatabaseManager.getInstance();
 
   public void setDocumentId(String documentId) {
     this.documentId = documentId;
@@ -30,14 +31,14 @@ public class ReviewController {
     int rating = Integer.parseInt(ratingField.getText());
     String comment = commentField.getText();
 
-    DocumentManager documentManager = new DocumentManager(new DatabaseManager());
+    DocumentManager documentManager = new DocumentManager(dbManager);
     documentManager.addReview(documentId, "currentUserId", rating, comment);
 
     loadReviews();
   }
 
   private void loadReviews() {
-    DocumentManager documentManager = new DocumentManager(new DatabaseManager());
+    DocumentManager documentManager = new DocumentManager(dbManager);
     List<Review> reviews = documentManager.getReviews(documentId);
     reviewListView.getItems().clear();
     for (Review review : reviews) {

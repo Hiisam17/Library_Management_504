@@ -19,6 +19,7 @@ public class RateBookController {
 
   private Document document;
   private String userId;
+  DatabaseManager dbManager = DatabaseManager.getInstance();
 
   public void setDocument(Document document) {
     this.document = document;
@@ -51,7 +52,7 @@ public class RateBookController {
     }
 
     // Lưu đánh giá vào cơ sở dữ liệu
-    DocumentManager documentManager = new DocumentManager(new DatabaseManager());
+    DocumentManager documentManager = new DocumentManager(dbManager);
     documentManager.addReview(document.getId(), userId, rating, comment);
     showAlert("Thành công","Cảm ơn vì đánh giá của bạn.");
     // Đóng cửa sổ đánh giá

@@ -32,8 +32,7 @@ public class ManageUsersController {
   private TableColumn<User, String> idColumn;
   @FXML
   private Button closeButton;
-
-  private final DatabaseManager dbManager = new DatabaseManager();
+  DatabaseManager dbManager = DatabaseManager.getInstance();
   private ObservableList<User> userList = FXCollections.observableArrayList();
 
   public void initialize() {
@@ -53,7 +52,7 @@ public class ManageUsersController {
     List<RegularUser> users = new ArrayList<>();
     String query = "SELECT id, name, email, age FROM users WHERE is_admin = 0";
 
-    try (Connection conn = DatabaseManager.SQL_connect();
+    try (Connection conn = DatabaseManager.getInstance().getConnection();
          PreparedStatement stmt = conn.prepareStatement(query);
          ResultSet rs = stmt.executeQuery()) {
 

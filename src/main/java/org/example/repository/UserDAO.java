@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static org.example.repository.DatabaseManager.SQL_connect;
+import static org.example.repository.DatabaseManager.getInstance;
 import static org.example.util.DialogUtils.showAlert;
 
 public class UserDAO {
@@ -49,7 +49,7 @@ public class UserDAO {
         String checkUserSql = "SELECT COUNT(*) FROM users WHERE user_name = ?";
         String insertUserSql = "INSERT INTO users (user_name, password) VALUES (?, ?)";
 
-        try (Connection conn = SQL_connect();
+        try (Connection conn = getInstance().getConnection();
              PreparedStatement checkStmt = conn.prepareStatement(checkUserSql)) {
 
             // Kiểm tra tên người dùng

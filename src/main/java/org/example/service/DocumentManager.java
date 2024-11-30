@@ -10,13 +10,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.repository.DatabaseManager.SQL_connect;
+import static java.sql.DriverManager.getConnection;
+import static org.example.repository.DatabaseManager.getInstance;
 import static org.example.util.DialogUtils.showAlert;
 
 public class DocumentManager {
 
-    private DatabaseManager dbManager;
-    private static Connection conn = SQL_connect();
+    DatabaseManager dbManager = DatabaseManager.getInstance();
 
     public DocumentManager(DatabaseManager dbManager) {
         this.dbManager = dbManager;
@@ -25,7 +25,8 @@ public class DocumentManager {
 
     private boolean isDocumentDuplicate(String title, String author, String publishedDate) {
         String checkDuplicateSql = "SELECT COUNT(*) FROM document WHERE title = ? AND author = ? AND publishedDate = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(checkDuplicateSql)) {
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(checkDuplicateSql)) {
             stmt.setString(1, title);
             stmt.setString(2, author);
             stmt.setString(3, publishedDate);
@@ -39,15 +40,23 @@ public class DocumentManager {
     public boolean insertDocument(String id, String title, String author, String publisher, String publishedDate) {
         String checkIdSql = "SELECT COUNT(*) FROM document WHERE id = ?";
         String insertSql = "INSERT INTO document (id, title, author, publisher, publishedDate) VALUES (?, ?, ?, ?, ?)";
+        String url = "jdbc:sqlite:data/liba.db";
 
-        try (PreparedStatement checkIdStmt = conn.prepareStatement(checkIdSql)) {
-
-            // Kiểm tra trùng ID
-            checkIdStmt.setString(1, id);
-            ResultSet rsId = checkIdStmt.executeQuery();
-            if (rsId.next() && rsId.getInt(1) > 0) {
-                showAlert("Error", "ID đã tồn tại!");
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn == null || conn.isClosed()) {
+                System.err.println("Connection is closed!");
                 return false;
+            }
+
+            // Tiếp tục logic kiểm tra và thêm tài liệu
+            try (PreparedStatement checkIdStmt = conn.prepareStatement(checkIdSql)) {
+                checkIdStmt.setString(1, id);
+                ResultSet rsId = checkIdStmt.executeQuery();
+
+                if (rsId.next() && rsId.getInt(1) > 0) {
+                    showAlert("Error", "ID đã tồn tại!");
+                    return false;
+                }
             }
 
             // Kiểm tra trùng title, author, publishedDate bằng phương thức isDocumentDuplicate
@@ -69,13 +78,15 @@ public class DocumentManager {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
     public boolean deleteDocumentById(String id) {
         String checkSql = "SELECT COUNT(*) FROM document WHERE id = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
             pstmt.setString(1, id);
             ResultSet rs = pstmt.executeQuery();
 
@@ -107,7 +118,8 @@ public class DocumentManager {
 
         String sql = "UPDATE document SET title = ?, author = ?, publisher = ?, publishedDate = ? WHERE id = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, document.getTitle());
             pstmt.setString(2, document.getAuthor());
@@ -133,7 +145,8 @@ public class DocumentManager {
         String borrowSql = "UPDATE document SET isAvailable = 0 WHERE id = ?"; // Đặt là 0 để đánh dấu là đã mượn
         String insertBorrowedSql = "INSERT INTO borrowed_documents (user_id, document_id, borrow_date) VALUES (?, ?, ?)";
 
-        try (PreparedStatement checkStmt = conn.prepareStatement(checkAvailabilitySql);
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement checkStmt = conn.prepareStatement(checkAvailabilitySql);
              PreparedStatement borrowStmt = conn.prepareStatement(borrowSql);
              PreparedStatement insertBorrowedStmt = conn.prepareStatement(insertBorrowedSql)) {
 
@@ -179,7 +192,7 @@ public class DocumentManager {
         List<Document> documents = new ArrayList<>();
         String sql = "SELECT id, title, author, publisher, publishedDate, isAvailable FROM document";
 
-        try (Connection conn = SQL_connect();
+        try (Connection conn = getInstance().getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -204,7 +217,8 @@ public class DocumentManager {
         List<Document> results = new ArrayList<>();
         String sql = "SELECT * FROM document WHERE title LIKE ? OR author LIKE ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, "%" + keyword + "%");
             pstmt.setString(2, "%" + keyword + "%");
@@ -235,7 +249,8 @@ public class DocumentManager {
                 "JOIN users u ON bd.user_id = u.id " +
                 "WHERE u.id >= 4 AND u.id = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             ResultSet rs = pstmt.executeQuery();
 
@@ -261,7 +276,8 @@ public class DocumentManager {
         String returnSql = "UPDATE document SET isAvailable = 1 WHERE id = ?";
         String deleteBorrowedSql = "DELETE FROM borrowed_documents WHERE document_id = ? AND user_id = ?";
 
-        try (PreparedStatement checkStmt = conn.prepareStatement(checkBorrowedSql);
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement checkStmt = conn.prepareStatement(checkBorrowedSql);
              PreparedStatement returnStmt = conn.prepareStatement(returnSql);
              PreparedStatement deleteBorrowedStmt = conn.prepareStatement(deleteBorrowedSql)) {
 
@@ -300,7 +316,8 @@ public class DocumentManager {
         List<Document> results = new ArrayList<>();
         String sql = "SELECT * FROM document WHERE title LIKE ? OR author LIKE ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, "%" + keyword + "%");
             pstmt.setString(2, "%" + keyword + "%");
@@ -335,7 +352,8 @@ public class DocumentManager {
                 + "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP"
                 + ");";
 
-        try (Statement stmt = conn.createStatement()) {
+        try (Connection conn = getInstance().getConnection();
+                Statement stmt = conn.createStatement()) {
             stmt.execute(createReviewsTable);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -346,7 +364,8 @@ public class DocumentManager {
     public boolean addReview(String documentId, String userId, int rating, String comment) {
         String sql = "INSERT INTO reviews(documentId, userId, rating, comment) VALUES(?, ?, ?, ?)";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, documentId);
             pstmt.setString(2, userId);
             pstmt.setInt(3, rating);
@@ -364,7 +383,8 @@ public class DocumentManager {
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT r.*, u.name AS userName FROM reviews r JOIN users u ON r.userId = u.id WHERE r.documentId = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, documentId);
             ResultSet rs = pstmt.executeQuery();
 
@@ -401,7 +421,8 @@ public class DocumentManager {
 
     public int getTotalBooksFromDatabase() throws SQLException {
         String query = "SELECT COUNT(*) FROM document";
-        try (Statement stmt = conn.createStatement();
+        try (Connection conn = getInstance().getConnection();
+             Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             if (rs.next()) {
                 return rs.getInt(1);
@@ -412,7 +433,8 @@ public class DocumentManager {
 
     public int getAvailableBooksFromDatabase() throws SQLException {
         String query = "SELECT COUNT(*) FROM document WHERE isAvailable = 1";
-        try (Statement stmt = conn.createStatement();
+        try (Connection conn = getInstance().getConnection();
+             Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             if (rs.next()) {
                 return rs.getInt(1);

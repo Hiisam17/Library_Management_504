@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class UserLogin {
     public LoginResult validateLogin(String username, String password) {
         String sql = "SELECT id, is_admin FROM users WHERE user_name = ? AND password = ?";
-        try (Connection conn = DatabaseManager.SQL_connect();
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, username);
