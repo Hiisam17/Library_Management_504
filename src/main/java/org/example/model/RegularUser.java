@@ -15,6 +15,11 @@ public class RegularUser extends User {
     public RegularUser(String id, String name, String email, int age) { // Thêm age vào constructor
         super(id,name,email,age);
     }
+
+  public RegularUser(String id, String username, String name, String email, int age) {
+    super(id, name, email, age);
+    this.setUsername(username); // Đặt giá trị cho username
+  }
   //  @Override
     public void LoginLoad(String userId, Stage stage)  {
         // Tải giao diện dành cho người dùng bình thường

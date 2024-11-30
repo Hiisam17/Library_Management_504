@@ -8,6 +8,7 @@
     <TableView fx:id="userTableView">
         <columns>
             <TableColumn fx:id="idColumn" text="ID" />
+            <TableColumn fx:id="usernameColumn" text="Tên đăng nhập" />
             <TableColumn fx:id="nameColumn" text="Tên" />
             <TableColumn fx:id="ageColumn" text="Tuổi" />
             <TableColumn fx:id="emailColumn" text="Email" />

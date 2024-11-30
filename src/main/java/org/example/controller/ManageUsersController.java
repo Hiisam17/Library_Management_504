@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManageUsersController {
+
+  @FXML
+  private TableColumn<User, String> usernameColumn; // Khai báo cột mới
+
   @FXML
   private TableView<User> userTableView;
   @FXML
@@ -45,11 +49,13 @@ public class ManageUsersController {
     nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
     ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
     emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+    usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
   }
 
   public List<RegularUser> loadRegularUsers() {
     List<RegularUser> users = new ArrayList<>();
-    String query = "SELECT id, name, email, age FROM users WHERE is_admin = 0";
+    String query = "SELECT id, user_name, name, email, age FROM users WHERE is_admin = 0";
+
 
     try (Connection conn = DatabaseManager.getInstance().getConnection();
          PreparedStatement stmt = conn.prepareStatement(query);
@@ -60,8 +66,9 @@ public class ManageUsersController {
         String name = rs.getString("name");
         String email = rs.getString("email");
         int age = rs.getInt("age");
+        String username = rs.getString("user_name"); // Lấy tên đăng nhập từ cơ sở dữ liệu
 
-        RegularUser user = new RegularUser(id, name, email, age);
+        RegularUser user = new RegularUser(id, username, name, email, age);
         users.add(user);
       }
     } catch (Exception e) {
