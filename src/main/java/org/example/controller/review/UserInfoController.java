@@ -98,6 +98,7 @@ public class UserInfoController {
       }
 
       // Lưu thông tin người dùng vào database hoặc xử lý logic ở đây
+<<<<<<< HEAD
       String updateSql = "UPDATE users SET name = ?, age = ?, email = ? WHERE id = ?";
       try (Connection conn = DatabaseManager.getInstance().getConnection();
            PreparedStatement stmt = conn.prepareStatement(updateSql)) {
@@ -121,6 +122,14 @@ public class UserInfoController {
       }
 
 
+=======
+      boolean success = UserService.updateUser(userId, newUsername, newEmail, newAge);
+      if (success) {
+        showAlert("Thành công","Cập nhật thông tin người dùng thành công.");
+      } else {
+        showAlert("Lỗi","Cập nhật thông tin người dùng thất bại.");
+      }
+>>>>>>> 0e3f33e102d3329be7bcc03207952d98fc4a7f41
       // Tắt chế độ chỉnh sửa
       enableEditing(false);
 
