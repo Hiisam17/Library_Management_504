@@ -98,38 +98,17 @@ public class UserInfoController {
       }
 
       // Lưu thông tin người dùng vào database hoặc xử lý logic ở đây
-<<<<<<< HEAD
-      String updateSql = "UPDATE users SET name = ?, age = ?, email = ? WHERE id = ?";
-      try (Connection conn = DatabaseManager.getInstance().getConnection();
-           PreparedStatement stmt = conn.prepareStatement(updateSql)) {
-
-        // Gán giá trị cho các cột
-        stmt.setString(1, newUsername); // user_name mới
-        stmt.setInt(2, newAge);         // Tuổi mới
-        stmt.setString(3, newEmail);    // Email mới
-        stmt.setString(4, userId);      // ID của user để xác định dòng
-
-        // Thực thi câu lệnh
-        int rowsAffected = stmt.executeUpdate();
-        if (rowsAffected > 0) {
-          showAlert("Thành công", "Thông tin người dùng đã được cập nhật.");
-        } else {
-          showAlert("Thất bại", "Không tìm thấy người dùng với ID: " + userId);
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-        showAlert("Lỗi", "Có lỗi xảy ra trong quá trình cập nhật thông tin.");
-      }
 
 
-=======
+
+
       boolean success = UserService.updateUser(userId, newUsername, newEmail, newAge);
       if (success) {
         showAlert("Thành công","Cập nhật thông tin người dùng thành công.");
       } else {
         showAlert("Lỗi","Cập nhật thông tin người dùng thất bại.");
       }
->>>>>>> 0e3f33e102d3329be7bcc03207952d98fc4a7f41
+
       // Tắt chế độ chỉnh sửa
       enableEditing(false);
 

@@ -15,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.Main;
+import org.example.controller.ManageUsersController;
 import org.example.controller.document.AddDocumentController;
 import org.example.controller.document.DeleteDocumentController;
 import org.example.controller.document.EditDocumentController;
@@ -320,6 +321,11 @@ public class MainMenuController implements Initializable {
             stage.setTitle("Quản lý người dùng");
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
+
+
+            ManageUsersController controller = loader.getController();
+            controller.setStage(stage);
+
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();

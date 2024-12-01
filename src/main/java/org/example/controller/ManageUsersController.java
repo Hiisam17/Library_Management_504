@@ -37,6 +37,11 @@ public class ManageUsersController {
   private Button closeButton;
   DatabaseManager dbManager = DatabaseManager.getInstance();
   private ObservableList<User> userList = FXCollections.observableArrayList();
+  private Stage stage;
+
+  public void setStage(Stage stage) {
+    this.stage = stage;
+  }
 
   public void initialize() {
     setupTableColumns();
@@ -79,8 +84,9 @@ public class ManageUsersController {
 
   @FXML
   private void handleClose() {
-    Stage stage = (Stage) closeButton.getScene().getWindow();
-    stage.close();
+    if (stage != null) {
+      stage.close();
+    }
   }
 
   @FXML
