@@ -6,14 +6,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.model.User;
 import org.example.service.UserService;
-import org.example.repository.DatabaseManager;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import static org.example.util.DialogUtils.showAlert;
 
+/**
+ * Controller to manage user information editing.
+ * Allows the user to view and update their personal details.
+ */
 public class UserInfoController {
   @FXML
   private TextField userIdLabel;
@@ -32,11 +31,19 @@ public class UserInfoController {
 
   private Stage stage;
 
+  /**
+   * Sets the user ID and loads the user information.
+   *
+   * @param userId the ID of the user whose information is to be loaded
+   */
   public void setUserId(String userId) {
     this.userId = userId;
     loadUserInfo();
   }
 
+  /**
+   * Loads the user's information from the UserService and displays it in the fields.
+   */
   private void loadUserInfo() {
     User user = UserService.getUserById(userId);
     if (user != null) {
@@ -49,17 +56,27 @@ public class UserInfoController {
     }
   }
 
+  /**
+   * Enables editing mode, allowing the user to update their information.
+   */
   @FXML
   private void handleEditUserInfo() {
     enableEditing(true);
   }
 
+  /**
+   * Closes the current window.
+   */
   @FXML
   private void handleClose() {
     Stage stage = (Stage) userIdLabel.getScene().getWindow();
     stage.close();
   }
 
+  /**
+   * Saves the updated user information after validation.
+   * Displays appropriate messages depending on whether the update is successful.
+   */
   @FXML
   private void handleSaveUserInfo() {
     try {
@@ -98,10 +115,6 @@ public class UserInfoController {
       }
 
       // Lưu thông tin người dùng vào database hoặc xử lý logic ở đây
-
-
-
-
       boolean success = UserService.updateUser(userId, newUsername, newEmail, newAge);
       if (success) {
         showAlert("Thành công","Cập nhật thông tin người dùng thành công.");
@@ -118,7 +131,11 @@ public class UserInfoController {
     }
   }
 
-
+  /**
+   * Toggles the editability of the user information fields and buttons.
+   *
+   * @param enable true to enable editing, false to disable it
+   */
   private void enableEditing(boolean enable) {
     userNameField.setEditable(enable);
     userEmailField.setEditable(enable);
@@ -127,18 +144,35 @@ public class UserInfoController {
     editButton.setVisible(!enable);
     saveButton.setVisible(enable);
   }
-  // Hàm kiểm tra tên không chứa ký tự đặc biệt
+
+  /**
+   * Validates that the user name does not contain special characters.
+   *
+   * @param name the user name to be validated
+   * @return true if the name is valid, false otherwise
+   */
   public boolean isValidName(String name) {
     String nameRegex = "^[a-zA-ZÀ-ỹ\\s]+$";
     return name != null && name.matches(nameRegex);
   }
 
-
-  // Hàm kiểm tra định dạng email
+  /**
+   * Validates that the email is in a proper format.
+   *
+   * @param email the email to be validated
+   * @return true if the email is valid, false otherwise
+   */
   public boolean isValidEmail(String email) {
     String emailRegex = "^[\\w-\\.]+@[\\w-\\.]+\\.[a-z]{2,}$"; // Biểu thức regex kiểm tra email
     return email != null && email.matches(emailRegex);
   }
+
+  /**
+   * Validates that the age is a positive integer and less than or equal to 200.
+   *
+   * @param age the age to be validated
+   * @return true if the age is valid, false otherwise
+   */
   public boolean isValidAge(int age){
     return age > 0 && age <= 200;
   }

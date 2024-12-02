@@ -12,6 +12,9 @@ import java.sql.SQLException;
 
 import static org.example.repository.DatabaseManager.getInstance;
 
+/**
+ * Service class responsible for user-related operations, such as adding, updating, and retrieving user information.
+ */
 public class UserService {
   @FXML
   private TextField userNameField;
@@ -22,6 +25,12 @@ public class UserService {
 
   private String userId;
 
+  /**
+   * Adds a new user to the database.
+   *
+   * @param user the user to be added
+   * @return true if the user was successfully added, false otherwise
+   */
   public boolean addUser(User user) {
     String sql = "INSERT INTO users (user_name, password, role) VALUES (?, ?, ?)";
 
@@ -42,6 +51,12 @@ public class UserService {
     return false;
   }
 
+  /**
+   * Retrieves a user by their ID.
+   *
+   * @param userId the ID of the user to retrieve
+   * @return the user if found, null otherwise
+   */
   public static User getUserById(String userId) {
     String sql = "SELECT * FROM users WHERE id = ?";
     try (Connection conn = getInstance().getConnection();
@@ -62,6 +77,9 @@ public class UserService {
     return null;
   }
 
+  /**
+   * Handles the editing of user information. This is triggered when the user tries to save updated details.
+   */
   @FXML
   private void handleEditUserInfo() {
     String newUsername = userNameField.getText();
@@ -75,6 +93,15 @@ public class UserService {
     }
   }
 
+  /**
+   * Updates the user's information in the database.
+   *
+   * @param userId    the ID of the user to update
+   * @param newName   the new name of the user
+   * @param newEmail  the new email of the user
+   * @param newAge    the new age of the user
+   * @return true if the update was successful, false otherwise
+   */
   public static boolean updateUser(String userId, String newName, String newEmail, int newAge) {
     String sql = "UPDATE users SET name = ?, email = ?, age = ? WHERE id = ?";
     try (Connection conn = getInstance().getConnection();
@@ -90,6 +117,4 @@ public class UserService {
       return false;
     }
   }
-
-
 }

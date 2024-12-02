@@ -8,10 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.Main;
@@ -33,20 +31,17 @@ import java.util.ResourceBundle;
 
 import static org.example.util.DialogUtils.showAlert;
 
-
+/**
+ * The {@code MainMenuController} class is responsible for controlling the main menu UI.
+ * It handles user interactions, displays documents, and manages actions such as add, edit,
+ * delete, and search documents. This class interacts with services and repositories
+ * to fetch and update data.
+ */
 public class MainMenuController implements Initializable {
+
     private Stage stage;
     @FXML
-    private TextField idField;
-    @FXML
-    private TextField titleField;
-    @FXML
-    private TextField authorField;
-    @FXML
-    private TextField publisherField;
-    @FXML
-    private DatePicker publishedDatePicker;
-
+    private TextField searchField;
     @FXML
     private TableView<Document> documentTableView;
     @FXML
@@ -68,43 +63,61 @@ public class MainMenuController implements Initializable {
     @FXML
     private Label availableBooksLabel;
 
-    private ObservableList<Document> documentList = FXCollections.observableArrayList();
-    private DocumentManager documentManager;
-    DatabaseManager dbManager = DatabaseManager.getInstance();
+
+    private final DocumentManager documentManager;
+    private final DatabaseManager dbManager = DatabaseManager.getInstance();
     private final DialogUtils dialogUtils = new DialogUtils();
     private final SessionManager sessionManager = new SessionManager();
 
+    /**
+     * Constructor initializes the {@link DocumentManager} with the {@link DatabaseManager}.
+     */
     public MainMenuController() {
         this.documentManager = new DocumentManager(dbManager);
     }
 
+    /**
+     * Sets the primary {@link Stage} for this controller.
+     *
+     * @param stage the primary stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
         stage.setTitle("Library Manager");
     }
-    // Phương thức getter để lấy stage
+
+    /**
+     * Gets the primary {@link Stage}.
+     *
+     * @return the primary stage
+     */
     public Stage getStage() {
         return this.stage;
     }
 
+    /**
+     * Sets the current user ID for further reference (if needed).
+     *
+     * @param userId the user ID
+     */
     public void setCurrentUserId(String userId) {
     }
 
+    /**
+     * Initializes the main menu UI, sets up table columns, starts the clock,
+     * and refreshes document data.
+     *
+     * @param location  the location of the FXML resource
+     * @param resources the resource bundle
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            // Kiểm tra kết nối trước
             if (dbManager.getConnection().isClosed()) {
                 throw new SQLException("Database connection is closed!");
             }
-
-            // Cấu hình bảng
             setupTableColumns();
-
-            // Khởi động đồng hồ
             ClockManager.startClock(clockLabel);
-
-            // Làm mới dữ liệu và cập nhật số liệu
             refreshTable();
             updateBookCounts();
         } catch (SQLException e) {
@@ -116,7 +129,9 @@ public class MainMenuController implements Initializable {
         }
     }
 
-
+    /**
+     * Configures the table columns for the document list view.
+     */
     private void setupTableColumns() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -131,10 +146,12 @@ public class MainMenuController implements Initializable {
                 setText(empty || item == null ? null : item ? "Có sẵn" : "Đang được mượn");
             }
         });
-
         addActionColumn();
     }
 
+    /**
+     * Adds an action column to the document table, allowing users to view details.
+     */
     private void addActionColumn() {
         TableColumn<Document, Void> actionColumn = new TableColumn<>("Hành động");
         actionColumn.setCellFactory(param -> new TableCell<>() {
@@ -157,25 +174,35 @@ public class MainMenuController implements Initializable {
         documentTableView.getColumns().add(actionColumn);
     }
 
+    /**
+     * Handles the logout action, showing a confirmation dialog before logging out.
+     *
+     * @param actionEvent the logout event
+     */
     @FXML
     public void handleLogout(ActionEvent actionEvent) {
         boolean confirmLogout = DialogUtils.showLogoutConfirmation(stage);
         if (confirmLogout) {
-            sessionManager.performLogout(stage); // Thực hiện logic đăng xuất
+            sessionManager.performLogout(stage);
         }
     }
+
+    /**
+     * Restarts the application.
+     *
+     * @throws IOException if the application cannot restart
+     */
     private void restartApp() throws IOException {
-        // Tạo lại đối tượng Main và gọi phương thức restart
         Main mainApp = new Main();
         Main.getInstance().restartApp();
     }
 
-
-    // Xử lý sự kiện nút Thêm Tài Liệu
+    /**
+     * Handles the addition of a new document, showing the Add Document window.
+     */
     @FXML
     private void handleAddDocument() {
         try {
-            // Tải FXML cho cửa sổ thêm tài liệu
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/document/AddDoc-view.fxml"));
             Parent root = loader.load();
 
@@ -184,24 +211,21 @@ public class MainMenuController implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
 
-            // Lấy controller của AddDocumentController và truyền các tham chiếu cần thiết
             AddDocumentController controller = loader.getController();
-            AddDocumentController.setMainMenuController(this); // "this" là MainMenuController
+            AddDocumentController.setMainMenuController(this);
             controller.setStage(stage);
-
-            // Thiết lập callback để cập nhật TableView sau khi thêm tài liệu
-            // Gọi phương thức cập nhật TableView
             controller.setOnDocumentAddedCallback(this::refreshTable);
 
-            stage.showAndWait(); // Đợi cho đến khi cửa sổ được đóng
+            stage.showAndWait();
         } catch (IOException e) {
             showAlert("Lỗi", "Không thể tải giao diện thêm tài liệu.");
             e.printStackTrace();
         }
     }
 
-
-    // Xử lý sự kiện nút Xóa Tài Liệu
+    /**
+     * Handles the event when the "Delete Document" button is clicked.
+     */
     @FXML
     private void handleDeleteDocument() {
         try {
@@ -224,6 +248,9 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    /**
+     * Handles the event when the "Edit Document" button is clicked.
+     */
     @FXML
     private void handleEditDocument() {
         Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
@@ -257,7 +284,7 @@ public class MainMenuController implements Initializable {
     private void handleSearchDocument() {
         // Lấy từ khóa từ thanh tìm kiếm
         String keyword = searchField.getText().trim().toLowerCase();
-        
+
         if (keyword.isEmpty()) {
             showAlert("Lỗi", "Vui lòng nhập từ khóa tìm kiếm.");
             return;
@@ -269,33 +296,26 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML
-    private TextField searchField;
-
-    @FXML
     private void handleReload() {
         refreshTable();
     }
 
-
+    /**
+     * Refreshes the table view with the latest document data.
+     */
     public void refreshTable() {
         updateBookCounts();
         ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getAllDocument());
         documentTableView.setItems(document);
     }
 
-
-    public ObservableList<Document> getDocumentList() {
-        return documentList;
-    }
-
-    public void setDocumentList(ObservableList<Document> documentList) {
-        this.documentList = documentList;
-    }
-
     public boolean deleteDocumentById(String id) {
         return documentManager.deleteDocumentById(id);
     }
 
+    /**
+     * Updates the book count labels based on current database data.
+     */
     private void updateBookCounts() {
         try {
             int totalBooks = documentManager.getTotalBooksFromDatabase();
@@ -306,6 +326,12 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    /**
+     * Updates the total and available books labels in the UI.
+     *
+     * @param totalBooks     the total number of books
+     * @param availableBooks the number of available books
+     */
     private void updateBookCountLabels(int totalBooks, int availableBooks) {
         totalBooksLabel.setText("Tổng số sách: " + totalBooks);
         availableBooksLabel.setText("Sách có sẵn: " + availableBooks);

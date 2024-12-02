@@ -15,7 +15,17 @@ import org.example.model.Document;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Utility class for displaying various types of dialogs, such as alert, confirmation, and custom dialogs.
+ */
 public class DialogUtils {
+
+    /**
+     * Displays an informational alert with the given title and message.
+     *
+     * @param title   the title of the alert
+     * @param message the message content of the alert
+     */
     public static void showAlert(String title, String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -26,6 +36,13 @@ public class DialogUtils {
         });
     }
 
+    /**
+     * Displays a confirmation dialog with the given title and message.
+     *
+     * @param title   the title of the confirmation dialog
+     * @param message the message content of the confirmation dialog
+     * @return true if the user confirms, false otherwise
+     */
     public static boolean showConfirmation(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
@@ -35,6 +52,13 @@ public class DialogUtils {
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
+
+    /**
+     * Shows a dialog for rating a book, where the user can rate the given document.
+     *
+     * @param doc     the document (book) to be rated
+     * @param userId  the user ID who is rating the book
+     */
     public void showRateBookDialog(Document doc, String userId) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/document/rate-book-view.fxml"));
@@ -53,6 +77,11 @@ public class DialogUtils {
         }
     }
 
+    /**
+     * Shows a dialog to display details of a book, including user reviews.
+     *
+     * @param doc the document (book) to display details for
+     */
     public void showBookDetails(Document doc) {
         try {
             // Tải file FXML
@@ -77,6 +106,12 @@ public class DialogUtils {
         }
     }
 
+    /**
+     * Displays a confirmation dialog for logging out.
+     *
+     * @param stage the stage of the application that is requesting the logout
+     * @return true if the user confirms logout, false otherwise
+     */
     public static boolean showLogoutConfirmation(Stage stage) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xác nhận Đăng xuất");
@@ -85,6 +120,5 @@ public class DialogUtils {
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
-
 
 }

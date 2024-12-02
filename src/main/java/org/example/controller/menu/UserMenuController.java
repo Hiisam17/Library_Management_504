@@ -27,10 +27,21 @@ import java.util.ResourceBundle;
 
 import static org.example.util.DialogUtils.showAlert;
 
+/**
+ * The {@code UserMenuController} class handles the user menu functionality.
+ * It allows users to view, borrow, and search for documents,
+ * as well as access their borrowed documents and user information.
+ */
 public class UserMenuController implements Initializable {
+
   private static UserMenuController instance;
   private String currentUserId;
-  DatabaseManager dbManager = DatabaseManager.getInstance();
+
+  private final DatabaseManager dbManager = DatabaseManager.getInstance();
+  private DocumentManager documentManager;
+  private final DialogUtils dialogUtils = new DialogUtils();
+  private final SessionManager sessionManager = new SessionManager();
+  private final ClockManager clockManager = new ClockManager();
 
   @FXML
   private Label clockLabel;
@@ -62,16 +73,43 @@ public class UserMenuController implements Initializable {
   @FXML
   private Label availableBooksLabel;
 
-  private Stage stage;
-  private DocumentManager documentManager;
-  private final DialogUtils dialogUtils = new DialogUtils();
-  private final SessionManager sessionManager = new SessionManager();
-  private final ClockManager clockManager = new ClockManager();
+  @FXML
+  private TextField searchField;
 
+  private Stage stage;
+
+  /**
+   * Constructor initializes the singleton instance of the controller.
+   */
+  public UserMenuController() {
+    instance = this;
+  }
+
+  /**
+   * Gets the singleton instance of the {@code UserMenuController}.
+   *
+   * @return the singleton instance
+   */
+  public static UserMenuController getInstance() {
+    return instance;
+  }
+
+  /**
+   * Sets the {@link DocumentManager} instance for managing document operations.
+   *
+   * @param documentManager the document manager to set
+   */
   public void setDocumentManager(DocumentManager documentManager) {
     this.documentManager = documentManager;
   }
 
+  /**
+   * Initializes the user menu by setting up the table columns, starting the clock,
+   * and loading the initial data into the table view.
+   *
+   * @param location  the location of the FXML resource
+   * @param resources the resource bundle for internationalization
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     documentManager = new DocumentManager(dbManager);
@@ -81,6 +119,9 @@ public class UserMenuController implements Initializable {
     updateBookCounts();
   }
 
+  /**
+   * Configures the columns of the document table view.
+   */
   private void setupTableColumns() {
     idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
     titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -100,6 +141,9 @@ public class UserMenuController implements Initializable {
     addActionColumn();
   }
 
+  /**
+   * Adds an action column to the table for viewing document details.
+   */
   private void addActionColumn() {
     TableColumn<Document, Void> actionColumn = new TableColumn<>("Hành động");
     actionColumn.setCellFactory(param -> new TableCell<>() {
@@ -122,6 +166,9 @@ public class UserMenuController implements Initializable {
     documentTableView.getColumns().add(actionColumn);
   }
 
+  /**
+   * Handles borrowing a document for the current user.
+   */
   @FXML
   private void handleBorrowDocument() {
     Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
@@ -133,12 +180,15 @@ public class UserMenuController implements Initializable {
     boolean success = documentManager.borrowDocument(selectedDocument.getId(), currentUserId);
     if (success) {
       showAlert("Thành công", "Bạn đã mượn tài liệu thành công.");
-      refreshTable(); // Tải lại dữ liệu sau khi mượn tài liệu
+      refreshTable();
     } else {
       showAlert("Thất bại", "Không thể mượn tài liệu. Vui lòng thử lại.");
     }
   }
 
+  /**
+   * Displays a list of documents borrowed by the current user.
+   */
   @FXML
   private void handleShowBorrowedDocuments() {
     try {
@@ -158,9 +208,11 @@ public class UserMenuController implements Initializable {
     }
   }
 
+  /**
+   * Searches for documents based on the keyword entered by the user.
+   */
   @FXML
   private void handleSearchDocument() {
-    // Lấy từ khóa từ thanh tìm kiếm
     String keyword = searchField.getText().trim().toLowerCase();
 
     if (keyword.isEmpty()) {
@@ -168,21 +220,19 @@ public class UserMenuController implements Initializable {
       return;
     }
 
-    // Lấy kết quả tìm kiếm từ DocumentManager
     ObservableList<Document> searchResults = FXCollections.observableArrayList(documentManager.searchDocuments(keyword));
     documentTableView.setItems(searchResults);
   }
 
-  @FXML
-  private TextField searchField;
-
+  /**
+   * Displays user information in a separate window.
+   */
   @FXML
   private void handleUserInfo() {
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user/user-info-view.fxml"));
       Parent userInfoRoot = loader.load();
 
-      // Lấy UserInfoController và truyền thông tin người dùng
       UserInfoController controller = loader.getController();
       controller.setUserId(currentUserId);
 
@@ -195,39 +245,49 @@ public class UserMenuController implements Initializable {
     }
   }
 
+  /**
+   * Refreshes the document table with the latest data.
+   */
   public void refreshTable() {
     updateBookCounts();
     ObservableList<Document> document = FXCollections.observableArrayList(documentManager.getAllDocument());
     documentTableView.setItems(document);
   }
 
-  public UserMenuController() {
-    instance = this;
-  }
-
-  public static UserMenuController getInstance() {
-    return instance;
-  }
-
+  /**
+   * Sets the current user ID and refreshes the document table.
+   *
+   * @param userId the user ID to set
+   */
   public void setCurrentUserId(String userId) {
     this.currentUserId = userId;
     refreshTable();
   }
 
+  /**
+   * Handles reloading the document table view.
+   */
   @FXML
   private void handleReload() {
     refreshTable();
   }
 
+  /**
+   * Logs out the current user after showing a confirmation dialog.
+   *
+   * @param actionEvent the logout event
+   */
   @FXML
   public void handleLogout(ActionEvent actionEvent) {
     boolean confirmLogout = DialogUtils.showLogoutConfirmation(stage);
     if (confirmLogout) {
-      sessionManager.performLogout(stage); // Thực hiện logic đăng xuất
+      sessionManager.performLogout(stage);
     }
   }
 
-
+  /**
+   * Opens a dialog for the user to rate a selected book.
+   */
   @FXML
   private void handleRateBook() {
     Document selectedDocument = documentTableView.getSelectionModel().getSelectedItem();
@@ -236,10 +296,12 @@ public class UserMenuController implements Initializable {
       return;
     }
 
-    // Hiển thị cửa sổ đánh giá
     dialogUtils.showRateBookDialog(selectedDocument, currentUserId);
   }
 
+  /**
+   * Updates the labels for the total and available book counts.
+   */
   private void updateBookCounts() {
     try {
       int totalBooks = documentManager.getTotalBooksFromDatabase();
@@ -250,9 +312,14 @@ public class UserMenuController implements Initializable {
     }
   }
 
+  /**
+   * Updates the UI labels for total and available book counts.
+   *
+   * @param totalBooks     the total number of books
+   * @param availableBooks the number of available books
+   */
   private void updateBookCountLabels(int totalBooks, int availableBooks) {
     totalBooksLabel.setText("Tổng số sách: " + totalBooks);
     availableBooksLabel.setText("Sách có sẵn: " + availableBooks);
   }
-
 }
