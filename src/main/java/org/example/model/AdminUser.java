@@ -8,25 +8,40 @@ import org.example.controller.menu.MainMenuController;
 
 import java.io.IOException;
 
+/**
+ * Represents an administrative user with special privileges.
+ * Extends the functionality of the {@link User} class to provide admin-specific features.
+ */
 public class AdminUser extends User {
+
+    /**
+     * Constructs an AdminUser with a username and password.
+     *
+     * @param username the username of the admin user.
+     * @param password the password of the admin user.
+     */
     public AdminUser(String username, String password) {
-        super(username, password,"admin");
+        super(username, password, "admin");
     }
-    public AdminUser(String id, String name, String email, int age) { // Thêm age vào constructor
-        super(id,name,email,age);
-    }
-  //  @Override
-    public void LoginLoad(String userId,Stage stage)  {
+
+    /**
+     * Loads the admin-specific user interface upon login.
+     *
+     * @param userId the unique identifier of the currently logged-in user.
+     * @param stage  the primary stage used to display the admin interface.
+     */
+    @Override
+    public void LoginLoad(String userId, Stage stage) {
         try {
-            // Tải giao diện dành cho Admin
+            // Load the admin-specific menu view
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/menu/menu-view.fxml"));
             Parent root = loader.load();
 
-            // Thiết lập controller cho Admin
+            // Set up the controller for the admin menu
             MainMenuController controller = loader.getController();
             controller.setCurrentUserId(userId);
 
-            // Hiển thị giao diện
+            // Display the admin interface
             stage.setScene(new Scene(root, 1200, 800));
             stage.show();
         } catch (IOException e) {

@@ -1,31 +1,43 @@
 package org.example.service;
 
-import javafx.scene.control.Alert;
 import org.example.repository.DatabaseManager;
 import org.example.model.Document;
 import org.example.model.Review;
-import org.example.util.DialogUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.sql.DriverManager.getConnection;
 import static org.example.repository.DatabaseManager.getInstance;
 import static org.example.util.DialogUtils.showAlert;
-
+/**
+ * Handles operations related to document management, including CRUD functionalities.
+ */
 public class DocumentManager {
 
     DatabaseManager dbManager = DatabaseManager.getInstance();
 
+    /**
+     * Constructs a new DocumentManager with a specified DatabaseManager.
+     *
+     * @param dbManager the database manager instance
+     */
     public DocumentManager(DatabaseManager dbManager) {
         this.dbManager = dbManager;
     }
 
-
+    /**
+     * Checks if a document with the same title, author, and published date already exists in the database.
+     *
+     * @param title         the title of the document
+     * @param author        the author of the document
+     * @param publishedDate the published date of the document
+     * @return true if a duplicate document exists, false otherwise
+     */
     private boolean isDocumentDuplicate(String title, String author, String publishedDate) {
-        String checkDuplicateSql = "SELECT COUNT(*) FROM document WHERE title = ? AND author = ? AND publishedDate = ?";
-        try (Connection conn = getInstance().getConnection();
+        String checkDuplicateSql =
+                "SELECT COUNT(*) FROM document WHERE title = ? AND author = ? AND publishedDate = ?";
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(checkDuplicateSql)) {
             stmt.setString(1, title);
             stmt.setString(2, author);
@@ -34,12 +46,26 @@ public class DocumentManager {
             return rs.next() && rs.getInt(1) > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false; // Nếu có lỗi, coi như có tài liệu trùng lặp
+            return false; // Assume duplicate in case of error
         }
     }
-    public boolean insertDocument(String id, String title, String author, String publisher, String publishedDate) {
+
+    /**
+     * Inserts a new document into the database.
+     *
+     * @param id            the ID of the document
+     * @param title         the title of the document
+     * @param author        the author of the document
+     * @param publisher     the publisher of the document
+     * @param publishedDate the published date of the document
+     * @return true if the document was successfully inserted, false otherwise
+     */
+    public boolean insertDocument(
+            String id, String title, String author, String publisher, String publishedDate) {
+
         String checkIdSql = "SELECT COUNT(*) FROM document WHERE id = ?";
-        String insertSql = "INSERT INTO document (id, title, author, publisher, publishedDate) VALUES (?, ?, ?, ?, ?)";
+        String insertSql =
+                "INSERT INTO document (id, title, author, publisher, publishedDate) VALUES (?, ?, ?, ?, ?)";
         String url = "jdbc:sqlite:data/liba.db";
 
         try (Connection conn = DriverManager.getConnection(url)) {
@@ -48,7 +74,7 @@ public class DocumentManager {
                 return false;
             }
 
-            // Tiếp tục logic kiểm tra và thêm tài liệu
+            // Check if the ID already exists
             try (PreparedStatement checkIdStmt = conn.prepareStatement(checkIdSql)) {
                 checkIdStmt.setString(1, id);
                 ResultSet rsId = checkIdStmt.executeQuery();
@@ -59,13 +85,13 @@ public class DocumentManager {
                 }
             }
 
-            // Kiểm tra trùng title, author, publishedDate bằng phương thức isDocumentDuplicate
+            // Check for duplicate documents
             if (isDocumentDuplicate(title, author, publishedDate)) {
                 showAlert("Error", "Tài liệu đã tồn tại!");
                 return false;
             }
 
-            // Nếu không có trùng lặp, thêm tài liệu mới
+            // Insert the new document
             try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
                 insertStmt.setString(1, id);
                 insertStmt.setString(2, title);
@@ -77,42 +103,53 @@ public class DocumentManager {
                 return rowsAffected > 0;
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
+    /**
+     * Deletes a document from the database by its ID.
+     *
+     * @param id the ID of the document to delete
+     * @return true if the document was successfully deleted, false otherwise
+     */
     public boolean deleteDocumentById(String id) {
         String checkSql = "SELECT COUNT(*) FROM document WHERE id = ?";
-        try (Connection conn = getInstance().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
-            pstmt.setString(1, id);
-            ResultSet rs = pstmt.executeQuery();
+        String deleteSql = "DELETE FROM document WHERE id = ?";
 
-            // Kiểm tra nếu tài liệu không tồn tại
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+
+            // Check if the document exists
+            checkStmt.setString(1, id);
+            ResultSet rs = checkStmt.executeQuery();
             if (rs.next() && rs.getInt(1) == 0) {
-                return false;  // Tài liệu không tồn tại
+                return false; // Document does not exist
             }
 
-            // Tiến hành xóa tài liệu nếu tồn tại
-            String deleteSql = "DELETE FROM document WHERE id = ?";
+            // Delete the document
             try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
                 deleteStmt.setString(1, id);
                 deleteStmt.executeUpdate();
             }
 
-            return true;  // Xóa thành công
+            return true; // Successfully deleted
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;  // Lỗi khi xóa
+            return false; // Error while deleting
         }
     }
 
+    /**
+     * Updates the details of an existing document.
+     *
+     * @param document the document to be updated with new details
+     */
     public void updateDocument(Document document) {
         // Kiểm tra xem tài liệu có trùng lặp hay không trước khi cập nhật
         if (isDocumentDuplicate(document.getTitle(), document.getAuthor(), document.getPublishedDate())) {
-            showAlert("Error", "Tài liệu đã tồn tại, không thể cập nhật.");
+            showAlert("Lỗi", "Tài liệu đã tồn tại, không thể cập nhật.");
             return; // Dừng lại nếu tài liệu trùng lặp
         }
 
@@ -129,16 +166,22 @@ public class DocumentManager {
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
-                showAlert("Success", "Cập nhật tài liệu thành công.");
+                showAlert("Thành công", "Cập nhật tài liệu thành công.");
             } else {
-                showAlert("Error", "Không tìm thấy tài liệu với ID: " + document.getId());
+                showAlert("Lỗi", "Không tìm thấy tài liệu với ID: " + document.getId());
             }
 
         } catch (SQLException e) {
             showAlert("Error", "Lỗi khi cập nhật tài liệu: " + e.getMessage());
         }
     }
-
+    /**
+     * Borrows a document for a specific user.
+     *
+     * @param documentId the ID of the document to be borrowed
+     * @param userId     the ID of the user borrowing the document
+     * @return true if the document was successfully borrowed, false otherwise
+     */
     public boolean borrowDocument(String documentId, String userId) {
         System.out.println("User ID: " + userId); // Kiểm tra giá trị userId
         String checkAvailabilitySql = "SELECT isAvailable FROM document WHERE id = ?";
@@ -187,7 +230,11 @@ public class DocumentManager {
         }
     }
 
-
+    /**
+     * Retrieves all documents from the database.
+     *
+     * @return a list of all documents available in the database
+     */
     public List<Document> getAllDocument() {
         List<Document> documents = new ArrayList<>();
         String sql = "SELECT id, title, author, publisher, publishedDate, isAvailable FROM document";
@@ -213,6 +260,12 @@ public class DocumentManager {
         return documents;
     }
 
+    /**
+     * Searches for documents in the database that match the given keyword in the title or author.
+     *
+     * @param keyword the search keyword, which will be matched against the title and author.
+     * @return a list of {@link Document} objects that match the search criteria.
+     */
     public List<Document> searchDocuments(String keyword) {
         List<Document> results = new ArrayList<>();
         String sql = "SELECT * FROM document WHERE title LIKE ? OR author LIKE ?";
@@ -242,6 +295,12 @@ public class DocumentManager {
         return results;
     }
 
+    /**
+     * Retrieves all documents borrowed by a specific user based on their user ID.
+     *
+     * @param userId the ID of the user whose borrowed documents are to be retrieved.
+     * @return a list of {@link Document} objects representing the borrowed documents.
+     */
     public List<Document> getBorrowedDocumentsByUserId(String userId) {
         List<Document> documents = new ArrayList<>();
         String sql = "SELECT d.* FROM document d " +
@@ -271,6 +330,13 @@ public class DocumentManager {
         return documents;
     }
 
+    /**
+     * Returns a borrowed document back to the library system.
+     *
+     * @param documentId the ID of the document to be returned.
+     * @param userId the ID of the user returning the document.
+     * @return {@code true} if the document was successfully returned, {@code false} otherwise.
+     */
     public boolean returnDocument(String documentId, String userId) {
         String checkBorrowedSql = "SELECT * FROM borrowed_documents WHERE document_id = ? AND user_id = ?";
         String returnSql = "UPDATE document SET isAvailable = 1 WHERE id = ?";
@@ -312,55 +378,15 @@ public class DocumentManager {
         }
     }
 
-    public List<Document> searchDocument(String keyword) {
-        List<Document> results = new ArrayList<>();
-        String sql = "SELECT * FROM document WHERE title LIKE ? OR author LIKE ?";
-
-        try (Connection conn = getInstance().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, "%" + keyword + "%");
-            pstmt.setString(2, "%" + keyword + "%");
-
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Document document = new Document(
-                        rs.getString("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("publisher"),
-                        rs.getString("publishedDate"),
-                        rs.getBoolean("isAvailable")
-                );
-                results.add(document);
-            }
-        } catch (SQLException e) {
-            System.out.println("Lỗi tìm kiếm tài liệu: " + e.getMessage());
-        }
-        return results;
-    }
-
-    // Phương thức tạo bảng reviews
-    public static void createTables() {
-        String createReviewsTable = "CREATE TABLE IF NOT EXISTS reviews ("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "documentId TEXT NOT NULL,"
-                + "userId TEXT NOT NULL,"
-                + "rating INTEGER NOT NULL,"
-                + "comment TEXT,"
-                + "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP"
-                + ");";
-
-        try (Connection conn = getInstance().getConnection();
-                Statement stmt = conn.createStatement()) {
-            stmt.execute(createReviewsTable);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    // Thêm đánh giá và nhận xét
+    /**
+     * Adds a review for a document.
+     *
+     * @param documentId the ID of the document being reviewed.
+     * @param userId the ID of the user submitting the review.
+     * @param rating the rating given by the user, typically a value between 1 and 5.
+     * @param comment a comment or feedback provided by the user about the document.
+     * @return {@code true} if the review was successfully added, {@code false} otherwise.
+     */
     public boolean addReview(String documentId, String userId, int rating, String comment) {
         String sql = "INSERT INTO reviews(documentId, userId, rating, comment) VALUES(?, ?, ?, ?)";
 
@@ -378,7 +404,12 @@ public class DocumentManager {
         }
     }
 
-    // Lấy danh sách đánh giá và nhận xét
+    /**
+     * Retrieves all reviews for a specific document, including user information.
+     *
+     * @param documentId the ID of the document for which reviews are retrieved.
+     * @return a list of {@link Review} objects containing review details and associated user information.
+     */
     public List<Review> getReviews(String documentId) {
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT r.*, u.name AS userName FROM reviews r JOIN users u ON r.userId = u.id WHERE r.documentId = ?";
@@ -419,6 +450,12 @@ public class DocumentManager {
         return reviews;
     }
 
+    /**
+     * Retrieves the total number of books in the database.
+     *
+     * @return the total count of books in the database.
+     * @throws SQLException if a database access error occurs.
+     */
     public int getTotalBooksFromDatabase() throws SQLException {
         String query = "SELECT COUNT(*) FROM document";
         try (Connection conn = getInstance().getConnection();
@@ -431,6 +468,12 @@ public class DocumentManager {
         return 0;
     }
 
+    /**
+     * Retrieves the total number of books currently available for borrowing.
+     *
+     * @return the total count of available books in the database.
+     * @throws SQLException if a database access error occurs.
+     */
     public int getAvailableBooksFromDatabase() throws SQLException {
         String query = "SELECT COUNT(*) FROM document WHERE isAvailable = 1";
         try (Connection conn = getInstance().getConnection();
@@ -442,5 +485,4 @@ public class DocumentManager {
         }
         return 0;
     }
-
 }
