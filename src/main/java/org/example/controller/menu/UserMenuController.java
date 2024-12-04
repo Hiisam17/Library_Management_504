@@ -37,7 +37,7 @@ public class UserMenuController implements Initializable {
   private static UserMenuController instance;
   private String currentUserId;
 
-  private final DatabaseManager dbManager = DatabaseManager.getInstance();
+  DatabaseManager dbManager = DatabaseManager.getInstance();
   private DocumentManager documentManager;
   private final DialogUtils dialogUtils = new DialogUtils();
   private final SessionManager sessionManager = new SessionManager();

@@ -307,8 +307,9 @@ public class DocumentManager {
                 "JOIN borrowed_documents bd ON d.id = bd.document_id " +
                 "JOIN users u ON bd.user_id = u.id " +
                 "WHERE u.id >= 4 AND u.id = ?";
+        String url = "jdbc:sqlite:data/liba.db";
 
-        try (Connection conn = getInstance().getConnection();
+        try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             ResultSet rs = pstmt.executeQuery();
@@ -324,6 +325,7 @@ public class DocumentManager {
                 documents.add(document);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             System.out.println("Lỗi khi lấy dữ liệu tài liệu: " + e.getMessage());
         }
 
@@ -341,8 +343,9 @@ public class DocumentManager {
         String checkBorrowedSql = "SELECT * FROM borrowed_documents WHERE document_id = ? AND user_id = ?";
         String returnSql = "UPDATE document SET isAvailable = 1 WHERE id = ?";
         String deleteBorrowedSql = "DELETE FROM borrowed_documents WHERE document_id = ? AND user_id = ?";
+        String url = "jdbc:sqlite:data/liba.db";
 
-        try (Connection conn = getInstance().getConnection();
+        try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement checkStmt = conn.prepareStatement(checkBorrowedSql);
              PreparedStatement returnStmt = conn.prepareStatement(returnSql);
              PreparedStatement deleteBorrowedStmt = conn.prepareStatement(deleteBorrowedSql)) {

@@ -49,16 +49,6 @@
                     </graphic>
                 </Button>
 
-                <Button fx:id="btnRateBooks" graphicTextGap="22.0" onAction="#handleRateBook" prefHeight="50.0" prefWidth="260.0" text="Đánh giá sách" textFill="#e7e5e5">
-                    <graphic>
-                        <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../../images/menu.jpg" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-
                 <Button fx:id="btnBorrowDocument" graphicTextGap="22.0" onAction="#handleBorrowDocument" prefHeight="50.0" prefWidth="260.0" text="Mượn tài liệu" textFill="#e7e5e5">
                     <graphic>
                         <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
