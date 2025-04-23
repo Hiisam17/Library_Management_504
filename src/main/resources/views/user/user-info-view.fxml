@@ -1,0 +1,40 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+
+<?import javafx.scene.layout.HBox?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="800" prefWidth="1200"
+      fx:controller="org.example.controller.review.UserInfoController"
+      stylesheets="@../../styles/user/userInfo.css" styleClass="main-container"
+      spacing="15" alignment="CENTER">
+
+    <!-- Tiêu đề -->
+    <Label text="Thông tin người dùng" styleClass="label-title"/>
+
+    <!-- Form thông tin -->
+    <VBox spacing="10" alignment="CENTER_LEFT" prefHeight="800" prefWidth="1200">
+        <Label text="ID:"/>
+        <TextField fx:id="userIdLabel" editable="false" styleClass="text-field"/>
+
+        <Label text="Tên:"/>
+        <TextField fx:id="userNameField" editable="false" styleClass="text-field"/>
+
+        <Label text="Email:"/>
+        <TextField fx:id="userEmailField" editable="false" styleClass="text-field"/>
+
+        <Label text="Tuổi:"/>
+        <TextField fx:id="userAgeField" editable="false" styleClass="text-field"/>
+    </VBox>
+
+    <!-- Các nút hành động -->
+    <HBox spacing="20" alignment="CENTER">
+        <Button text="Đóng" onAction="#handleClose" styleClass="button button-close"/>
+        <Button text="Chỉnh sửa thông tin" fx:id="editButton" onAction="#handleEditUserInfo" styleClass="button"/>
+        <Button text="Lưu thông tin" fx:id="saveButton" onAction="#handleSaveUserInfo" styleClass="button" visible="false"/>
+    </HBox>
+</VBox>
+
+
+

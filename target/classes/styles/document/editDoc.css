@@ -1,0 +1,45 @@
+/* editDoc.css */
+.anchor-pane {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+}
+
+.label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding: 0 0 15 0;
+}
+
+.text-field {
+    -fx-pref-width: 300px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-text-fill: #333333;
+}
+
+.date-picker {
+    -fx-pref-width: 300px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+}
+
+.save-button {
+    -fx-pref-width: 150px;
+    -fx-background-color: #5cb85c; /* Màu xanh lá nhạt */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.save-button:hover {
+    -fx-background-color: #4cae4c; /* Xanh đậm hơn khi hover */
+}

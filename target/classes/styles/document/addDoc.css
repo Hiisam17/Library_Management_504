@@ -1,0 +1,37 @@
+/* addDoc.css */
+.vbox {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.header-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.text-field {
+    -fx-pref-width: 300px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-text-fill: #333333;
+}
+
+.menu-button {
+    -fx-pref-width: 150px;
+    -fx-background-color: #4CAF50; /* Màu xanh lá */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.menu-button:hover {
+    -fx-background-color: #45A049; /* Màu xanh đậm khi hover */
+}
+

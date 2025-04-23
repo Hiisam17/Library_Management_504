@@ -1,0 +1,35 @@
+.root {
+    -fx-background-color: #f0f0f0; /* Màu nền cho toàn bộ giao diện */
+}
+
+.text-field, .password-field {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Phong cách mặc định cho nút */
+.button {
+    -fx-background-color: #2E3B55;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-pref-width: 150;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 5, 0.5, 0, 1);
+}
+
+/* Hiệu ứng khi di chuột vào nút */
+.button:hover {
+    -fx-background-color: #3A4A68;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 8, 0.5, 0, 1);
+}
+
+/* Hiệu ứng khi nhấn vào nút */
+.button:pressed {
+    -fx-background-color: #1E2A3D;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0.5, 0, 1);
+    -fx-translate-y: 1px;
+}
+
